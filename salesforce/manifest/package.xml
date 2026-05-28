@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>D360_Goal_Agent_Demo</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>D360_Goal_Pack__c</members>
+        <members>D360_Goal_Run__c</members>
+        <members>D360_Recovery_Account__c</members>
+        <members>D360_Evidence__c</members>
+        <members>D360_Proposed_Action__c</members>
+        <members>D360_Approval__c</members>
+        <members>D360_Impact_Metric__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>D360_Goal_Pack__c</members>
+        <members>D360_Goal_Run__c</members>
+        <members>D360_Recovery_Account__c</members>
+        <members>D360_Evidence__c</members>
+        <members>D360_Proposed_Action__c</members>
+        <members>D360_Approval__c</members>
+        <members>D360_Impact_Metric__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>D360_Goal_Agent_Demo_Admin</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>66.0</version>
+</Package>

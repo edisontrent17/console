@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Run_Status__c</columns>
+    <columns>Total_Recoverable_Revenue__c</columns>
+    <columns>Accounts_Identified__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>All Goal Runs</label>
+</ListView>

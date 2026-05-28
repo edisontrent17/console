@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recovery_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <label>Recovery Account</label>
+    <referenceTo>D360_Recovery_Account__c</referenceTo>
+    <relationshipLabel>Proposed Actions</relationshipLabel>
+    <relationshipName>Proposed_Actions</relationshipName>
+    <required>false</required>
+    <type>Lookup</type>
+</CustomField>

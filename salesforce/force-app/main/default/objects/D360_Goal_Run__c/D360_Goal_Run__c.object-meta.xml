@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Execution instance of a Data360 goal pack.</description>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
+    <label>D360 Goal Run</label>
+    <nameField>
+        <displayFormat>DGR-{0000}</displayFormat>
+        <label>Goal Run Number</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>D360 Goal Runs</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

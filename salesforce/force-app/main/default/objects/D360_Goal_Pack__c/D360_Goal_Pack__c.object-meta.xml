@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Reusable business goal template powered by trusted Data360 context.</description>
+    <enableActivities>false</enableActivities>
+    <enableReports>true</enableReports>
+    <label>D360 Goal Pack</label>
+    <nameField>
+        <label>Goal Pack Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>D360 Goal Packs</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

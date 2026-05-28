@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Human-reviewable action proposed by the goal agent.</description>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
+    <label>D360 Proposed Action</label>
+    <nameField>
+        <label>Proposed Action Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>D360 Proposed Actions</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

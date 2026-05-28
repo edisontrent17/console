@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Mock unified account selected by the Dormant Revenue Recovery goal.</description>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
+    <label>D360 Recovery Account</label>
+    <nameField>
+        <label>Recovery Account Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>D360 Recovery Accounts</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

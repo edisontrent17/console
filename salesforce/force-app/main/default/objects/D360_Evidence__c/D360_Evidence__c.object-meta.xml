@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Evidence signal explaining why a recovery account was selected.</description>
+    <enableActivities>false</enableActivities>
+    <enableReports>true</enableReports>
+    <label>D360 Evidence</label>
+    <nameField>
+        <label>Evidence Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>D360 Evidence</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>
