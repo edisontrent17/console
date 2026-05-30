@@ -1,0 +1,21 @@
+{
+  "name": "data360-agent-console-ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/copy-slds.mjs && rollup -c",
+    "check": "npm run build"
+  },
+  "dependencies": {
+    "@lwc/synthetic-shadow": "9.2.2",
+    "@salesforce-ux/design-system": "2.30.4",
+    "lwc": "9.2.2"
+  },
+  "devDependencies": {
+    "@lwc/rollup-plugin": "9.2.2",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "^6.0.2",
+    "rollup": "4.60.4"
+  }
+}

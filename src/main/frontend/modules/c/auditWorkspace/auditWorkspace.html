@@ -1,0 +1,60 @@
+<template>
+    <div class="audit-layout">
+        <section class="slds-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Trusted Context</h2>
+                <p class="slds-text-body_small slds-text-color_weak">Signal sources used by the scenario</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner audit-list">
+                <template for:each={signalSources} for:item="source">
+                    <article key={source.name} class="audit-row">
+                        <strong>{source.name}</strong>
+                        <p>{source.detail}</p>
+                    </article>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Run Plan</h2>
+                <p class="slds-text-body_small slds-text-color_weak">Operator narrative for the workflow</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner audit-list">
+                <template for:each={planStages} for:item="stage">
+                    <article key={stage.title} class="audit-row">
+                        <strong>{stage.title}</strong>
+                        <p>{stage.detail}</p>
+                    </article>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card json-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">PlanSpec JSON</h2>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <pre>{planJson}</pre>
+            </div>
+        </section>
+
+        <section class="slds-card json-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Run State JSON</h2>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <pre>{runJson}</pre>
+            </div>
+        </section>
+
+        <section class="slds-card json-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Data 360 Client</h2>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <pre>{diagnosticsJson}</pre>
+            </div>
+        </section>
+    </div>
+</template>

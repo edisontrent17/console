@@ -1,0 +1,187 @@
+<template>
+    <div class="plan-layout">
+        <section class="slds-card request-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">Request</h2>
+                        <p class="slds-text-body_small slds-text-color_weak">Scenario, goal, connection readiness</p>
+                    </div>
+                </header>
+                <span class="slds-badge">{plannerStatus}</span>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="scenario">Scenario</label>
+                    <div class="slds-form-element__control">
+                        <select id="scenario" class="slds-select" onchange={handleScenarioChange}>
+                            <template for:each={scenarioOptions} for:item="scenario">
+                                <option key={scenario.id} value={scenario.id} selected={scenario.selected}>{scenario.name}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="goal">Goal</label>
+                    <div class="slds-form-element__control">
+                        <textarea id="goal" class="slds-textarea" oninput={handleGoalChange}>{goal}</textarea>
+                    </div>
+                </div>
+                <div class="request-actions slds-m-top_medium">
+                    <button class="slds-button slds-button_brand" onclick={handleDraft} disabled={busy.draftPlan}>{draftLabel}</button>
+                    <button class="slds-button slds-button_neutral" onclick={handleStart} disabled={startDisabled}>{startLabel}</button>
+                    <button class="slds-button slds-button_neutral" onclick={handleSmoke} disabled={busy.smokeData360}>{smokeLabel}</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="slds-card plan-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">PlanSpec</h2>
+                        <p class="slds-text-body_small slds-text-color_weak">Human-approved setup plan before any Data 360 mutation</p>
+                    </div>
+                </header>
+                <template if:true={hasDraft}>
+                    <span class={validationClass}>{validationLabel}</span>
+                </template>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <template if:false={hasDraft}>
+                    <div class="empty-state">No plan drafted.</div>
+                </template>
+
+                <template if:true={hasDraft}>
+                    <div class="plan-head">
+                        <div>
+                            <strong>{plan.goal}</strong>
+                            <p>{planContext}</p>
+                        </div>
+                        <span class="slds-badge">{plan.scenarioId}</span>
+                    </div>
+
+                    <div class="review-stats">
+                        <template for:each={reviewStats} for:item="stat">
+                            <div key={stat.label}>
+                                <strong>{stat.value}</strong>
+                                <span>{stat.label}</span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <template if:true={hasIssues}>
+                        <div class="slds-m-vertical_small issue-stack">
+                            <template for:each={issues} for:item="issue">
+                                <div key={issue.key} class={issue.className}>
+                                    {issue.severity} • {issue.stepId} • {issue.message}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:false={hasIssues}>
+                        <div class="slds-notify slds-notify_alert validation-ok" role="status">
+                            <span>No blocking issues found.</span>
+                        </div>
+                    </template>
+
+                    <template if:true={hasRun}>
+                        <div class="timeline" aria-label="Run timeline">
+                            <template for:each={timelineSteps} for:item="step">
+                                <span key={step.key} class={step.className} title={step.status}></span>
+                            </template>
+                        </div>
+                    </template>
+
+                    <div class="table-wrap">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered plan-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Step</th>
+                                    <th scope="col">Action</th>
+                                    <th scope="col">Phase</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Gate</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={planRows} for:item="row">
+                                    <tr key={row.key} class={row.rowClass} tabindex="0" data-step-id={row.id} onclick={handleSelectStep} onkeydown={handleStepKeydown}>
+                                        <th scope="row">
+                                            <div class="slds-truncate" title={row.title}>{row.title}</div>
+                                            <span>{row.id}</span>
+                                        </th>
+                                        <td>{row.action}</td>
+                                        <td>{row.phase}</td>
+                                        <td><span class={row.statusClass}>{row.status}</span></td>
+                                        <td><span class={row.approvalClass}>{row.approvalLabel}</span></td>
+                                        <td>
+                                            <template if:true={row.canApprove}>
+                                                <button class="slds-button slds-button_brand slds-button_x-small" data-step-id={row.id} onclick={handleApproveStep}>Approve</button>
+                                            </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <section class="approval-history">
+                        <h3>Approval history</h3>
+                        <template if:true={hasApprovalRows}>
+                            <template for:each={approvalRows} for:item="item">
+                                <div key={item.key} class="history-row">
+                                    <strong>{item.step}</strong>
+                                    <span>{item.status}</span>
+                                    <p>{item.detail}</p>
+                                </div>
+                            </template>
+                        </template>
+                        <template if:false={hasApprovalRows}>
+                            <p class="slds-text-body_small slds-text-color_weak">{approvalFallback}</p>
+                        </template>
+                    </section>
+                </template>
+            </div>
+        </section>
+
+        <aside class="slds-card inspector-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">Step Inspector</h2>
+                        <p class="slds-text-body_small slds-text-color_weak">Inputs, bindings, outputs</p>
+                    </div>
+                </header>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <template if:false={hasSelectedStep}>
+                    <div class="empty-state">Select a plan step.</div>
+                </template>
+                <template if:true={hasSelectedStep}>
+                    <div class="inspector-head">
+                        <strong>{selectedStep.title}</strong>
+                        <span class="slds-badge">{selectedStatus}</span>
+                    </div>
+                    <dl class="inspector-list">
+                        <div><dt>Step</dt><dd>{selectedStep.id}</dd></div>
+                        <div><dt>Phase</dt><dd>{selectedStep.phase}</dd></div>
+                        <div><dt>Action</dt><dd>{selectedStep.action}</dd></div>
+                        <div><dt>Approval</dt><dd>{selectedApproval}</dd></div>
+                        <div><dt>Timing</dt><dd>{selectedTiming}</dd></div>
+                    </dl>
+                    <div class="json-grid">
+                        <template for:each={selectedPreviews} for:item="preview">
+                            <article key={preview.label} class="json-preview">
+                                <strong>{preview.label}</strong>
+                                <pre>{preview.value}</pre>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </aside>
+    </div>
+</template>

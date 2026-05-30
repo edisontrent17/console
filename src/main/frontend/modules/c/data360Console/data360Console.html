@@ -1,0 +1,144 @@
+<template>
+    <div class="app-frame">
+        <header class="slds-context-bar">
+            <div class="slds-context-bar__primary">
+                <div class="slds-context-bar__item slds-no-hover">
+                    <div class="slds-context-bar__label-action brand">
+                        <span class="brand-mark">D360</span>
+                        <span class="slds-truncate" title="Data 360 Goal Workbench">Data 360 Goal Workbench</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="slds-context-bar__secondary" aria-label="Workspace">
+                <ul class="slds-grid">
+                    <template for:each={tabs} for:item="tab">
+                        <li key={tab.id} class="slds-context-bar__item">
+                            <a class="slds-context-bar__label-action" href={tab.href} data-tab={tab.id} onclick={handleTab}>
+                                <span class="slds-truncate">{tab.label}</span>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="console-body">
+            <section class="slds-page-header slds-page-header_record-home command-header">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__figure">
+                                <span class="slds-icon_container slds-icon-standard-flow">
+                                    <span class="header-icon">PS</span>
+                                </span>
+                            </div>
+                            <div class="slds-media__body">
+                                <p class="slds-page-header__name-meta">Goal</p>
+                                <h1 class="slds-page-header__title command-title" title={goalTitle}>{goalTitle}</h1>
+                                <div class="slds-m-top_x-small header-meta">
+                                    <span class="slds-badge">Sandbox</span>
+                                    <span class="slds-badge">Data 360</span>
+                                    <span class="slds-badge">Connect API</span>
+                                    <span class={diagnosticsClass}>{diagnosticsLabel}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <span class={userClass}>{userLabel}</span>
+                            <button class="slds-button slds-button_neutral" onclick={handleResetDemo}>Reset demo</button>
+                            <span class={headerStatusClass}>{headerStatusLabel}</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="metric-strip" aria-label="Goal metrics">
+                <template for:each={metricCards} for:item="item">
+                    <article key={item.label} class="slds-card metric-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p class="metric-label">{item.label}</p>
+                            <strong>{item.value}</strong>
+                        </div>
+                    </article>
+                </template>
+            </section>
+
+            <section class="slds-tabs_default workbench">
+                <ul class="slds-tabs_default__nav" role="tablist">
+                    <template for:each={tabs} for:item="tab">
+                        <li key={tab.id} class={tab.itemClass} role="presentation">
+                            <a class="slds-tabs_default__link" href={tab.href} role="tab" aria-selected={tab.selected} data-tab={tab.id} onclick={handleTab}>
+                                {tab.label}
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+
+                <div class="workspace-panel">
+                    <template if:true={isPlan}>
+                        <c-plan-workspace
+                            scenarios={scenarios}
+                            selected-scenario-id={selectedScenarioId}
+                            goal={goal}
+                            diagnostics={diagnostics}
+                            planner-status={plannerStatus}
+                            current-draft={currentDraft}
+                            current-run={currentRun}
+                            approval-history={approvalHistory}
+                            approval-history-unavailable={approvalHistoryUnavailable}
+                            selected-step-id={selectedStepId}
+                            busy={busy}
+                            onscenariochange={handleScenarioChange}
+                            ongoalchange={handleGoalChange}
+                            ondraftplan={handleDraftPlan}
+                            onstartplan={handleStartPlan}
+                            onsmokedata360={handleSmokeData360}
+                            onselectstep={handleSelectStep}
+                            onapprovestep={handleApproveStep}
+                        ></c-plan-workspace>
+                    </template>
+
+                    <template if:true={isExecution}>
+                        <c-execution-workspace
+                            demo={demo}
+                            selected-account-id={selectedAccountId}
+                            busy={busy}
+                            onresetdemo={handleResetDemo}
+                            onselectaccount={handleSelectAccount}
+                            onactiontransition={handleActionTransition}
+                        ></c-execution-workspace>
+                    </template>
+
+                    <template if:true={isMonitors}>
+                        <c-monitor-workspace
+                            demo={demo}
+                            monitors={monitors}
+                            last-monitor-run={lastMonitorRun}
+                            recommendations={recommendations}
+                            recommendation-unavailable={recommendationUnavailable}
+                            onrunmonitor={handleRunMonitor}
+                            onrecommendationtransition={handleRecommendationTransition}
+                        ></c-monitor-workspace>
+                    </template>
+
+                    <template if:true={isAudit}>
+                        <c-audit-workspace
+                            demo={demo}
+                            current-draft={currentDraft}
+                            current-run={currentRun}
+                            diagnostics={diagnostics}
+                        ></c-audit-workspace>
+                    </template>
+                </div>
+            </section>
+
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span>{error}</span>
+                </div>
+            </template>
+        </main>
+    </div>
+</template>

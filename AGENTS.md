@@ -11,7 +11,8 @@ Current clean baseline: `c652942 Initial Data 360 agent console`.
 
 - Root: `/home/manoj/Projects/data360-agent-console`
 - App entry point: `src/main/java/com/acme/data360agent/Data360AgentApplication.java`
-- Browser UI: `src/main/resources/static/index.html`, `styles.css`, and ES modules under `src/main/resources/static/ui/`
+- Browser UI source: LWC OSS components under `src/main/frontend/modules/`
+- Browser UI static shell: `src/main/resources/static/index.html`, `styles.css`, and generated `app.js`
 - Primary README: `README.md`
 - Salesforce demo package: `salesforce/README.md`
 - Current demo narrative docs: `docs/`
@@ -22,9 +23,11 @@ asks.
 
 ## Run And Test
 
-Use Java 21 and Maven.
+Use Java 21, Maven, Node, and npm.
 
 ```bash
+npm install
+npm run build
 mvn test
 ```
 
@@ -258,18 +261,27 @@ one-time existing-schema adoption.
 
 ## Browser UI Modules
 
-Keep browser code modular:
+The browser UI is LWC OSS with SLDS, not hand-written DOM modules. Keep source
+logic under `src/main/frontend/modules/` and build the bundle with:
 
-- `ui/api.js`: fetch wrapper and API error handling
-- `ui/dom.js`: DOM lookup, escaping, formatting, and tiny UI helpers
-- `ui/session.js`: current user/auth pill
-- `ui/planLab.js`: PlanSpec generation, run approval, monitor, and recommendation UI
-- `ui/demo.js`: dormant revenue demo cockpit
-- `ui/app.js`: module bootstrap only
+```bash
+npm run build
+```
 
-Do not put new feature logic in `ui/app.js`, and do not recreate a monolithic
-`static/app.js`. Shared code should move into a small module rather than being
-copy-pasted between plan lab and demo surfaces.
+Current module boundaries:
+
+- `c/data360Console`: root shell, session, tabs, API orchestration, shared state
+- `c/planWorkspace`: PlanSpec drafting, review, approval, and step inspector
+- `c/executionWorkspace`: dormant revenue account cockpit and approval queue
+- `c/monitorWorkspace`: monitors, monitor runs, and recommendations
+- `c/auditWorkspace`: trusted context and raw PlanSpec/run diagnostics
+- `c/api`: fetch wrapper and API error handling
+- `c/format`: formatting helpers
+
+Do not edit generated `src/main/resources/static/app.js` by hand. Change LWC
+source, run `npm run build`, and commit the source plus generated static bundle
+when the app needs to run directly from Spring Boot. Shared code belongs in
+small LWC service modules rather than being copy-pasted between workspaces.
 
 ## LLM Providers
 

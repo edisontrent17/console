@@ -2,7 +2,8 @@
 
 Java/Spring Boot prototype for a Data 360 plan-review-execute agent.
 
-The current primary demo surface is an external **Data360 Goal Cockpit** for
+The current primary demo surface is an external **Data 360 Goal Workbench** built
+with LWC OSS and SLDS. It is a Salesforce-style console for
 the Dormant Revenue Recovery story. It runs outside Salesforce, shows a
 business goal, trusted Data360/Salesforce context, account-level evidence,
 approval-gated actions, and impact metrics.
@@ -68,6 +69,8 @@ Each template creates the same small PlanSpec shape: preview query, create segme
 Local demo:
 
 ```bash
+npm install
+npm run build
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 

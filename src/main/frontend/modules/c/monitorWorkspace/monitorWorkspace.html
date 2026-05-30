@@ -1,0 +1,92 @@
+<template>
+    <div class="monitor-layout">
+        <section class="slds-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Goal Monitors</h2>
+                <p class="slds-text-body_small slds-text-color_weak">Continuously watch the scenario after setup</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner monitor-list">
+                <template if:true={hasMonitors}>
+                    <template for:each={monitorRows} for:item="monitor">
+                        <article key={monitor.id} class={monitor.className}>
+                            <div>
+                                <strong>{monitor.metric}</strong>
+                                <p>{monitor.detail}</p>
+                            </div>
+                            <span class={monitor.statusClass}>{monitor.status}</span>
+                            <button class="slds-button slds-button_neutral slds-button_x-small" data-monitor-id={monitor.id} onclick={handleRunMonitor}>Run</button>
+                        </article>
+                    </template>
+                </template>
+                <template if:false={hasMonitors}>
+                    <div class="empty-state">No monitors registered.</div>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Monitor Result</h2>
+                <p class="slds-text-body_small slds-text-color_weak">Latest threshold evaluation</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <template if:true={hasLastRun}>
+                    <div class="last-run">
+                        <div>
+                            <strong>{lastMonitorRun.recommendation}</strong>
+                            <p>{lastRunObserved}</p>
+                        </div>
+                        <span class={lastRunClass}>{lastMonitorRun.status}</span>
+                    </div>
+                </template>
+                <template if:false={hasLastRun}>
+                    <div class="empty-state">Run a monitor to view latest evaluation.</div>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card recommendations-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Recommendations</h2>
+                <p class="slds-text-body_small slds-text-color_weak">Agent suggestions created from monitor drift</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner recommendation-list">
+                <template if:true={hasRecommendations}>
+                    <template for:each={recommendationRows} for:item="item">
+                        <article key={item.key} class={item.className}>
+                            <div>
+                                <strong>{item.title}</strong>
+                                <p>{item.detail}</p>
+                                <p>{item.observed}</p>
+                            </div>
+                            <span class={item.badgeClass}>{item.badge}</span>
+                            <template if:true={item.canApprove}>
+                                <div class="recommendation-actions">
+                                    <button class="slds-button slds-button_brand slds-button_x-small" data-recommendation-id={item.id} data-transition="approve" onclick={handleRecommendation}>Approve</button>
+                                    <button class="slds-button slds-button_neutral slds-button_x-small" data-recommendation-id={item.id} data-transition="reject" onclick={handleRecommendation}>Reject</button>
+                                </div>
+                            </template>
+                        </article>
+                    </template>
+                </template>
+                <template if:false={hasRecommendations}>
+                    <div class="empty-state">{recommendationFallback}</div>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card">
+            <div class="slds-card__header">
+                <h2 class="slds-card__header-title">Activation Guardrails</h2>
+                <p class="slds-text-body_small slds-text-color_weak">What the monitor keeps enforcing</p>
+            </div>
+            <div class="slds-card__body slds-card__body_inner guardrail">
+                <template if:true={activation}>
+                    <strong>{activation.provider}</strong>
+                    <p>{activation.safetyRule}</p>
+                    <p>{activation.outcomeJoin}</p>
+                </template>
+            </div>
+        </section>
+    </div>
+</template>
