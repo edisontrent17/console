@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
@@ -21,17 +24,41 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
     }
 
+    @ExceptionHandler({CompletionException.class, ExecutionException.class})
+    ResponseEntity<Map<String, Object>> async(Exception e) {
+        var cause = rootCause(e);
+        if (cause instanceof IllegalArgumentException illegalArgumentException) {
+            return badRequest(illegalArgumentException);
+        }
+        return server(e);
+    }
+
     @ExceptionHandler(ConnectApiException.class)
     ResponseEntity<Map<String, Object>> connectApi(ConnectApiException e) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of(
                 "error", e.getMessage(),
                 "statusCode", e.statusCode(),
-                "responseBody", e.responseBody()
+                "correlationId", UUID.randomUUID().toString()
         ));
     }
 
     @ExceptionHandler(Exception.class)
     ResponseEntity<Map<String, Object>> server(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
+        var cause = rootCause(e);
+        if (cause instanceof IllegalArgumentException illegalArgumentException) {
+            return badRequest(illegalArgumentException);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "error", "Internal server error.",
+                "correlationId", UUID.randomUUID().toString()
+        ));
+    }
+
+    private Throwable rootCause(Throwable throwable) {
+        var current = throwable;
+        while (current.getCause() != null) {
+            current = current.getCause();
+        }
+        return current;
     }
 }

@@ -1,5 +1,7 @@
 package com.acme.data360agent.execution;
 
+import com.acme.data360agent.support.SensitiveData;
+
 import java.time.Instant;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ public class StepRun {
     }
 
     public void setRaw(Map<String, Object> raw) {
-        this.raw = raw == null ? Map.of() : Map.copyOf(raw);
+        this.raw = raw == null ? Map.of() : SensitiveData.redactMap(raw);
     }
 
     public String getError() {

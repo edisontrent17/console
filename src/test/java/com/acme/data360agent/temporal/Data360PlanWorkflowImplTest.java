@@ -55,7 +55,7 @@ class Data360PlanWorkflowImplTest {
         waitForStatus(workflow, "WAITING_APPROVAL");
         assertThat(workflow.status()).containsEntry("waitingStepId", "create_segment");
 
-        workflow.approveStep("create_segment");
+        workflow.approveStep("create_segment", "reviewer@example.com");
         var result = WorkflowStub.fromTyped(workflow).getResult(String.class);
 
         assertThat(result).isEqualTo("run_1");
@@ -142,7 +142,8 @@ class Data360PlanWorkflowImplTest {
         }
 
         @Override
-        public void stepApproved(String runId, String planId, String stepId) {
+        public void stepApproved(String runId, String planId, String stepId, String approvedBy) {
+            assertThat(approvedBy).isEqualTo("reviewer@example.com");
             events.add("approved:" + stepId);
         }
 

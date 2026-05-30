@@ -56,7 +56,7 @@ public class Data360DiagnosticsService {
             return new Data360DiagnosticsResult(mode, true, "ok", details, Instant.now());
         } catch (ConnectApiException e) {
             details.put("statusCode", e.statusCode());
-            details.put("responseBody", e.responseBody());
+            details.put("error", "Data 360 Connect API call failed.");
             return new Data360DiagnosticsResult(mode, true, "failed", details, Instant.now());
         } catch (Exception e) {
             details.put("error", e.getMessage());

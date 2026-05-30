@@ -7,6 +7,7 @@ import com.acme.data360agent.planner.Data360Planner;
 import com.acme.data360agent.planner.PlanDraft;
 import com.acme.data360agent.planner.PlanRequest;
 import com.acme.data360agent.plan.PlanValidator;
+import com.acme.data360agent.security.CurrentUserService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,18 +26,20 @@ public class PlanController {
     private final PlanStore store;
     private final PlanExecutor executor;
     private final AuditService audit;
+    private final CurrentUserService users;
 
-    public PlanController(Data360Planner planner, PlanValidator validator, PlanStore store, PlanExecutor executor, AuditService audit) {
+    public PlanController(Data360Planner planner, PlanValidator validator, PlanStore store, PlanExecutor executor, AuditService audit, CurrentUserService users) {
         this.planner = planner;
         this.validator = validator;
         this.store = store;
         this.executor = executor;
         this.audit = audit;
+        this.users = users;
     }
 
     @PostMapping("/plans")
     public PlanDraft draft(@Valid @RequestBody PlanRequest request) {
-        var draft = planner.draft(request);
+        var draft = draftPlan(request);
         return store.saveDraft(draft);
     }
 
@@ -67,7 +70,7 @@ public class PlanController {
 
     @PostMapping("/runs/{runId}/steps/{stepId}/approve")
     public Object approveStep(@PathVariable String runId, @PathVariable String stepId) {
-        return executor.approveStep(runId, stepId);
+        return executor.approveStep(runId, stepId, users.actor());
     }
 
     @GetMapping("/runs/{runId}/approvals")
@@ -78,5 +81,25 @@ public class PlanController {
     @GetMapping("/runs/{runId}/audit")
     public Object audit(@PathVariable String runId) {
         return audit.events(runId);
+    }
+
+    private PlanDraft draftPlan(PlanRequest request) {
+        try {
+            return planner.draft(request);
+        } catch (Exception e) {
+            var cause = rootCause(e);
+            if (cause instanceof IllegalArgumentException illegalArgumentException) {
+                throw illegalArgumentException;
+            }
+            throw e;
+        }
+    }
+
+    private Throwable rootCause(Throwable throwable) {
+        var current = throwable;
+        while (current.getCause() != null) {
+            current = current.getCause();
+        }
+        return current;
     }
 }

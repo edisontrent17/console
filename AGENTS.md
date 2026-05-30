@@ -11,7 +11,7 @@ Current clean baseline: `c652942 Initial Data 360 agent console`.
 
 - Root: `/home/manoj/Projects/data360-agent-console`
 - App entry point: `src/main/java/com/acme/data360agent/Data360AgentApplication.java`
-- Browser UI: `src/main/resources/static/index.html`, `app.js`, `styles.css`
+- Browser UI: `src/main/resources/static/index.html`, `styles.css`, and ES modules under `src/main/resources/static/ui/`
 - Primary README: `README.md`
 - Salesforce demo package: `salesforce/README.md`
 - Current demo narrative docs: `docs/`
@@ -67,6 +67,8 @@ Keep these responsibilities separate:
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
 - State stores: keep drafts, runs, approvals, audit events, monitor state, and Connect idempotency durable.
 - Temporal: production orchestration boundary for durable setup execution.
+- Security: production defaults are fail-closed. Keep OAuth/JWT auth, scope checks,
+  and actor propagation intact when adding APIs.
 
 ## Key Java Packages
 
@@ -78,6 +80,7 @@ Keep these responsibilities separate:
 - `operation/`: allowed operation registry and effect metadata.
 - `state/`: shared JSON/timestamp state codec for JDBC stores.
 - `support/`: small cross-cutting helpers such as ID generation.
+- `security/`: JWT resource-server config, current-user extraction, and audience validation.
 - `temporal/`: workflow/activity interfaces, workflow implementation, executor adapter, worker lifecycle, and tests.
 - `library/`: reusable solution templates.
 - `scenario/`: publicly grounded customer scenario packs.
@@ -226,6 +229,47 @@ Use diagnostics before real setup execution:
 
 Do not make diagnostics perform writes. They exist to validate auth and reachability
 before a user approves setup mutations.
+
+## Production Auth And DB
+
+Production startup should provide:
+
+- `APP_SECURITY_ENABLED=true`
+- `OAUTH2_ISSUER_URI`
+- `APP_SECURITY_REQUIRED_AUDIENCE`
+- `DATA360_AGENT_DB_URL`, `DATA360_AGENT_DB_USERNAME`, and `DATA360_AGENT_DB_PASSWORD`
+
+The `dev` profile may disable auth and use H2 for local demos only:
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+Do not add new write endpoints without assigning a narrow authority in
+`SecurityConfig`. Current scopes are `data360.read`, `data360.plan`,
+`data360.execute`, `data360.approve`, `data360.monitor`, `data360.demo`, and
+`data360.admin`. Any operation that approves, starts, runs, diagnoses, mutates, or
+exposes audit/raw details should not share the generic read scope.
+
+Database schema changes belong in Flyway migrations under
+`src/main/resources/db/migration/`. Do not reintroduce `schema.sql`. Keep
+production `baseline-on-migrate=false`; only use baselining for an explicit
+one-time existing-schema adoption.
+
+## Browser UI Modules
+
+Keep browser code modular:
+
+- `ui/api.js`: fetch wrapper and API error handling
+- `ui/dom.js`: DOM lookup, escaping, formatting, and tiny UI helpers
+- `ui/session.js`: current user/auth pill
+- `ui/planLab.js`: PlanSpec generation, run approval, monitor, and recommendation UI
+- `ui/demo.js`: dormant revenue demo cockpit
+- `ui/app.js`: module bootstrap only
+
+Do not put new feature logic in `ui/app.js`, and do not recreate a monolithic
+`static/app.js`. Shared code should move into a small module rather than being
+copy-pasted between plan lab and demo surfaces.
 
 ## LLM Providers
 

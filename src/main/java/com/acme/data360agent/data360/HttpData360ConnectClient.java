@@ -53,7 +53,7 @@ public class HttpData360ConnectClient implements Data360Client {
             if (existing.isPresent()) {
                 return existing.get();
             }
-            return idempotency.remember(key, execute(request, operation, step));
+            return idempotency.remember(key, execute(request.withIdempotencyKey(key), operation, step));
         }
         return execute(request, operation, step);
     }
@@ -68,7 +68,7 @@ public class HttpData360ConnectClient implements Data360Client {
                 "path", request.path(),
                 "calledAt", Instant.now().toString(),
                 "effect", operation.effect().name(),
-                "raw", raw
+                "rawKeys", raw.keySet().stream().sorted().toList()
         );
         return new Data360CallResult(output, audit);
     }
@@ -100,6 +100,9 @@ public class HttpData360ConnectClient implements Data360Client {
                     .uri(uri)
                     .accept(MediaType.APPLICATION_JSON);
             bodySpec.headers(headers -> headers.setBearerAuth(session.accessToken()));
+            if (request.idempotencyKey() != null && !request.idempotencyKey().isBlank()) {
+                bodySpec.header("Idempotency-Key", request.idempotencyKey());
+            }
             WebClient.RequestHeadersSpec<?> headersSpec = request.body() == null
                     ? bodySpec
                     : bodySpec.contentType(MediaType.APPLICATION_JSON).bodyValue(request.body());
@@ -317,7 +320,15 @@ public class HttpData360ConnectClient implements Data360Client {
         return body.replaceAll("(?i)(access_token|refresh_token|secret|private_key)\"\\s*:\\s*\"[^\"]+\"", "$1\":\"***\"");
     }
 
-    private record ConnectRequest(HttpMethod method, String path, Map<String, String> queryParams, Map<String, Object> body) {
+    private record ConnectRequest(HttpMethod method, String path, Map<String, String> queryParams, Map<String, Object> body, String idempotencyKey) {
+        ConnectRequest(HttpMethod method, String path, Map<String, String> queryParams, Map<String, Object> body) {
+            this(method, path, queryParams, body, null);
+        }
+
+        ConnectRequest withIdempotencyKey(String key) {
+            return new ConnectRequest(method, path, queryParams, body, key);
+        }
+
         String uri() {
             if (queryParams == null || queryParams.isEmpty()) {
                 return path;

@@ -48,7 +48,7 @@ public class LocalPlanExecutor implements PlanExecutor {
     }
 
     @Override
-    public PlanRun approveStep(String runId, String stepId) {
+    public PlanRun approveStep(String runId, String stepId, String approvedBy) {
         var run = store.withRunLock(runId, lockedRun -> {
             var runRef = lockedRun;
             var planStep = PlanRunSupport.planStep(runRef, stepId);
@@ -67,7 +67,7 @@ public class LocalPlanExecutor implements PlanExecutor {
             runRef.setStatus(RunStatus.RUNNING);
             store.saveRun(runRef);
             if (audit != null) {
-                audit.approval(runRef.getId(), stepId, "local-user", "APPROVED", Map.of("planId", runRef.getPlan().id()));
+                audit.approval(runRef.getId(), stepId, approvedBy, "APPROVED", Map.of("planId", runRef.getPlan().id()));
             }
             event(runRef, stepId, "step_approved", Map.of("status", current.getStatus().name()));
             return runRef;

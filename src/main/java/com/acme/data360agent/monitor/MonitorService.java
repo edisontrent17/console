@@ -1,5 +1,6 @@
 package com.acme.data360agent.monitor;
 
+import com.acme.data360agent.audit.AuditService;
 import com.acme.data360agent.data360.Data360Client;
 import com.acme.data360agent.execution.PlanRun;
 import com.acme.data360agent.execution.PlanStore;
@@ -12,6 +13,7 @@ import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
 import com.acme.data360agent.support.Ids;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -25,12 +27,19 @@ public class MonitorService {
     private final PlanStore planStore;
     private final OperationRegistry operations;
     private final Data360Client data360Client;
+    private final AuditService audit;
 
-    public MonitorService(MonitorStore store, PlanStore planStore, OperationRegistry operations, Data360Client data360Client) {
+    @Autowired
+    public MonitorService(MonitorStore store, PlanStore planStore, OperationRegistry operations, Data360Client data360Client, AuditService audit) {
         this.store = store;
         this.planStore = planStore;
         this.operations = operations;
         this.data360Client = data360Client;
+        this.audit = audit;
+    }
+
+    public MonitorService(MonitorStore store, PlanStore planStore, OperationRegistry operations, Data360Client data360Client) {
+        this(store, planStore, operations, data360Client, null);
     }
 
     public List<MonitorDefinition> registerFromPlan(String runId, PlanSpec plan) {
@@ -134,19 +143,44 @@ public class MonitorService {
     }
 
     public MonitorRecommendation approveRecommendation(String recommendationId) {
-        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.APPROVED);
+        return approveRecommendation(recommendationId, "system");
+    }
+
+    public MonitorRecommendation approveRecommendation(String recommendationId, String actor) {
+        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.APPROVED, actor);
     }
 
     public MonitorRecommendation rejectRecommendation(String recommendationId) {
-        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.REJECTED);
+        return rejectRecommendation(recommendationId, "system");
     }
 
-    private MonitorRecommendation reviewRecommendation(String recommendationId, MonitorRecommendationStatus status) {
+    public MonitorRecommendation rejectRecommendation(String recommendationId, String actor) {
+        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.REJECTED, actor);
+    }
+
+    private MonitorRecommendation reviewRecommendation(String recommendationId, MonitorRecommendationStatus status, String actor) {
         var recommendation = recommendation(recommendationId);
         if (recommendation.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
             throw new IllegalStateException("Recommendation has already been reviewed: " + recommendationId);
         }
-        return store.saveRecommendation(recommendation.withStatus(status, Instant.now()));
+        if (!store.reviewRecommendation(recommendationId, status, Instant.now())) {
+            throw new IllegalStateException("Recommendation has already been reviewed: " + recommendationId);
+        }
+        var reviewed = recommendation(recommendationId);
+        auditRecommendation(reviewed, actor);
+        return reviewed;
+    }
+
+    private void auditRecommendation(MonitorRecommendation recommendation, String actor) {
+        if (audit == null) {
+            return;
+        }
+        var definition = definition(recommendation.monitorId());
+        audit.event(definition.runId(), definition.planId(), definition.stepId(), "monitor_recommendation_reviewed", Map.of(
+                "recommendationId", recommendation.id(),
+                "decision", recommendation.status().name(),
+                "actor", actor == null || actor.isBlank() ? "system" : actor
+        ));
     }
 
     private MonitorRecommendation recommendation(MonitorDefinition definition, MonitorRun run) {

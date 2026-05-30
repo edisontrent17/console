@@ -72,6 +72,17 @@ public class InMemoryMonitorStore implements MonitorStore {
     }
 
     @Override
+    public boolean reviewRecommendation(String recommendationId, MonitorRecommendationStatus status, Instant reviewedAt) {
+        var reviewed = recommendations.computeIfPresent(recommendationId, (id, current) -> {
+            if (current.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
+                return current;
+            }
+            return current.withStatus(status, reviewedAt);
+        });
+        return reviewed != null && reviewed.status() == status;
+    }
+
+    @Override
     public Optional<MonitorRecommendation> recommendation(String id) {
         return Optional.ofNullable(recommendations.get(id));
     }

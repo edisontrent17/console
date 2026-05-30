@@ -4,6 +4,7 @@ import com.acme.data360agent.monitor.MonitorDefinition;
 import com.acme.data360agent.monitor.MonitorRecommendation;
 import com.acme.data360agent.monitor.MonitorRun;
 import com.acme.data360agent.monitor.MonitorService;
+import com.acme.data360agent.security.CurrentUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +17,11 @@ import java.util.List;
 @RequestMapping("/api/monitors")
 public class MonitorController {
     private final MonitorService monitors;
+    private final CurrentUserService users;
 
-    public MonitorController(MonitorService monitors) {
+    public MonitorController(MonitorService monitors, CurrentUserService users) {
         this.monitors = monitors;
+        this.users = users;
     }
 
     @GetMapping
@@ -33,12 +36,12 @@ public class MonitorController {
 
     @PostMapping("/recommendations/{recommendationId}/approve")
     public MonitorRecommendation approveRecommendation(@PathVariable String recommendationId) {
-        return monitors.approveRecommendation(recommendationId);
+        return monitors.approveRecommendation(recommendationId, users.actor());
     }
 
     @PostMapping("/recommendations/{recommendationId}/reject")
     public MonitorRecommendation rejectRecommendation(@PathVariable String recommendationId) {
-        return monitors.rejectRecommendation(recommendationId);
+        return monitors.rejectRecommendation(recommendationId, users.actor());
     }
 
     @GetMapping("/{monitorId}")

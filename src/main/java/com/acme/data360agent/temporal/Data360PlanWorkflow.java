@@ -14,7 +14,7 @@ public interface Data360PlanWorkflow {
     String run(String runId, PlanSpec plan);
 
     @SignalMethod
-    void approveStep(String stepId);
+    void approveStep(String stepId, String approvedBy);
 
     @SignalMethod
     void cancel(String reason);

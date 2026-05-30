@@ -35,7 +35,7 @@ public class MockData360Client implements Data360Client {
                 "mode", "mock",
                 "mcpOperation", operation.mcpOperation(),
                 "calledAt", Instant.now().toString(),
-                "resolvedInput", resolvedInput
+                "inputKeys", resolvedInput.keySet().stream().sorted().toList()
         );
         return new Data360CallResult(output, raw);
     }

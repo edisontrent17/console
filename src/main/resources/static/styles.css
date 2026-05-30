@@ -106,6 +106,35 @@ button:disabled {
     gap: 10px;
 }
 
+.user-pill {
+    display: inline-flex;
+    align-items: center;
+    max-width: 260px;
+    min-height: 26px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface-subtle);
+    color: var(--muted);
+    padding: 4px 9px;
+    font-size: 12px;
+    font-weight: 730;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-pill.authenticated {
+    border-color: #b8d8ce;
+    background: var(--teal-soft);
+    color: var(--teal);
+}
+
+.user-pill.failed {
+    border-color: #edb6ae;
+    background: var(--red-soft);
+    color: var(--red);
+}
+
 .status-pill,
 .mini-badge {
     display: inline-flex;

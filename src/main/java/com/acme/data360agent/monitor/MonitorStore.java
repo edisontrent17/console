@@ -22,6 +22,8 @@ public interface MonitorStore {
 
     MonitorRecommendation saveRecommendation(MonitorRecommendation recommendation);
 
+    boolean reviewRecommendation(String recommendationId, MonitorRecommendationStatus status, Instant reviewedAt);
+
     Optional<MonitorRecommendation> recommendation(String id);
 
     Optional<MonitorRecommendation> pendingRecommendationFor(String monitorId);

@@ -15,7 +15,9 @@ The app keeps three boundaries separate:
 - **Monitors** track goal health after setup and produce approval-gated recommendations.
 - **Durable state** stores drafts, runs, approvals, audit events, monitor leases, recommendations, and Connect idempotency records.
 
-The default mode is local and mock-backed so the product loop can be tested before wiring real org credentials.
+The production default is fail-closed: OAuth JWT auth is enabled and a datasource
+must be supplied. The `dev` profile keeps the local product loop mock-backed and
+easy to run before wiring real org credentials.
 
 ## PlanSpec Lab
 
@@ -63,8 +65,10 @@ Each template creates the same small PlanSpec shape: preview query, create segme
 
 ## Run
 
+Local demo:
+
 ```bash
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 Open:
@@ -76,7 +80,7 @@ http://localhost:8080
 If port 8080 is busy:
 
 ```bash
-mvn spring-boot:run -Dspring-boot.run.arguments='--server.port=8082'
+mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.arguments='--server.port=8082'
 ```
 
 Open:
@@ -122,7 +126,7 @@ Anthropic direct:
 export APP_LLM_PROVIDER=anthropic
 export ANTHROPIC_API_KEY="..."
 export ANTHROPIC_MODEL="claude-sonnet-4-5"
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 OpenRouter:
@@ -131,14 +135,14 @@ OpenRouter:
 export APP_LLM_PROVIDER=openrouter
 export OPENROUTER_API_KEY="..."
 export OPENROUTER_MODEL="anthropic/claude-sonnet-4.5"
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 Fallback:
 
 ```bash
 export APP_LLM_PROVIDER=fallback
-mvn spring-boot:run
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
 Provider-specific behavior is isolated behind the `LlmClient` boundary. Model
@@ -167,19 +171,51 @@ GET  /api/data360/diagnostics
 POST /api/data360/diagnostics/smoke
 ```
 
-## State And Scheduling
+## Auth
 
-The default state store is JDBC-backed H2:
+Production mode expects a JWT resource server:
 
-```properties
-app.state.store=jdbc
-spring.datasource.url=jdbc:h2:file:./data/data360-agent-console;AUTO_SERVER=TRUE
+```bash
+export APP_SECURITY_ENABLED=true
+export OAUTH2_ISSUER_URI="https://issuer.example.com"
+export OAUTH2_JWK_SET_URI="https://issuer.example.com/.well-known/jwks.json"
+export APP_SECURITY_REQUIRED_AUDIENCE="data360-agent-console"
+export APP_SECURITY_ALLOWED_ORIGINS="https://console.example.com"
 ```
 
-Use `app.state.store=memory` only for throwaway local experiments. JDBC mode keeps
+The API is split by scope:
+
+- `data360.read`: read scenarios, templates, plans, runs, monitors, and demo state
+- `data360.plan`: create PlanSpec drafts
+- `data360.execute`: start setup runs
+- `data360.approve`: approve setup steps and monitor recommendations
+- `data360.monitor`: run monitors on demand
+- `data360.demo`: mutate the demo action state
+- `data360.admin` or `ROLE_DATA360_ADMIN`: diagnostics and audit access
+
+`GET /api/me` returns the effective actor and authorities. Approval and monitor
+recommendation reviews persist that actor into the audit trail.
+
+## State And Scheduling
+
+Production should use PostgreSQL with Flyway migrations:
+
+```bash
+export DATA360_AGENT_DB_URL="jdbc:postgresql://db.example.com:5432/data360_agent"
+export DATA360_AGENT_DB_USERNAME="data360_agent"
+export DATA360_AGENT_DB_PASSWORD="..."
+export DATA360_AGENT_FLYWAY_ENABLED=true
+```
+
+The `dev` profile uses file-backed H2 at `./data/data360-agent-console`. Use
+`app.state.store=memory` only for throwaway local experiments. JDBC mode keeps
 PlanSpec drafts, setup runs, step output snapshots, approval records, audit events,
 monitor definitions/runs/recommendations, monitor leases, and Connect API
 idempotency records.
+
+Flyway `baseline-on-migrate` defaults to `false` in production. Only set
+`DATA360_AGENT_FLYWAY_BASELINE_ON_MIGRATE=true` during an explicit one-time
+adoption of an existing schema.
 
 Tests use an in-memory H2 datasource via `src/test/resources/application.properties`
 so local runs do not create file-backed database state.
@@ -220,7 +256,10 @@ data360-plan-{runId}
 ```
 
 The workflow owns the ordered execution loop, approval waits, cancellation signal,
-activity retries, and monitor-step skipping. Activities own the side effects:
+read-activity retries, and monitor-step skipping. Mutating Data 360 activities run
+with a single Temporal attempt; Connect calls also receive a stable
+`Idempotency-Key` header where upstream services honor it. Activities own the side
+effects:
 
 - `Data360Activities` executes Data 360/MCP/Connect calls through the configured `Data360Client`.
 - `PlanRunActivities` persists step/run state, approval records, audit events, and monitor registration.

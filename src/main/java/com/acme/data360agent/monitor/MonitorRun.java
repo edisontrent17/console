@@ -1,5 +1,7 @@
 package com.acme.data360agent.monitor;
 
+import com.acme.data360agent.support.SensitiveData;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
@@ -15,6 +17,6 @@ public record MonitorRun(
         Instant createdAt
 ) implements Serializable {
     public MonitorRun {
-        raw = raw == null ? Map.of() : Map.copyOf(raw);
+        raw = raw == null ? Map.of() : SensitiveData.redactMap(raw);
     }
 }

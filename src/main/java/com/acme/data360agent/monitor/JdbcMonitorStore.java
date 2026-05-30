@@ -141,6 +141,16 @@ public class JdbcMonitorStore implements MonitorStore {
     }
 
     @Override
+    public boolean reviewRecommendation(String recommendationId, MonitorRecommendationStatus status, Instant reviewedAt) {
+        return jdbc.update("""
+                UPDATE monitor_recommendations
+                SET status = ?, reviewed_at = ?
+                WHERE recommendation_id = ?
+                  AND status = 'PENDING_APPROVAL'
+                """, status.name(), codec.timestamp(reviewedAt), recommendationId) == 1;
+    }
+
+    @Override
     public Optional<MonitorRecommendation> recommendation(String id) {
         return jdbc.query("SELECT * FROM monitor_recommendations WHERE recommendation_id = ?", (rs, rowNum) -> recommendation(rs), id)
                 .stream()

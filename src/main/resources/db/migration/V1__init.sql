@@ -13,7 +13,9 @@ CREATE TABLE IF NOT EXISTS plan_runs (
     steps_json TEXT NOT NULL,
     approved_steps_json TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_plan_runs_draft
+        FOREIGN KEY (plan_id) REFERENCES plan_drafts (plan_id)
 );
 
 CREATE TABLE IF NOT EXISTS approval_records (
@@ -23,8 +25,15 @@ CREATE TABLE IF NOT EXISTS approval_records (
     approved_by VARCHAR(255) NOT NULL,
     decision VARCHAR(64) NOT NULL,
     payload_json TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_approval_records_run
+        FOREIGN KEY (run_id) REFERENCES plan_runs (run_id),
+    CONSTRAINT uq_approval_records_run_step
+        UNIQUE (run_id, step_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_approval_records_run
+    ON approval_records (run_id, created_at);
 
 CREATE TABLE IF NOT EXISTS audit_events (
     event_id VARCHAR(128) PRIMARY KEY,
@@ -33,8 +42,13 @@ CREATE TABLE IF NOT EXISTS audit_events (
     step_id VARCHAR(128),
     event_type VARCHAR(128) NOT NULL,
     detail_json TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_audit_events_run
+        FOREIGN KEY (run_id) REFERENCES plan_runs (run_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_audit_events_run
+    ON audit_events (run_id, created_at);
 
 CREATE TABLE IF NOT EXISTS connect_idempotency_records (
     idempotency_key VARCHAR(128) PRIMARY KEY,
@@ -54,7 +68,11 @@ CREATE TABLE IF NOT EXISTS monitor_definitions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     last_run_at TIMESTAMP,
     next_run_at TIMESTAMP,
-    lease_until TIMESTAMP
+    lease_until TIMESTAMP,
+    CONSTRAINT fk_monitor_definitions_run
+        FOREIGN KEY (run_id) REFERENCES plan_runs (run_id),
+    CONSTRAINT uq_monitor_definitions_run_step
+        UNIQUE (run_id, step_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_monitor_definitions_run_step
@@ -71,7 +89,9 @@ CREATE TABLE IF NOT EXISTS monitor_runs (
     status VARCHAR(64) NOT NULL,
     recommendation TEXT NOT NULL,
     raw_json TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT fk_monitor_runs_definition
+        FOREIGN KEY (monitor_id) REFERENCES monitor_definitions (monitor_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_monitor_runs_monitor
@@ -87,7 +107,11 @@ CREATE TABLE IF NOT EXISTS monitor_recommendations (
     summary TEXT NOT NULL,
     status VARCHAR(64) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    reviewed_at TIMESTAMP
+    reviewed_at TIMESTAMP,
+    CONSTRAINT fk_monitor_recommendations_definition
+        FOREIGN KEY (monitor_id) REFERENCES monitor_definitions (monitor_id),
+    CONSTRAINT fk_monitor_recommendations_run
+        FOREIGN KEY (monitor_run_id) REFERENCES monitor_runs (monitor_run_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_monitor_recommendations_status

@@ -48,7 +48,12 @@ public class McpData360Client implements Data360Client {
         var toolName = step.action() == Data360Action.SEARCH ? "search" : "execute";
         var arguments = compileArguments(operation, step, resolvedInput);
         var raw = callTool(command, toolName, arguments);
-        return new Data360CallResult(normalizeOutput(step, raw), Map.of("mcp", raw, "tool", toolName, "arguments", arguments));
+        return new Data360CallResult(normalizeOutput(step, raw), Map.of(
+                "mode", "mcp",
+                "tool", toolName,
+                "argumentKeys", arguments.keySet().stream().sorted().toList(),
+                "rawKeys", raw.keySet().stream().sorted().toList()
+        ));
     }
 
     private Map<String, Object> compileArguments(OperationDefinition operation, PlanStep step, Map<String, Object> input) {
@@ -69,9 +74,10 @@ public class McpData360Client implements Data360Client {
     }
 
     private Map<String, Object> callTool(String command, String toolName, Map<String, Object> arguments) {
+        Process process = null;
         try {
-            var process = new ProcessBuilder("bash", "-lc", command)
-                    .redirectError(ProcessBuilder.Redirect.INHERIT)
+            process = new ProcessBuilder(parseCommand(command))
+                    .redirectError(ProcessBuilder.Redirect.DISCARD)
                     .start();
             try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
                  var writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8))) {
@@ -95,6 +101,43 @@ public class McpData360Client implements Data360Client {
             }
         } catch (Exception e) {
             throw new IllegalStateException("Data 360 MCP call failed.", e);
+        } finally {
+            if (process != null && process.isAlive()) {
+                process.destroyForcibly();
+            }
+        }
+    }
+
+    private List<String> parseCommand(String command) {
+        var args = new java.util.ArrayList<String>();
+        var current = new StringBuilder();
+        var quote = '\0';
+        for (int i = 0; i < command.length(); i++) {
+            var ch = command.charAt(i);
+            if ((ch == '\'' || ch == '"') && quote == '\0') {
+                quote = ch;
+            } else if (ch == quote) {
+                quote = '\0';
+            } else if (Character.isWhitespace(ch) && quote == '\0') {
+                addArg(args, current);
+            } else {
+                current.append(ch);
+            }
+        }
+        if (quote != '\0') {
+            throw new IllegalArgumentException("Unclosed quote in app.data360.mcp.command.");
+        }
+        addArg(args, current);
+        if (args.isEmpty()) {
+            throw new IllegalArgumentException("app.data360.mcp.command must not be blank.");
+        }
+        return List.copyOf(args);
+    }
+
+    private void addArg(List<String> args, StringBuilder current) {
+        if (!current.isEmpty()) {
+            args.add(current.toString());
+            current.setLength(0);
         }
     }
 

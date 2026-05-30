@@ -4,6 +4,7 @@ import com.acme.data360agent.data360.Data360CallResult;
 import com.acme.data360agent.execution.PlanInputResolver;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.StepStatus;
+import com.acme.data360agent.operation.Effect;
 import com.acme.data360agent.operation.OperationDefinition;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.PlanPhase;
@@ -22,12 +23,18 @@ import java.util.Map;
 import java.util.Set;
 
 public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
-    private static final ActivityOptions DATA360_ACTIVITY_OPTIONS = ActivityOptions.newBuilder()
+    private static final ActivityOptions DATA360_READ_ACTIVITY_OPTIONS = ActivityOptions.newBuilder()
             .setStartToCloseTimeout(Duration.ofMinutes(5))
             .setRetryOptions(RetryOptions.newBuilder()
                     .setMaximumAttempts(3)
                     .setInitialInterval(Duration.ofSeconds(2))
                     .setBackoffCoefficient(2)
+                    .build())
+            .build();
+    private static final ActivityOptions DATA360_MUTATION_ACTIVITY_OPTIONS = ActivityOptions.newBuilder()
+            .setStartToCloseTimeout(Duration.ofMinutes(5))
+            .setRetryOptions(RetryOptions.newBuilder()
+                    .setMaximumAttempts(1)
                     .build())
             .build();
     private static final ActivityOptions STATE_ACTIVITY_OPTIONS = ActivityOptions.newBuilder()
@@ -39,10 +46,12 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
                     .build())
             .build();
 
-    private final Data360Activities data360 = Workflow.newActivityStub(Data360Activities.class, DATA360_ACTIVITY_OPTIONS);
+    private final Data360Activities data360Reads = Workflow.newActivityStub(Data360Activities.class, DATA360_READ_ACTIVITY_OPTIONS);
+    private final Data360Activities data360Mutations = Workflow.newActivityStub(Data360Activities.class, DATA360_MUTATION_ACTIVITY_OPTIONS);
     private final PlanRunActivities state = Workflow.newActivityStub(PlanRunActivities.class, STATE_ACTIVITY_OPTIONS);
 
     private final Set<String> approvedSteps = new LinkedHashSet<>();
+    private final Map<String, String> approvalActorsByStep = new LinkedHashMap<>();
     private final Map<String, StepStatus> stepStatuses = new LinkedHashMap<>();
     private final Map<String, Map<String, Object>> outputsByStep = new LinkedHashMap<>();
     private RunStatus runStatus = RunStatus.RUNNING;
@@ -82,8 +91,9 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
     }
 
     @Override
-    public void approveStep(String stepId) {
+    public void approveStep(String stepId, String approvedBy) {
         approvedSteps.add(stepId);
+        approvalActorsByStep.put(stepId, approvedBy == null || approvedBy.isBlank() ? "system" : approvedBy);
     }
 
     @Override
@@ -121,7 +131,7 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         Workflow.await(() -> approvedSteps.contains(step.id()) || cancelReason != null);
         waitingStepId = null;
         if (cancelReason == null) {
-            state.stepApproved(runId, plan.id(), step.id());
+            state.stepApproved(runId, plan.id(), step.id(), approvalActorsByStep.getOrDefault(step.id(), "system"));
             stepStatuses.put(step.id(), StepStatus.PENDING);
             runStatus = RunStatus.RUNNING;
         }
@@ -135,7 +145,7 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         try {
             var operation = operation(step);
             var resolved = PlanInputResolver.resolve(step, this::outputForStep);
-            Data360CallResult result = data360.executeStep(runId, plan.id(), plan.context(), operation, step, resolved);
+            Data360CallResult result = data360(operation).executeStep(runId, plan.id(), plan.context(), operation, step, resolved);
             outputsByStep.put(step.id(), result.output());
             stepStatuses.put(step.id(), StepStatus.SUCCEEDED);
             state.stepSucceeded(runId, plan.id(), step.id(), step.action().value(), result.output(), result.raw());
@@ -150,6 +160,10 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
 
     private OperationDefinition operation(PlanStep step) {
         return new OperationRegistry().require(step.action());
+    }
+
+    private Data360Activities data360(OperationDefinition operation) {
+        return operation.effect() == Effect.READ ? data360Reads : data360Mutations;
     }
 
     private Map<String, Object> outputForStep(String stepId) {

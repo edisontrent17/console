@@ -37,14 +37,14 @@ public class PlanRunActivitiesImpl implements PlanRunActivities {
     }
 
     @Override
-    public void stepApproved(String runId, String planId, String stepId) {
+    public void stepApproved(String runId, String planId, String stepId, String approvedBy) {
         store.withRunLock(runId, run -> {
             var step = PlanRunSupport.stepRun(run, stepId);
             run.getApprovedSteps().add(stepId);
             step.setStatus(StepStatus.PENDING);
             run.setStatus(RunStatus.RUNNING);
             store.saveRun(run);
-            audit.approval(runId, stepId, "local-user", "APPROVED", Map.of("planId", planId, "executor", "temporal"));
+            audit.approval(runId, stepId, approvedBy, "APPROVED", Map.of("planId", planId, "executor", "temporal"));
             audit.event(runId, planId, stepId, "step_approved", Map.of("status", step.getStatus().name(), "executor", "temporal"));
             return run;
         });

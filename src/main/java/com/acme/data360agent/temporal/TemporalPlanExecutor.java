@@ -43,7 +43,7 @@ public class TemporalPlanExecutor implements PlanExecutor {
     }
 
     @Override
-    public PlanRun approveStep(String runId, String stepId) {
+    public PlanRun approveStep(String runId, String stepId, String approvedBy) {
         var run = store.withRunLock(runId, lockedRun -> {
             var planStep = PlanRunSupport.planStep(lockedRun, stepId);
             if (!planStep.needsApproval()) {
@@ -58,7 +58,7 @@ public class TemporalPlanExecutor implements PlanExecutor {
             }
             return lockedRun;
         });
-        workflow(runId).approveStep(stepId);
+        workflow(runId).approveStep(stepId, approvedBy);
         return run;
     }
 

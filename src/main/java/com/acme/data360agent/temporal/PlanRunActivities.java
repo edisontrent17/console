@@ -11,7 +11,7 @@ public interface PlanRunActivities {
     void waitingForApproval(String runId, String planId, String stepId, String action);
 
     @ActivityMethod
-    void stepApproved(String runId, String planId, String stepId);
+    void stepApproved(String runId, String planId, String stepId, String approvedBy);
 
     @ActivityMethod
     void stepStarted(String runId, String planId, String stepId, String action);
