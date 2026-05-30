@@ -267,6 +267,28 @@ button:disabled {
     gap: 8px;
 }
 
+.diagnostics-line {
+    border: 1px solid var(--line-soft);
+    border-radius: 7px;
+    background: var(--surface-subtle);
+    color: var(--muted);
+    padding: 8px 9px;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.diagnostics-line.ok,
+.diagnostics-line.ready {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+}
+
+.diagnostics-line.failed,
+.diagnostics-line.not-configured {
+    border-color: var(--amber);
+    background: var(--amber-soft);
+}
+
 .plan-preview,
 .monitor-list {
     min-height: 152px;

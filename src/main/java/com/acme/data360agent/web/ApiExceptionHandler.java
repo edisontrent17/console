@@ -1,5 +1,6 @@
 package com.acme.data360agent.web;
 
+import com.acme.data360agent.data360.ConnectApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,6 +19,15 @@ public class ApiExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<Map<String, Object>> validation(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    }
+
+    @ExceptionHandler(ConnectApiException.class)
+    ResponseEntity<Map<String, Object>> connectApi(ConnectApiException e) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of(
+                "error", e.getMessage(),
+                "statusCode", e.statusCode(),
+                "responseBody", e.responseBody()
+        ));
     }
 
     @ExceptionHandler(Exception.class)

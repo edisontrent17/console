@@ -157,6 +157,8 @@ GET  /api/monitors
 GET  /api/monitors/{monitorId}
 GET  /api/monitors/{monitorId}/runs
 POST /api/monitors/{monitorId}/run-now
+GET  /api/data360/diagnostics
+POST /api/data360/diagnostics/smoke
 ```
 
 ## Data 360 MCP
@@ -248,6 +250,18 @@ Mutation calls are locally idempotent by run, step, and resolved input so duplic
 approval clicks do not replay successful create/publish/activation calls in the
 same process. Production deployment should back this idempotency store with durable
 storage.
+
+Before approving setup against a real org, use the read-only diagnostics endpoint
+or the **Check Data 360** button in the PlanSpec Lab:
+
+```bash
+curl http://localhost:8080/api/data360/diagnostics
+curl -X POST http://localhost:8080/api/data360/diagnostics/smoke
+```
+
+`diagnostics` reports mode and configuration readiness without making an external
+call. `smoke` performs one read-only metadata check through the selected Data 360
+client.
 
 ## Tests
 

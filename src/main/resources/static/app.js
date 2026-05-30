@@ -11,6 +11,7 @@ $("resetButton").addEventListener("click", resetDemo);
 $("scenarioSelect").addEventListener("change", selectScenario);
 $("generatePlanButton").addEventListener("click", generatePlan);
 $("startPlanButton").addEventListener("click", startPlan);
+$("data360SmokeButton").addEventListener("click", smokeData360);
 $("planSpecPreview").addEventListener("click", async (event) => {
     const button = event.target.closest("button[data-approve-step]");
     if (!button || !currentRun) return;
@@ -34,11 +35,33 @@ async function loadPlanLab() {
     try {
         scenarios = await api("/api/scenarios");
         renderScenarioOptions();
+        await loadData360Diagnostics();
         await loadMonitors();
     } catch (error) {
         $("plannerStatus").textContent = "Error";
         $("planSpecPreview").innerHTML = `<div class="issue">${escapeHtml(error.message)}</div>`;
     }
+}
+
+async function loadData360Diagnostics() {
+    const diagnostics = await api("/api/data360/diagnostics");
+    renderData360Diagnostics(diagnostics);
+}
+
+async function smokeData360() {
+    setBusy("data360SmokeButton", true);
+    try {
+        const diagnostics = await api("/api/data360/diagnostics/smoke", "POST");
+        renderData360Diagnostics(diagnostics);
+    } finally {
+        setBusy("data360SmokeButton", false);
+    }
+}
+
+function renderData360Diagnostics(diagnostics) {
+    const configured = diagnostics.configured ? "configured" : "not configured";
+    $("data360Diagnostics").className = `diagnostics-line ${slug(diagnostics.status)}`;
+    $("data360Diagnostics").textContent = `Data 360 ${diagnostics.mode}: ${diagnostics.status} (${configured})`;
 }
 
 function renderScenarioOptions() {

@@ -168,6 +168,14 @@ Current Connect endpoint families:
 `ConnectApiIdempotencyStore` is in-memory. It prevents duplicate mutation replay
 inside this local process, but production should replace it with durable storage.
 
+Use diagnostics before real setup execution:
+
+- `GET /api/data360/diagnostics` reports mode/configuration without external calls.
+- `POST /api/data360/diagnostics/smoke` performs one read-only metadata call.
+
+Do not make diagnostics perform writes. They exist to validate auth and reachability
+before a user approves setup mutations.
+
 ## LLM Providers
 
 The planner uses a deterministic fallback unless a provider is configured.
