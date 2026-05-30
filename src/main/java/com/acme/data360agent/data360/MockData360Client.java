@@ -19,11 +19,17 @@ public class MockData360Client implements Data360Client {
     public Data360CallResult call(OperationDefinition operation, PlanStep step, Map<String, Object> resolvedInput, RunContext context) {
         var output = switch (step.action()) {
             case SEARCH -> search(resolvedInput);
+            case METADATA_DESCRIBE -> describeMetadata(resolvedInput);
             case QUERY -> query(resolvedInput);
+            case CREATE_CALCULATED_INSIGHT -> createCalculatedInsight(resolvedInput);
+            case RUN_CALCULATED_INSIGHT -> runCalculatedInsight(resolvedInput);
             case CREATE_SEGMENT -> createSegment(resolvedInput);
+            case UPDATE_SEGMENT -> updateSegment(resolvedInput);
             case PUBLISH_SEGMENT -> publishSegment(resolvedInput);
             case CREATE_ACTIVATION -> createActivation(resolvedInput);
             case RUN_ACTIVATION -> runActivation(resolvedInput);
+            case GET_IDENTITY_RULESET -> getIdentityRuleset(resolvedInput);
+            case MONITOR_METRIC -> monitorMetric(resolvedInput);
         };
         var raw = Map.<String, Object>of(
                 "mode", "mock",
@@ -56,11 +62,46 @@ public class MockData360Client implements Data360Client {
         );
     }
 
+    private Map<String, Object> describeMetadata(Map<String, Object> input) {
+        return Map.of(
+                "objects", input.getOrDefault("objects", input.getOrDefault("objectApiNames", List.of())),
+                "available", List.of(
+                        Map.of("apiName", "UnifiedAccount", "category", "DMO", "status", "available"),
+                        Map.of("apiName", "UnifiedIndividual", "category", "DMO", "status", "available"),
+                        Map.of("apiName", "Engagement", "category", "DMO", "status", "available")
+                )
+        );
+    }
+
+    private Map<String, Object> createCalculatedInsight(Map<String, Object> input) {
+        return Map.of(
+                "insightId", "ci_" + shortId(),
+                "name", input.get("name"),
+                "status", "draft"
+        );
+    }
+
+    private Map<String, Object> runCalculatedInsight(Map<String, Object> input) {
+        return Map.of(
+                "insightId", input.get("insightId"),
+                "jobId", "job_" + shortId(),
+                "status", "completed"
+        );
+    }
+
     private Map<String, Object> createSegment(Map<String, Object> input) {
         return Map.of(
                 "segmentId", "seg_" + shortId(),
                 "name", input.get("name"),
                 "status", "draft"
+        );
+    }
+
+    private Map<String, Object> updateSegment(Map<String, Object> input) {
+        return Map.of(
+                "segmentId", input.get("segmentId"),
+                "name", input.get("name"),
+                "status", "updated"
         );
     }
 
@@ -86,6 +127,24 @@ public class MockData360Client implements Data360Client {
                 "activationId", input.get("activationId"),
                 "jobId", "job_" + shortId(),
                 "status", "completed"
+        );
+    }
+
+    private Map<String, Object> getIdentityRuleset(Map<String, Object> input) {
+        return Map.of(
+                "rulesetId", input.getOrDefault("rulesetId", "irs_" + shortId()),
+                "rulesetName", input.getOrDefault("rulesetName", "Default Identity Resolution"),
+                "status", "active"
+        );
+    }
+
+    private Map<String, Object> monitorMetric(Map<String, Object> input) {
+        return Map.of(
+                "metric", input.get("metric"),
+                "observedValue", 0.11,
+                "threshold", input.get("threshold"),
+                "status", "attention_required",
+                "checkedAt", Instant.now().toString()
         );
     }
 

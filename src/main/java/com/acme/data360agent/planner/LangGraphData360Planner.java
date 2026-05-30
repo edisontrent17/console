@@ -15,10 +15,10 @@ import static org.bsc.langgraph4j.action.AsyncNodeAction.node_async;
 
 @Service
 public class LangGraphData360Planner implements Data360Planner {
-    private final AnthropicPlanGenerator generator;
+    private final LlmPlanGenerator generator;
     private final PlanValidator validator;
 
-    public LangGraphData360Planner(AnthropicPlanGenerator generator, PlanValidator validator) {
+    public LangGraphData360Planner(LlmPlanGenerator generator, PlanValidator validator) {
         this.generator = generator;
         this.validator = validator;
     }

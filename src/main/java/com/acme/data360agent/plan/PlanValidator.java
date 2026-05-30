@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @Component
@@ -30,6 +32,7 @@ public class PlanValidator {
         } else if ("production".equals(plan.context().environment())) {
             issues.add(ValidationIssue.warning(null, "Production environment selected. Every write/publish/activation step must require approval."));
         }
+        var isProduction = plan.context() != null && "production".equals(plan.context().environment());
 
         var seen = new HashSet<String>();
         for (var step : plan.steps()) {
@@ -39,6 +42,14 @@ public class PlanValidator {
             for (var dependency : step.dependsOn()) {
                 if (!seen.contains(dependency)) {
                     issues.add(ValidationIssue.error(step.id(), "Dependency must refer to an earlier step: " + dependency));
+                }
+            }
+            for (var binding : step.inputBindings().entrySet()) {
+                if (!seen.contains(binding.getValue().fromStep())) {
+                    issues.add(ValidationIssue.error(step.id(), "Input binding must refer to an earlier step: " + binding.getValue().fromStep()));
+                }
+                if (!binding.getValue().path().startsWith("$.")) {
+                    issues.add(ValidationIssue.error(step.id(), "Input binding path must start with $."));
                 }
             }
 
@@ -62,13 +73,14 @@ public class PlanValidator {
                 issues.add(ValidationIssue.error(step.id(), definition.effect().name().toLowerCase(Locale.ROOT) + " step must set needsApproval=true."));
             }
 
-            if (definition.effect() != Effect.READ && "production".equals(plan.context().environment()) && !step.needsApproval()) {
+            if (definition.effect() != Effect.READ && isProduction && !step.needsApproval()) {
                 issues.add(ValidationIssue.error(step.id(), "Production mutation steps require explicit approval."));
             }
 
             if (step.action() == Data360Action.QUERY) {
                 validateQuery(step, issues);
             }
+            validatePhase(step, definition, issues);
         }
         return new PlanValidationResult(List.copyOf(issues));
     }
@@ -86,6 +98,36 @@ public class PlanValidator {
         }
         if (sql.contains(";")) {
             issues.add(ValidationIssue.error(step.id(), "SQL must contain a single statement without semicolons."));
+        }
+    }
+
+    private void validatePhase(PlanStep step, com.acme.data360agent.operation.OperationDefinition definition, ArrayList<ValidationIssue> issues) {
+        if (step.phase() == PlanPhase.MONITOR && step.action() != Data360Action.MONITOR_METRIC) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor phase currently allows only data360.monitor.metric."));
+        }
+        if (step.action() == Data360Action.MONITOR_METRIC && step.phase() != PlanPhase.MONITOR) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor metric steps must use phase=monitor."));
+        }
+        if (step.phase() == PlanPhase.MONITOR && definition.effect() != Effect.READ) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor phase cannot contain mutation or activation actions."));
+        }
+        if (step.action() == Data360Action.MONITOR_METRIC) {
+            validateThreshold(step, issues);
+        }
+    }
+
+    private void validateThreshold(PlanStep step, ArrayList<ValidationIssue> issues) {
+        var threshold = step.input().get("threshold");
+        if (!(threshold instanceof Map<?, ?> map)) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor threshold must be an object with operator and numeric value."));
+            return;
+        }
+        var operator = String.valueOf(map.get("operator"));
+        if (!Set.of("<", "<=", ">", ">=", "==").contains(operator)) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor threshold operator must be one of <, <=, >, >=, ==."));
+        }
+        if (!(map.get("value") instanceof Number)) {
+            issues.add(ValidationIssue.error(step.id(), "Monitor threshold value must be numeric."));
         }
     }
 

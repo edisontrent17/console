@@ -7,11 +7,17 @@ import java.util.Arrays;
 
 public enum Data360Action {
     SEARCH("data360.search"),
+    METADATA_DESCRIBE("data360.metadata.describe"),
     QUERY("data360.query"),
+    CREATE_CALCULATED_INSIGHT("data360.calculatedInsight.create"),
+    RUN_CALCULATED_INSIGHT("data360.calculatedInsight.run"),
     CREATE_SEGMENT("data360.createSegment"),
+    UPDATE_SEGMENT("data360.updateSegment"),
     PUBLISH_SEGMENT("data360.publishSegment"),
     CREATE_ACTIVATION("data360.createActivation"),
-    RUN_ACTIVATION("data360.runActivation");
+    RUN_ACTIVATION("data360.runActivation"),
+    GET_IDENTITY_RULESET("data360.identityRuleset.get"),
+    MONITOR_METRIC("data360.monitor.metric");
 
     private final String value;
 

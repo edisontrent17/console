@@ -54,4 +54,111 @@ class PlanValidatorTest {
         assertThat(result.ok()).isFalse();
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("needsApproval=true"));
     }
+
+    @Test
+    void rejectsMonitorMetricOutsideMonitorPhase() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Monitor metric",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "monitor",
+                        "Monitor metric",
+                        PlanPhase.SETUP,
+                        Data360Action.MONITOR_METRIC,
+                        Map.of("metric", "activation_rate", "cadence", "daily", "threshold", Map.of("operator", "<", "value", 0.13)),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("phase=monitor"));
+    }
+
+    @Test
+    void validatesSimpleInputBindingsOnly() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bind inputs",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(
+                        new PlanStep(
+                                "preview",
+                                "Preview records",
+                                Data360Action.QUERY,
+                                Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                                List.of(),
+                                false
+                        ),
+                        new PlanStep(
+                                "publish",
+                                "Publish segment",
+                                PlanPhase.SETUP,
+                                Data360Action.PUBLISH_SEGMENT,
+                                Map.of(),
+                                List.of("preview"),
+                                Map.of("segmentId", new InputBinding("preview", "segmentId")),
+                                true
+                        )
+                )
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("path must start with $."));
+    }
+
+    @Test
+    void rejectsMutationActionsInMonitorPhase() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bad monitor",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_segment",
+                        "Create segment later",
+                        PlanPhase.MONITOR,
+                        Data360Action.CREATE_SEGMENT,
+                        Map.of("name", "Bad Segment", "criteria", Map.of()),
+                        List.of(),
+                        Map.of(),
+                        true
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Monitor phase currently allows only"));
+    }
+
+    @Test
+    void rejectsMalformedMonitorThresholds() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bad threshold",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "monitor",
+                        "Monitor metric",
+                        PlanPhase.MONITOR,
+                        Data360Action.MONITOR_METRIC,
+                        Map.of("metric", "activation_rate", "cadence", "daily", "threshold", Map.of("operator", "around", "value", "0.13")),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("operator must be one of"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("value must be numeric"));
+    }
 }

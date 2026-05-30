@@ -23,6 +23,16 @@ public class OperationRegistry {
                 List.of(),
                 List.of("query")
         ));
+        defs.put(Data360Action.METADATA_DESCRIBE, new OperationDefinition(
+                Data360Action.METADATA_DESCRIBE,
+                "Describe Data 360 metadata",
+                Effect.READ,
+                false,
+                false,
+                "d360_metadata_describe",
+                List.of("objects", "objectApiNames"),
+                List.of()
+        ));
         defs.put(Data360Action.QUERY, new OperationDefinition(
                 Data360Action.QUERY,
                 "Run limited Data 360 SQL preview",
@@ -33,6 +43,26 @@ public class OperationRegistry {
                 List.of(),
                 List.of("sql")
         ));
+        defs.put(Data360Action.CREATE_CALCULATED_INSIGHT, new OperationDefinition(
+                Data360Action.CREATE_CALCULATED_INSIGHT,
+                "Create calculated insight",
+                Effect.WRITE,
+                true,
+                false,
+                "d360_calculated_insight_create",
+                List.of("sql", "definition"),
+                List.of("name")
+        ));
+        defs.put(Data360Action.RUN_CALCULATED_INSIGHT, new OperationDefinition(
+                Data360Action.RUN_CALCULATED_INSIGHT,
+                "Run calculated insight",
+                Effect.WRITE,
+                true,
+                false,
+                "d360_calculated_insight_run",
+                List.of("insightId", "insightIdFromStep"),
+                List.of()
+        ));
         defs.put(Data360Action.CREATE_SEGMENT, new OperationDefinition(
                 Data360Action.CREATE_SEGMENT,
                 "Create Data 360 segment",
@@ -42,6 +72,16 @@ public class OperationRegistry {
                 "d360_segment_create",
                 List.of("criteria", "criteriaFromStep"),
                 List.of("name")
+        ));
+        defs.put(Data360Action.UPDATE_SEGMENT, new OperationDefinition(
+                Data360Action.UPDATE_SEGMENT,
+                "Update Data 360 segment",
+                Effect.WRITE,
+                true,
+                false,
+                "d360_segment_update",
+                List.of("segmentId", "segmentIdFromStep"),
+                List.of("name", "criteria")
         ));
         defs.put(Data360Action.PUBLISH_SEGMENT, new OperationDefinition(
                 Data360Action.PUBLISH_SEGMENT,
@@ -72,6 +112,26 @@ public class OperationRegistry {
                 "d360_activation_get",
                 List.of("activationId", "activationIdFromStep"),
                 List.of()
+        ));
+        defs.put(Data360Action.GET_IDENTITY_RULESET, new OperationDefinition(
+                Data360Action.GET_IDENTITY_RULESET,
+                "Get identity resolution ruleset",
+                Effect.READ,
+                false,
+                false,
+                "d360_identity_ruleset_get",
+                List.of("rulesetId", "rulesetName"),
+                List.of()
+        ));
+        defs.put(Data360Action.MONITOR_METRIC, new OperationDefinition(
+                Data360Action.MONITOR_METRIC,
+                "Monitor a Data 360 goal metric",
+                Effect.READ,
+                false,
+                false,
+                "d360_monitor_metric",
+                List.of("query", "queryFromStep", "metric"),
+                List.of("cadence", "threshold")
         ));
         definitions = Map.copyOf(defs);
     }

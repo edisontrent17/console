@@ -47,7 +47,8 @@ p {
 }
 
 button,
-textarea {
+textarea,
+select {
     font: inherit;
 }
 
@@ -214,6 +215,141 @@ button:disabled {
     grid-template-columns: minmax(260px, 300px) minmax(430px, 1fr) minmax(340px, 395px);
     gap: 12px;
     align-items: start;
+}
+
+.planner-panel {
+    margin-top: 12px;
+}
+
+.planner-grid {
+    display: grid;
+    grid-template-columns: minmax(250px, 0.45fr) minmax(360px, 1fr) minmax(300px, 0.62fr);
+    gap: 14px;
+    align-items: start;
+}
+
+.planner-grid h3 {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.3;
+}
+
+.planner-form {
+    display: grid;
+    gap: 8px;
+}
+
+.planner-form label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 740;
+}
+
+.planner-form select,
+.planner-form textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--ink);
+    padding: 9px 10px;
+    font-size: 13px;
+}
+
+.planner-form textarea {
+    min-height: 92px;
+    resize: vertical;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.plan-preview,
+.monitor-list {
+    min-height: 152px;
+    display: grid;
+    gap: 8px;
+}
+
+.plan-preview.empty,
+.monitor-list.empty {
+    place-items: center;
+    border: 1px dashed var(--line);
+    border-radius: 7px;
+    color: var(--faint);
+    font-size: 13px;
+}
+
+.plan-head,
+.plan-step,
+.monitor-item,
+.monitor-result {
+    border: 1px solid var(--line-soft);
+    border-radius: 7px;
+    background: var(--surface-subtle);
+    padding: 9px 10px;
+}
+
+.plan-head,
+.plan-step,
+.monitor-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.plan-step:has(button) {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.plan-head strong,
+.plan-step strong,
+.monitor-item strong,
+.monitor-result strong {
+    display: block;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.plan-head span,
+.plan-step span,
+.plan-step p,
+.monitor-item p,
+.monitor-result p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.plan-step.discover {
+    border-left: 3px solid var(--blue);
+}
+
+.plan-step.setup {
+    border-left: 3px solid var(--amber);
+}
+
+.plan-step.monitor,
+.monitor-item.active {
+    border-left: 3px solid var(--teal);
+}
+
+.monitor-item.attention-required {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+}
+
+.monitor-item.error {
+    border-left: 3px solid var(--red);
+    background: var(--red-soft);
+}
+
+.monitor-result {
+    background: var(--teal-soft);
 }
 
 .bottom-grid {

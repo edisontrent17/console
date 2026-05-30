@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AnthropicClient {
+public class AnthropicClient implements LlmClient {
     private static final TypeReference<Map<String, Object>> MAP = new TypeReference<>() {
     };
 
@@ -30,13 +30,28 @@ public class AnthropicClient {
         return properties.configured();
     }
 
+    @Override
+    public String provider() {
+        return "anthropic";
+    }
+
+    @Override
+    public LlmCompletion completeJson(LlmPrompt prompt) {
+        var model = model(prompt);
+        return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model));
+    }
+
     public String completeJson(String system, String user) {
+        return completeJson(system, user, properties.model());
+    }
+
+    private String completeJson(String system, String user, String model) {
         if (!configured()) {
             throw new IllegalStateException("ANTHROPIC_API_KEY is not configured.");
         }
 
         var request = Map.of(
-                "model", properties.model(),
+                "model", model,
                 "max_tokens", 2400,
                 "temperature", 0,
                 "system", system,
@@ -65,5 +80,12 @@ public class AnthropicClient {
         } catch (Exception e) {
             throw new IllegalStateException("Unable to parse Anthropic response.", e);
         }
+    }
+
+    private String model(LlmPrompt prompt) {
+        if (prompt != null && prompt.model() != null && !prompt.model().isBlank()) {
+            return prompt.model();
+        }
+        return properties.model();
     }
 }

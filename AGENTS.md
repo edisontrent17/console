@@ -60,9 +60,10 @@ Goal -> Planner -> PlanSpec -> Human review -> Executor -> Data 360/MCP tools
 
 Keep these responsibilities separate:
 
-- Planner: drafts a small plan, using LangGraph4j plus Anthropic when configured.
+- Planner: drafts a small plan, using LangGraph4j plus Anthropic, OpenRouter, or deterministic fallback.
 - PlanSpec: the reviewable contract. It should stay small and serializable.
 - Executor: runs approved steps in order and stores runtime outputs outside the plan.
+- Monitor service: registers monitor-phase steps and evaluates goal health after setup.
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
 - Temporal: production orchestration boundary, not the local demo runner yet.
 
@@ -72,9 +73,11 @@ Keep these responsibilities separate:
 - `planner/`: LangGraph4j planner and Anthropic-backed plan drafting.
 - `execution/`: local ordered executor, run state, step state, in-memory store.
 - `data360/`: mock and MCP-backed Data 360 clients.
+- `monitor/`: monitor definitions, run-now execution, threshold evaluation.
 - `operation/`: allowed operation registry and effect metadata.
 - `temporal/`: workflow/activity interfaces and notes for production wiring.
 - `library/`: reusable solution templates.
+- `scenario/`: publicly grounded customer scenario packs.
 - `demo/`: Dormant Revenue Recovery demo API.
 - `web/`: REST controllers and API exception handling.
 
@@ -84,10 +87,13 @@ Be critical about PlanSpec changes. The current shape is intentionally simpler t
 a workflow engine:
 
 - Each node is a `PlanStep`.
+- Each step has a phase: `discover`, `setup`, or `monitor`.
 - Step input is the API/action parameters for that step, not arbitrary hidden state.
 - Step output belongs in runtime execution records such as `StepRun`, not in the
   static plan.
 - Dependencies should stay simple and explicit.
+- Use only simple `inputBindings` with `fromStep` and `$.field` paths when a later
+  step needs a prior output.
 - Approval-gated steps must pause before write, publish, or activation side effects.
 - Do not add a general expression language, loops, retries, queues, compensation,
   or scheduling into PlanSpec unless the user explicitly chooses to build a workflow
@@ -136,16 +142,38 @@ Current adapter mapping:
 If new Salesforce MCPs are added, wrap them behind typed `Data360Action` or operation
 definitions. Do not let template authors call raw tools directly.
 
-## Anthropic
+## LLM Providers
 
-The planner uses a deterministic fallback unless Anthropic is configured:
+The planner uses a deterministic fallback unless a provider is configured.
+
+Anthropic direct:
 
 ```bash
+export APP_LLM_PROVIDER="anthropic"
 export ANTHROPIC_API_KEY="..."
 export ANTHROPIC_MODEL="claude-sonnet-4-5"
 ```
 
+OpenRouter:
+
+```bash
+export APP_LLM_PROVIDER="openrouter"
+export OPENROUTER_API_KEY="..."
+export OPENROUTER_MODEL="anthropic/claude-sonnet-4.5"
+```
+
 Do not commit `.env` files or real API keys.
+
+Provider-specific quirks belong inside `llm/`. The planner should consume only
+`LlmGateway` and PlanSpec JSON.
+
+## Scenario Library
+
+`ScenarioLibrary` contains publicly grounded scenario packs for FedEx-style
+dormant account reactivation, UChicago Medicine-style patient access, Pacers
+fan engagement, Salesforce event-to-pipeline, and PepsiCo retailer engagement.
+Treat them as demo goal packs grounded in public Salesforce stories, not private
+customer implementations.
 
 ## Solution Library
 
@@ -199,4 +227,3 @@ explicitly asks to wire real org behavior.
 - Do not add custom workflow-engine behavior when Temporal or LangGraph already owns
   that concern.
 - Use the README as the user-facing entry point; use this file for agent handoff.
-

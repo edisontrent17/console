@@ -1,16 +1,196 @@
 let demo = null;
 let selectedAccountId = null;
+let scenarios = [];
+let currentDraft = null;
+let currentRun = null;
+let lastMonitorRun = null;
 
 const $ = (id) => document.getElementById(id);
 
 $("resetButton").addEventListener("click", resetDemo);
+$("scenarioSelect").addEventListener("change", selectScenario);
+$("generatePlanButton").addEventListener("click", generatePlan);
+$("startPlanButton").addEventListener("click", startPlan);
+$("planSpecPreview").addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-approve-step]");
+    if (!button || !currentRun) return;
+    await approvePlanStep(button.dataset.approveStep);
+});
+$("monitorList").addEventListener("click", async (event) => {
+    const button = event.target.closest("button[data-monitor-id]");
+    if (!button) return;
+    await runMonitor(button.dataset.monitorId);
+});
 $("approvalQueue").addEventListener("click", async (event) => {
     const button = event.target.closest("button[data-action-id]");
     if (!button) return;
     await updateAction(button.dataset.actionId, button.dataset.transition);
 });
 
+loadPlanLab();
 loadDemo();
+
+async function loadPlanLab() {
+    try {
+        scenarios = await api("/api/scenarios");
+        renderScenarioOptions();
+        await loadMonitors();
+    } catch (error) {
+        $("plannerStatus").textContent = "Error";
+        $("planSpecPreview").innerHTML = `<div class="issue">${escapeHtml(error.message)}</div>`;
+    }
+}
+
+function renderScenarioOptions() {
+    $("scenarioSelect").innerHTML = scenarios.map((scenario) => `
+        <option value="${escapeHtml(scenario.id)}">${escapeHtml(scenario.name)}</option>
+    `).join("");
+    selectScenario();
+}
+
+function selectScenario() {
+    const scenario = selectedScenario();
+    if (!scenario) return;
+    $("goalInput").value = scenario.defaultUtterances?.[0] || scenario.name;
+}
+
+async function generatePlan() {
+    const scenario = selectedScenario();
+    if (!scenario) return;
+    setBusy("generatePlanButton", true);
+    $("plannerStatus").textContent = "Planning";
+    try {
+        currentDraft = await api("/api/plans", "POST", {
+            scenarioId: scenario.id,
+            goal: $("goalInput").value,
+            context: {
+                org: "demo-org",
+                dataspace: "default",
+                environment: "sandbox"
+            }
+        });
+        currentRun = null;
+        renderPlanDraft();
+        $("plannerStatus").textContent = currentDraft.validation.ok ? "Ready" : "Review";
+        $("startPlanButton").disabled = !currentDraft.validation.ok;
+    } catch (error) {
+        $("plannerStatus").textContent = "Error";
+        $("planSpecPreview").innerHTML = `<div class="issue">${escapeHtml(error.message)}</div>`;
+    } finally {
+        setBusy("generatePlanButton", false);
+    }
+}
+
+async function startPlan() {
+    if (!currentDraft) return;
+    setBusy("startPlanButton", true);
+    $("plannerStatus").textContent = "Running";
+    try {
+        currentRun = await api(`/api/plans/${currentDraft.plan.id}/runs`, "POST");
+        await pollRun(currentRun.id);
+        await loadMonitors();
+    } finally {
+        setBusy("startPlanButton", false);
+    }
+}
+
+async function approvePlanStep(stepId) {
+    $("plannerStatus").textContent = "Approving";
+    currentRun = await api(`/api/runs/${currentRun.id}/steps/${stepId}/approve`, "POST");
+    await pollRun(currentRun.id);
+    await loadMonitors();
+}
+
+async function pollRun(runId) {
+    for (let i = 0; i < 20; i++) {
+        await sleep(150);
+        currentRun = await api(`/api/runs/${runId}`);
+        renderPlanDraft();
+        if (["WAITING_APPROVAL", "SUCCEEDED", "FAILED"].includes(currentRun.status)) {
+            $("plannerStatus").textContent = currentRun.status;
+            return;
+        }
+    }
+    $("plannerStatus").textContent = currentRun.status;
+}
+
+function renderPlanDraft() {
+    if (!currentDraft) {
+        $("planSpecPreview").className = "plan-preview empty";
+        $("planSpecPreview").textContent = "No plan generated.";
+        return;
+    }
+    const plan = currentDraft.plan;
+    const runSteps = currentRun ? Object.fromEntries(currentRun.steps.map((step) => [step.stepId, step])) : {};
+    $("planSpecPreview").className = "plan-preview";
+    $("planSpecPreview").innerHTML = `
+        <div class="plan-head">
+            <strong>${escapeHtml(plan.goal)}</strong>
+            <span>${escapeHtml(plan.scenarioId || "custom")}</span>
+        </div>
+        <div class="plan-issues">${renderPlanIssues(currentDraft.validation.issues)}</div>
+        <div class="plan-steps">
+            ${plan.steps.map((step) => renderPlanStep(step, runSteps[step.id])).join("")}
+        </div>
+    `;
+}
+
+function renderPlanIssues(issues) {
+    if (!issues?.length) return "";
+    return issues.map((issue) => `<div class="issue">${escapeHtml(issue.severity)} · ${escapeHtml(issue.stepId || "plan")} · ${escapeHtml(issue.message)}</div>`).join("");
+}
+
+function renderPlanStep(step, runStep) {
+    const waiting = runStep?.status === "WAITING_APPROVAL";
+    return `
+        <article class="plan-step ${slug(step.phase)}">
+            <div>
+                <strong>${escapeHtml(step.title)}</strong>
+                <p>${escapeHtml(step.action)} · ${escapeHtml(step.phase)}${runStep ? ` · ${escapeHtml(runStep.status)}` : ""}</p>
+            </div>
+            <span>${step.needsApproval ? "Approval" : "Auto"}</span>
+            ${waiting ? `<button class="secondary small" data-approve-step="${escapeHtml(step.id)}">Approve</button>` : ""}
+        </article>
+    `;
+}
+
+async function loadMonitors() {
+    const monitors = await api("/api/monitors");
+    renderMonitors(monitors);
+}
+
+function renderMonitors(monitors) {
+    if (!monitors.length) {
+        $("monitorList").className = "monitor-list empty";
+        $("monitorList").textContent = "No monitors registered.";
+        return;
+    }
+    $("monitorList").className = "monitor-list";
+    $("monitorList").innerHTML = monitors.map((monitor) => `
+        <article class="monitor-item ${slug(monitor.status)}">
+            <div>
+                <strong>${escapeHtml(monitor.metric)}</strong>
+                <p>${escapeHtml(monitor.cadence)} · ${escapeHtml(monitor.status)}${monitor.lastRunAt ? ` · ${formatDateTime(monitor.lastRunAt)}` : ""}</p>
+            </div>
+            <button class="ghost small" data-monitor-id="${escapeHtml(monitor.id)}">Run</button>
+        </article>
+    `).join("") + renderLastMonitorRun();
+}
+
+function renderLastMonitorRun() {
+    if (!lastMonitorRun) return "";
+    return `
+        <div class="monitor-result">
+            <strong>${escapeHtml(lastMonitorRun.status)}</strong>
+            <p>${escapeHtml(lastMonitorRun.recommendation)}</p>
+        </div>
+    `;
+}
+
+async function runMonitor(monitorId) {
+    lastMonitorRun = await api(`/api/monitors/${monitorId}/run-now`, "POST");
+    await loadMonitors();
+}
 
 async function loadDemo() {
     try {
@@ -37,6 +217,10 @@ async function resetDemo() {
 async function updateAction(actionId, transition) {
     demo = await api(`/api/demo/dormant-revenue-recovery/actions/${actionId}/${transition}`, "POST");
     renderDemo();
+}
+
+function selectedScenario() {
+    return scenarios.find((scenario) => scenario.id === $("scenarioSelect").value);
 }
 
 function renderDemo() {
@@ -232,8 +416,13 @@ function selectedAccount() {
     return demo.accounts.find((account) => account.id === selectedAccountId);
 }
 
-async function api(path, method = "GET") {
-    const response = await fetch(path, { method });
+async function api(path, method = "GET", body = null) {
+    const options = { method };
+    if (body) {
+        options.headers = { "Content-Type": "application/json" };
+        options.body = JSON.stringify(body);
+    }
+    const response = await fetch(path, options);
     const json = await response.json();
     if (!response.ok) throw new Error(json.error || response.statusText);
     return json;
@@ -260,6 +449,14 @@ function trimZeros(value) {
     return value.replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
 }
 
+function formatDateTime(value) {
+    return new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit" }).format(new Date(value));
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function formatPercent(value) {
     return `${Math.round(value * 100)}%`;
 }
@@ -275,7 +472,7 @@ function formatNumber(value) {
 }
 
 function slug(value) {
-    return String(value || "").toLowerCase().replaceAll(" ", "-");
+    return String(value || "").toLowerCase().replaceAll(" ", "-").replaceAll("_", "-");
 }
 
 function escapeHtml(value) {
