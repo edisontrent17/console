@@ -142,6 +142,32 @@ Current adapter mapping:
 If new Salesforce MCPs are added, wrap them behind typed `Data360Action` or operation
 definitions. Do not let template authors call raw tools directly.
 
+## Connect API Mode
+
+`app.data360.client=connect` routes approved PlanSpec actions through
+`HttpData360ConnectClient`. It supports three auth shapes:
+
+- direct Data 360 token: `DATA360_CONNECT_INSTANCE_URL` + `DATA360_CONNECT_ACCESS_TOKEN`
+- Salesforce token exchange: `SALESFORCE_INSTANCE_URL` + `SALESFORCE_ACCESS_TOKEN`
+- JWT bearer: `SALESFORCE_CLIENT_ID`, `SALESFORCE_USERNAME`, and a PKCS#8 private key
+
+The token provider exchanges Salesforce tokens through `/services/a360/token`.
+The HTTP client never accepts raw URLs or raw tool names from PlanSpec. Keep it that
+way: add new Data 360 capabilities as typed `Data360Action` values plus explicit
+payload builders.
+
+Current Connect endpoint families:
+
+- metadata: `/api/v1/metadata/`
+- query: `/services/data/{version}/ssot/query-sql`
+- calculated insights: `/services/data/{version}/ssot/calculated-insights`
+- segments: `/services/data/{version}/ssot/segments`
+- activations: `/services/data/{version}/ssot/activations`
+- identity rulesets: `/services/data/{version}/ssot/identity-resolutions`
+
+`ConnectApiIdempotencyStore` is in-memory. It prevents duplicate mutation replay
+inside this local process, but production should replace it with durable storage.
+
 ## LLM Providers
 
 The planner uses a deterministic fallback unless a provider is configured.

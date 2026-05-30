@@ -189,6 +189,66 @@ The MCP adapter compiles MVP actions to the server's facade tools:
 - `data360.identityRuleset.get` -> `execute(d360_identity_ruleset_get)`
 - `data360.monitor.metric` -> mock/local monitor evaluation
 
+## Data 360 Connect API
+
+The app can also route approved PlanSpec steps through Data 360 Connect REST
+API by setting:
+
+```bash
+export APP_LLM_PROVIDER=fallback
+export DATA360_CONNECT_INSTANCE_URL="https://your-dne-cdp-instance.example"
+export DATA360_CONNECT_ACCESS_TOKEN="..."
+mvn spring-boot:run -Dspring-boot.run.arguments='--app.data360.client=connect'
+```
+
+For real org authentication, prefer a Salesforce OAuth token exchange or JWT
+bearer flow rather than long-lived static Data 360 tokens.
+
+Salesforce access token exchange:
+
+```bash
+export SALESFORCE_INSTANCE_URL="https://your-org.my.salesforce.com"
+export SALESFORCE_ACCESS_TOKEN="..."
+mvn spring-boot:run -Dspring-boot.run.arguments='--app.data360.client=connect'
+```
+
+JWT bearer flow:
+
+```bash
+export SALESFORCE_LOGIN_URL="https://login.salesforce.com"
+export SALESFORCE_CLIENT_ID="..."
+export SALESFORCE_USERNAME="integration-user@example.com"
+export SALESFORCE_PRIVATE_KEY_PATH="/secure/path/server.key.pkcs8.pem"
+mvn spring-boot:run -Dspring-boot.run.arguments='--app.data360.client=connect'
+```
+
+Connect configuration:
+
+```properties
+app.data360.connect.api-version=v66.0
+app.data360.connect.workload-name=data360-agent-console
+app.data360.connect.timeout-seconds=45
+```
+
+The Connect client is typed by PlanSpec action:
+
+- `data360.metadata.describe` -> `GET /api/v1/metadata/`
+- `data360.query` -> `POST /services/data/{version}/ssot/query-sql`
+- `data360.calculatedInsight.create` -> `POST /services/data/{version}/ssot/calculated-insights`
+- `data360.calculatedInsight.run` -> `POST /services/data/{version}/ssot/calculated-insights/{id}/actions/run`
+- `data360.createSegment` -> `POST /services/data/{version}/ssot/segments`
+- `data360.updateSegment` -> `PATCH /services/data/{version}/ssot/segments/{id}`
+- `data360.publishSegment` -> `POST /services/data/{version}/ssot/segments/{id}/actions/publish`
+- `data360.createActivation` -> `POST /services/data/{version}/ssot/activations`
+- `data360.runActivation` -> `POST /services/data/{version}/ssot/activations/{id}/actions/publish`
+- `data360.identityRuleset.get` -> `GET /services/data/{version}/ssot/identity-resolutions`
+- `data360.monitor.metric` -> Connect query execution against a monitor SQL/query context
+
+Mutation calls are locally idempotent by run, step, and resolved input so duplicate
+approval clicks do not replay successful create/publish/activation calls in the
+same process. Production deployment should back this idempotency store with durable
+storage.
+
 ## Tests
 
 ```bash
