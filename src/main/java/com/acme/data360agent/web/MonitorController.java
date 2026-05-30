@@ -1,6 +1,7 @@
 package com.acme.data360agent.web;
 
 import com.acme.data360agent.monitor.MonitorDefinition;
+import com.acme.data360agent.monitor.MonitorRecommendation;
 import com.acme.data360agent.monitor.MonitorRun;
 import com.acme.data360agent.monitor.MonitorService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,21 @@ public class MonitorController {
     @GetMapping
     public List<MonitorDefinition> all() {
         return monitors.all();
+    }
+
+    @GetMapping("/recommendations")
+    public List<MonitorRecommendation> recommendations() {
+        return monitors.recommendations();
+    }
+
+    @PostMapping("/recommendations/{recommendationId}/approve")
+    public MonitorRecommendation approveRecommendation(@PathVariable String recommendationId) {
+        return monitors.approveRecommendation(recommendationId);
+    }
+
+    @PostMapping("/recommendations/{recommendationId}/reject")
+    public MonitorRecommendation rejectRecommendation(@PathVariable String recommendationId) {
+        return monitors.rejectRecommendation(recommendationId);
     }
 
     @GetMapping("/{monitorId}")

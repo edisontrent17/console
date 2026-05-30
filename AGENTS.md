@@ -65,16 +65,19 @@ Keep these responsibilities separate:
 - Executor: runs approved steps in order and stores runtime outputs outside the plan.
 - Monitor service: registers monitor-phase steps and evaluates goal health after setup.
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
+- State stores: keep drafts, runs, approvals, audit events, monitor state, and Connect idempotency durable.
 - Temporal: production orchestration boundary, not the local demo runner yet.
 
 ## Key Java Packages
 
 - `plan/`: `PlanSpec`, `PlanStep`, `PlanContext`, `Data360Action`, validation.
 - `planner/`: LangGraph4j planner and Anthropic-backed plan drafting.
-- `execution/`: local ordered executor, run state, step state, in-memory store.
+- `execution/`: local ordered executor, run state, step state, `PlanStore` implementations.
 - `data360/`: mock and MCP-backed Data 360 clients.
-- `monitor/`: monitor definitions, run-now execution, threshold evaluation.
+- `monitor/`: monitor definitions, due-monitor leasing, run-now execution, recommendation review.
 - `operation/`: allowed operation registry and effect metadata.
+- `state/`: shared JSON/timestamp state codec for JDBC stores.
+- `support/`: small cross-cutting helpers such as ID generation.
 - `temporal/`: workflow/activity interfaces and notes for production wiring.
 - `library/`: reusable solution templates.
 - `scenario/`: publicly grounded customer scenario packs.
@@ -112,7 +115,27 @@ The execute path should not be broadly agentic by default.
 - Route side effects through named operations such as query, create segment, publish
   segment, create activation, or run activation.
 - Keep execution deterministic and auditable.
+- Use `PlanStore.withRunLock` for run mutations. Do not synchronize on a freshly loaded JDBC `PlanRun`.
 - Keep secrets, org credentials, and bearer tokens out of source files and logs.
+
+## State Store
+
+Default app state is JDBC-backed H2:
+
+```properties
+app.state.store=jdbc
+spring.datasource.url=jdbc:h2:file:./data/data360-agent-console;AUTO_SERVER=TRUE
+```
+
+Tests override this to in-memory H2 under `src/test/resources/application.properties`.
+Use `app.state.store=memory` only for quick local experiments.
+
+When adding a durable store:
+
+- depend on the interface (`PlanStore`, `MonitorStore`, `AuditService`, `ConnectApiIdempotencyStore`) from services/controllers
+- reuse `JsonStateCodec` for JSON and timestamp conversion
+- keep generated H2 files under `data/` out of git
+- do not duplicate store-specific serialization helpers unless there is a real reason
 
 ## MCP And Data 360
 
@@ -165,8 +188,9 @@ Current Connect endpoint families:
 - activations: `/services/data/{version}/ssot/activations`
 - identity rulesets: `/services/data/{version}/ssot/identity-resolutions`
 
-`ConnectApiIdempotencyStore` is in-memory. It prevents duplicate mutation replay
-inside this local process, but production should replace it with durable storage.
+`ConnectApiIdempotencyStore` has memory and JDBC implementations. JDBC mode is the
+default and prevents duplicate mutation replay across restarts for the same run,
+step, and resolved input.
 
 Use diagnostics before real setup execution:
 

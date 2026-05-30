@@ -4,12 +4,12 @@ import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.support.Ids;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 public class SolutionLibrary {
@@ -50,7 +50,7 @@ public class SolutionLibrary {
     public PlanSpec instantiate(String id, PlanContext context) {
         var template = get(id);
         return new PlanSpec(
-                "plan_" + UUID.randomUUID().toString().substring(0, 8),
+                Ids.prefixed("plan"),
                 template.title() + ": " + template.outcome(),
                 context,
                 template.steps()

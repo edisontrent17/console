@@ -161,4 +161,149 @@ class PlanValidatorTest {
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("operator must be one of"));
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("value must be numeric"));
     }
+
+    @Test
+    void rejectsTooManySteps() {
+        var steps = java.util.stream.IntStream.rangeClosed(1, 21)
+                .mapToObj(index -> new PlanStep(
+                        "preview_" + index,
+                        "Preview records",
+                        Data360Action.QUERY,
+                        Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                        List.of(),
+                        false
+                ))
+                .toList();
+        var plan = new PlanSpec(
+                "plan_test",
+                "Too many previews",
+                new PlanContext("org", "default", "sandbox"),
+                steps
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("more than 20 steps"));
+    }
+
+    @Test
+    void rejectsBlankDuplicateAndMalformedStepIds() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bad ids",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(
+                        new PlanStep(
+                                "1_bad",
+                                "Preview records",
+                                Data360Action.QUERY,
+                                Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                                List.of(),
+                                false
+                        ),
+                        new PlanStep(
+                                "1_bad",
+                                "Preview again",
+                                Data360Action.QUERY,
+                                Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                                List.of(),
+                                false
+                        ),
+                        new PlanStep(
+                                "   ",
+                                "Blank id",
+                                Data360Action.QUERY,
+                                Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                                List.of(),
+                                false
+                        )
+                )
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("start with a letter"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Duplicate step id"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Step id is required"));
+    }
+
+    @Test
+    void rejectsOversizedInputAndRawUrls() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bad input",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "search",
+                        "Search",
+                        Data360Action.SEARCH,
+                        Map.of("query", "https://example.com/" + "x".repeat(8_200)),
+                        List.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("cannot exceed 8192"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Raw URL-like input"));
+    }
+
+    @Test
+    void rejectsMutationKeywordsInQuerySql() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Mutating query",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "preview",
+                        "Preview records",
+                        Data360Action.QUERY,
+                        Map.of("sql", "SELECT id FROM UnifiedIndividual UNION DROP TABLE UnifiedIndividual LIMIT 10"),
+                        List.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("read-only"));
+    }
+
+    @Test
+    void rejectsBadSegmentNameAndBlankActivationDestination() {
+        var plan = new PlanSpec(
+                "plan_test",
+                "Bad names",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(
+                        new PlanStep(
+                                "create_segment",
+                                "Create segment",
+                                Data360Action.CREATE_SEGMENT,
+                                Map.of("name", "Bad/Segment", "criteria", Map.of()),
+                                List.of(),
+                                true
+                        ),
+                        new PlanStep(
+                                "create_activation",
+                                "Create activation",
+                                Data360Action.CREATE_ACTIVATION,
+                                Map.of("name", "Activation", "segmentId", "seg_123", "destination", "   "),
+                                List.of(),
+                                true
+                        )
+                )
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Segment name must be 1-80"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Activation destination must be nonblank"));
+    }
 }

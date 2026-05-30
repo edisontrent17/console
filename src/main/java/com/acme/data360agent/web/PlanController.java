@@ -1,7 +1,8 @@
 package com.acme.data360agent.web;
 
-import com.acme.data360agent.execution.InMemoryPlanStore;
+import com.acme.data360agent.audit.AuditService;
 import com.acme.data360agent.execution.PlanExecutor;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.planner.Data360Planner;
 import com.acme.data360agent.planner.PlanDraft;
 import com.acme.data360agent.planner.PlanRequest;
@@ -21,14 +22,16 @@ import java.util.Collection;
 public class PlanController {
     private final Data360Planner planner;
     private final PlanValidator validator;
-    private final InMemoryPlanStore store;
+    private final PlanStore store;
     private final PlanExecutor executor;
+    private final AuditService audit;
 
-    public PlanController(Data360Planner planner, PlanValidator validator, InMemoryPlanStore store, PlanExecutor executor) {
+    public PlanController(Data360Planner planner, PlanValidator validator, PlanStore store, PlanExecutor executor, AuditService audit) {
         this.planner = planner;
         this.validator = validator;
         this.store = store;
         this.executor = executor;
+        this.audit = audit;
     }
 
     @PostMapping("/plans")
@@ -65,5 +68,15 @@ public class PlanController {
     @PostMapping("/runs/{runId}/steps/{stepId}/approve")
     public Object approveStep(@PathVariable String runId, @PathVariable String stepId) {
         return executor.approveStep(runId, stepId);
+    }
+
+    @GetMapping("/runs/{runId}/approvals")
+    public Object approvals(@PathVariable String runId) {
+        return audit.approvals(runId);
+    }
+
+    @GetMapping("/runs/{runId}/audit")
+    public Object audit(@PathVariable String runId) {
+        return audit.events(runId);
     }
 }

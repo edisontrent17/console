@@ -85,7 +85,7 @@ class HttpData360ConnectClientTest {
         ));
         var mapper = new ObjectMapper();
         var tokenProvider = new ConnectTokenProvider(properties, mapper, WebClient.builder());
-        return new HttpData360ConnectClient(properties, mapper, WebClient.builder(), tokenProvider, new ConnectApiIdempotencyStore());
+        return new HttpData360ConnectClient(properties, mapper, WebClient.builder(), tokenProvider, new InMemoryConnectApiIdempotencyStore());
     }
 
     private RunContext runContext() {

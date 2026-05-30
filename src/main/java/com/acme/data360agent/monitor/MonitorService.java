@@ -1,31 +1,32 @@
 package com.acme.data360agent.monitor;
 
 import com.acme.data360agent.data360.Data360Client;
-import com.acme.data360agent.execution.InMemoryPlanStore;
 import com.acme.data360agent.execution.PlanRun;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.RunContext;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
+import com.acme.data360agent.plan.MonitorThreshold;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.support.Ids;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class MonitorService {
-    private final InMemoryMonitorStore store;
-    private final InMemoryPlanStore planStore;
+    private final MonitorStore store;
+    private final PlanStore planStore;
     private final OperationRegistry operations;
     private final Data360Client data360Client;
 
-    public MonitorService(InMemoryMonitorStore store, InMemoryPlanStore planStore, OperationRegistry operations, Data360Client data360Client) {
+    public MonitorService(MonitorStore store, PlanStore planStore, OperationRegistry operations, Data360Client data360Client) {
         this.store = store;
         this.planStore = planStore;
         this.operations = operations;
@@ -64,6 +65,14 @@ public class MonitorService {
         return store.runsFor(monitorId);
     }
 
+    public List<MonitorRun> runScheduled() {
+        var now = Instant.now();
+        var leaseUntil = now.plus(MonitorCadence.leaseDuration());
+        return store.claimDue(now, leaseUntil, 25).stream()
+                .map(definition -> runNow(definition.id()))
+                .toList();
+    }
+
     public MonitorRun runNow(String monitorId) {
         var definition = definition(monitorId);
         var run = planStore.run(definition.runId()).orElseThrow(() -> new IllegalArgumentException("Run not found: " + definition.runId()));
@@ -80,34 +89,79 @@ public class MonitorService {
         try {
             var result = data360Client.call(operation, step, resolvedInput, new RunContext(run.getId(), run.getPlan().id(), run.getPlan().context()));
             var observed = observedValue(result.output());
-            var breached = thresholdBreached(observed, definition.threshold());
+            var breached = MonitorThreshold.require(definition.threshold()).isBreached(observed);
             var status = breached ? MonitorStatus.ATTENTION_REQUIRED : MonitorStatus.ACTIVE;
+            var checkedAt = Instant.now();
             var monitorRun = new MonitorRun(
-                    "monrun_" + shortId(),
+                    Ids.prefixed("monrun"),
                     monitorId,
                     observed,
                     breached,
                     status,
                     recommendation(definition, observed, breached),
                     result.raw(),
-                    Instant.now()
+                    checkedAt
             );
-            store.save(definition.withStatus(status, monitorRun.createdAt()));
-            return store.saveRun(monitorRun);
+            store.save(definition.withStatus(status, monitorRun.createdAt(), MonitorCadence.nextRunAt(definition.cadence(), checkedAt)));
+            var saved = store.saveRun(monitorRun);
+            if (breached && store.pendingRecommendationFor(definition.id()).isEmpty()) {
+                store.saveRecommendation(recommendation(definition, saved));
+            }
+            return saved;
         } catch (Exception e) {
             var monitorRun = new MonitorRun(
-                    "monrun_" + shortId(),
+                    Ids.prefixed("monrun"),
                     monitorId,
-                    Double.NaN,
+                    0,
                     true,
                     MonitorStatus.ERROR,
                     "Monitor failed: " + e.getMessage(),
                     Map.of("error", e.getMessage()),
                     Instant.now()
             );
-            store.save(definition.withStatus(MonitorStatus.ERROR, monitorRun.createdAt()));
+            store.save(definition.withStatus(MonitorStatus.ERROR, monitorRun.createdAt(), MonitorCadence.nextRunAt(definition.cadence(), monitorRun.createdAt())));
             return store.saveRun(monitorRun);
         }
+    }
+
+    public List<MonitorRecommendation> recommendations() {
+        return store.recommendations();
+    }
+
+    public MonitorRecommendation recommendation(String recommendationId) {
+        return store.recommendation(recommendationId)
+                .orElseThrow(() -> new IllegalArgumentException("Recommendation not found: " + recommendationId));
+    }
+
+    public MonitorRecommendation approveRecommendation(String recommendationId) {
+        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.APPROVED);
+    }
+
+    public MonitorRecommendation rejectRecommendation(String recommendationId) {
+        return reviewRecommendation(recommendationId, MonitorRecommendationStatus.REJECTED);
+    }
+
+    private MonitorRecommendation reviewRecommendation(String recommendationId, MonitorRecommendationStatus status) {
+        var recommendation = recommendation(recommendationId);
+        if (recommendation.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
+            throw new IllegalStateException("Recommendation has already been reviewed: " + recommendationId);
+        }
+        return store.saveRecommendation(recommendation.withStatus(status, Instant.now()));
+    }
+
+    private MonitorRecommendation recommendation(MonitorDefinition definition, MonitorRun run) {
+        return new MonitorRecommendation(
+                Ids.prefixed("monrec"),
+                definition.id(),
+                run.id(),
+                definition.metric(),
+                run.observedValue(),
+                definition.threshold(),
+                run.recommendation(),
+                MonitorRecommendationStatus.PENDING_APPROVAL,
+                Instant.now(),
+                null
+        );
     }
 
     private MonitorDefinition register(String runId, PlanSpec plan, PlanStep step) {
@@ -116,7 +170,7 @@ public class MonitorService {
         }
         var input = step.input();
         var definition = new MonitorDefinition(
-                "mon_" + shortId(),
+                Ids.prefixed("mon"),
                 plan.id(),
                 runId,
                 step.id(),
@@ -132,15 +186,7 @@ public class MonitorService {
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> threshold(Map<String, Object> input) {
-        var threshold = input.get("threshold");
-        if (threshold instanceof Map<?, ?> map) {
-            var operator = String.valueOf(map.get("operator"));
-            if (!List.of("<", "<=", ">", ">=", "==").contains(operator) || !(map.get("value") instanceof Number)) {
-                throw new IllegalArgumentException("Monitor threshold must include a supported operator and numeric value.");
-            }
-            return (Map<String, Object>) map;
-        }
-        throw new IllegalArgumentException("Monitor threshold must be an object.");
+        return MonitorThreshold.require(input.get("threshold")).asMap();
     }
 
     private Map<String, Object> resolveInput(PlanStep step, com.acme.data360agent.execution.PlanRun run) {
@@ -160,20 +206,7 @@ public class MonitorService {
         if (observed instanceof Number number) {
             return number.doubleValue();
         }
-        return 0;
-    }
-
-    private boolean thresholdBreached(double observed, Map<String, Object> threshold) {
-        var operator = String.valueOf(threshold.getOrDefault("operator", "<"));
-        var value = threshold.get("value") instanceof Number number ? number.doubleValue() : 0;
-        return switch (operator) {
-            case "<" -> observed < value;
-            case "<=" -> observed <= value;
-            case ">" -> observed > value;
-            case ">=" -> observed >= value;
-            case "==" -> Double.compare(observed, value) == 0;
-            default -> throw new IllegalArgumentException("Unsupported monitor threshold operator: " + operator);
-        };
+        throw new IllegalStateException("Monitor output missing numeric observedValue.");
     }
 
     private String recommendation(MonitorDefinition definition, double observed, boolean breached) {
@@ -183,7 +216,4 @@ public class MonitorService {
         return "Goal metric " + definition.metric() + " is outside threshold at " + observed + ". Review the PlanSpec and approve a follow-up action before mutating Data 360.";
     }
 
-    private String shortId() {
-        return UUID.randomUUID().toString().substring(0, 8);
-    }
 }

@@ -1,6 +1,6 @@
 package com.acme.data360agent.web;
 
-import com.acme.data360agent.execution.InMemoryPlanStore;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.library.SolutionLibrary;
 import com.acme.data360agent.library.SolutionTemplate;
 import com.acme.data360agent.library.TemplatePlanRequest;
@@ -21,9 +21,9 @@ import java.util.List;
 public class LibraryController {
     private final SolutionLibrary library;
     private final PlanValidator validator;
-    private final InMemoryPlanStore store;
+    private final PlanStore store;
 
-    public LibraryController(SolutionLibrary library, PlanValidator validator, InMemoryPlanStore store) {
+    public LibraryController(SolutionLibrary library, PlanValidator validator, PlanStore store) {
         this.library = library;
         this.validator = validator;
         this.store = store;

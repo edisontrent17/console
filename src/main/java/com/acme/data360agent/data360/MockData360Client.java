@@ -4,13 +4,13 @@ import com.acme.data360agent.execution.RunContext;
 import com.acme.data360agent.operation.OperationDefinition;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.support.Ids;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 @ConditionalOnProperty(name = "app.data360.client", havingValue = "mock", matchIfMissing = true)
@@ -75,7 +75,7 @@ public class MockData360Client implements Data360Client {
 
     private Map<String, Object> createCalculatedInsight(Map<String, Object> input) {
         return Map.of(
-                "insightId", "ci_" + shortId(),
+                "insightId", Ids.prefixed("ci"),
                 "name", input.get("name"),
                 "status", "draft"
         );
@@ -84,14 +84,14 @@ public class MockData360Client implements Data360Client {
     private Map<String, Object> runCalculatedInsight(Map<String, Object> input) {
         return Map.of(
                 "insightId", input.get("insightId"),
-                "jobId", "job_" + shortId(),
+                "jobId", Ids.prefixed("job"),
                 "status", "completed"
         );
     }
 
     private Map<String, Object> createSegment(Map<String, Object> input) {
         return Map.of(
-                "segmentId", "seg_" + shortId(),
+                "segmentId", Ids.prefixed("seg"),
                 "name", input.get("name"),
                 "status", "draft"
         );
@@ -108,14 +108,14 @@ public class MockData360Client implements Data360Client {
     private Map<String, Object> publishSegment(Map<String, Object> input) {
         return Map.of(
                 "segmentId", input.get("segmentId"),
-                "jobId", "job_" + shortId(),
+                "jobId", Ids.prefixed("job"),
                 "status", "published"
         );
     }
 
     private Map<String, Object> createActivation(Map<String, Object> input) {
         return Map.of(
-                "activationId", "act_" + shortId(),
+                "activationId", Ids.prefixed("act"),
                 "name", input.get("name"),
                 "destination", input.get("destination"),
                 "status", "draft"
@@ -125,14 +125,14 @@ public class MockData360Client implements Data360Client {
     private Map<String, Object> runActivation(Map<String, Object> input) {
         return Map.of(
                 "activationId", input.get("activationId"),
-                "jobId", "job_" + shortId(),
+                "jobId", Ids.prefixed("job"),
                 "status", "completed"
         );
     }
 
     private Map<String, Object> getIdentityRuleset(Map<String, Object> input) {
         return Map.of(
-                "rulesetId", input.getOrDefault("rulesetId", "irs_" + shortId()),
+                "rulesetId", input.getOrDefault("rulesetId", Ids.prefixed("irs")),
                 "rulesetName", input.getOrDefault("rulesetName", "Default Identity Resolution"),
                 "status", "active"
         );
@@ -148,7 +148,4 @@ public class MockData360Client implements Data360Client {
         );
     }
 
-    private String shortId() {
-        return UUID.randomUUID().toString().substring(0, 8);
-    }
 }

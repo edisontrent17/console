@@ -234,6 +234,10 @@ button:disabled {
     line-height: 1.3;
 }
 
+.subsection-heading {
+    margin-top: 12px;
+}
+
 .planner-form {
     display: grid;
     gap: 8px;
@@ -290,14 +294,16 @@ button:disabled {
 }
 
 .plan-preview,
-.monitor-list {
+.monitor-list,
+.recommendation-list {
     min-height: 152px;
     display: grid;
     gap: 8px;
 }
 
 .plan-preview.empty,
-.monitor-list.empty {
+.monitor-list.empty,
+.recommendation-list.empty {
     place-items: center;
     border: 1px dashed var(--line);
     border-radius: 7px;
@@ -308,7 +314,10 @@ button:disabled {
 .plan-head,
 .plan-step,
 .monitor-item,
-.monitor-result {
+.monitor-result,
+.recommendation-item,
+.review-strip,
+.history-item {
     border: 1px solid var(--line-soft);
     border-radius: 7px;
     background: var(--surface-subtle);
@@ -317,7 +326,9 @@ button:disabled {
 
 .plan-head,
 .plan-step,
-.monitor-item {
+.monitor-item,
+.recommendation-item,
+.history-item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
@@ -331,20 +342,125 @@ button:disabled {
 .plan-head strong,
 .plan-step strong,
 .monitor-item strong,
-.monitor-result strong {
+.monitor-result strong,
+.recommendation-item strong,
+.review-strip strong,
+.history-item strong,
+.object-preview strong {
     display: block;
     font-size: 13px;
     line-height: 1.35;
 }
 
 .plan-head span,
+.plan-head p,
 .plan-step span,
 .plan-step p,
 .monitor-item p,
-.monitor-result p {
+.monitor-result p,
+.recommendation-item p,
+.review-strip span,
+.history-item p {
     color: var(--muted);
     font-size: 12px;
     line-height: 1.35;
+}
+
+.plan-head {
+    align-items: start;
+}
+
+.review-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.review-kpis div {
+    min-width: 0;
+    border: 1px solid var(--line-soft);
+    border-radius: 7px;
+    background: #fff;
+    padding: 8px 9px;
+}
+
+.review-kpis strong {
+    display: block;
+    font-size: 16px;
+    line-height: 1.15;
+}
+
+.review-kpis span {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.25;
+}
+
+.review-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.review-strip.ok {
+    border-color: #b9decf;
+    background: var(--teal-soft);
+}
+
+.review-block {
+    display: grid;
+    gap: 7px;
+}
+
+.review-block-title {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+.run-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+    gap: 6px;
+}
+
+.timeline-step {
+    min-width: 0;
+}
+
+.timeline-step span {
+    display: block;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--line-strong);
+}
+
+.timeline-step small {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 780;
+    overflow-wrap: anywhere;
+}
+
+.timeline-step.succeeded span {
+    background: var(--teal);
+}
+
+.timeline-step.running span,
+.timeline-step.waiting-approval span {
+    background: var(--amber);
+}
+
+.timeline-step.failed span,
+.timeline-step.error span {
+    background: var(--red);
 }
 
 .plan-step.discover {
@@ -372,6 +488,102 @@ button:disabled {
 
 .monitor-result {
     background: var(--teal-soft);
+}
+
+.result-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.result-head span,
+.recommendation-item span,
+.history-item span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--muted);
+    padding: 3px 7px;
+    font-size: 11px;
+    font-weight: 780;
+    white-space: nowrap;
+}
+
+.recommendation-list {
+    min-height: 96px;
+}
+
+.recommendation-item.high,
+.recommendation-item.attention-required {
+    border-left: 3px solid var(--amber);
+    background: var(--amber-soft);
+}
+
+.recommendation-item.critical,
+.recommendation-item.error {
+    border-left: 3px solid var(--red);
+    background: var(--red-soft);
+}
+
+.recommendation-item.pending-approval {
+    border-left: 3px solid var(--amber);
+}
+
+.recommendation-actions {
+    grid-column: 1 / -1;
+    justify-self: end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.placeholder-note {
+    max-width: 100%;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.step-details {
+    margin-top: 6px;
+}
+
+.step-detail-grid {
+    margin-top: 7px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.object-preview {
+    min-width: 0;
+    border: 1px solid var(--line-soft);
+    border-radius: 7px;
+    background: #fff;
+    padding: 8px;
+}
+
+.object-preview.empty-object {
+    background: transparent;
+}
+
+.object-preview pre {
+    max-height: 128px;
+    margin: 6px 0 0;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.step-timing {
+    margin-top: 7px;
 }
 
 .bottom-grid {
@@ -776,8 +988,15 @@ summary {
     background: var(--red-soft);
 }
 
+.issue.warning {
+    border-color: #ecd59c;
+    color: var(--amber);
+    background: var(--amber-soft);
+}
+
 @media (max-width: 1120px) {
     .hero-panel,
+    .planner-grid,
     .main-grid,
     .bottom-grid {
         grid-template-columns: 1fr;
@@ -799,6 +1018,8 @@ summary {
     }
 
     .hero-metrics,
+    .review-kpis,
+    .step-detail-grid,
     .context-grid {
         grid-template-columns: 1fr;
     }

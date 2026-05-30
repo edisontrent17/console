@@ -10,14 +10,19 @@ import java.util.Set;
 public class PlanRun {
     private final String id;
     private final PlanSpec plan;
-    private final Instant createdAt = Instant.now();
+    private final Instant createdAt;
     private RunStatus status = RunStatus.RUNNING;
     private final List<StepRun> steps;
     private final Set<String> approvedSteps = new LinkedHashSet<>();
 
     public PlanRun(String id, PlanSpec plan) {
+        this(id, plan, Instant.now());
+    }
+
+    public PlanRun(String id, PlanSpec plan, Instant createdAt) {
         this.id = id;
         this.plan = plan;
+        this.createdAt = createdAt == null ? Instant.now() : createdAt;
         this.steps = plan.steps().stream().map(step -> new StepRun(step.id())).toList();
     }
 

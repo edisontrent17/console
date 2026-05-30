@@ -8,13 +8,13 @@ import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
 import com.acme.data360agent.scenario.CustomerScenario;
 import com.acme.data360agent.scenario.ScenarioLibrary;
+import com.acme.data360agent.support.Ids;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Component
 public class LlmPlanGenerator {
@@ -209,7 +209,7 @@ public class LlmPlanGenerator {
                 Map.of(),
                 false
         ));
-        return new PlanSpec("plan_" + UUID.randomUUID().toString().substring(0, 8), scenario.id(), request.goal(), request.context(), steps);
+        return new PlanSpec(Ids.prefixed("plan"), scenario.id(), request.goal(), request.context(), steps);
     }
 
     private List<String> allowedActions() {

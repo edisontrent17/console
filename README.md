@@ -13,6 +13,7 @@ The app keeps three boundaries separate:
 - **PlanSpec** is the human-reviewable contract.
 - **Executor** runs approved steps, pauses for write/publish/activation approvals, and stores runtime outputs outside the plan.
 - **Monitors** track goal health after setup and produce approval-gated recommendations.
+- **Durable state** stores drafts, runs, approvals, audit events, monitor leases, recommendations, and Connect idempotency records.
 
 The default mode is local and mock-backed so the product loop can be tested before wiring real org credentials.
 
@@ -152,14 +153,48 @@ GET  /api/plans
 GET  /api/plans/{planId}
 POST /api/plans/{planId}/runs
 GET  /api/runs/{runId}
+GET  /api/runs/{runId}/approvals
+GET  /api/runs/{runId}/audit
 POST /api/runs/{runId}/steps/{stepId}/approve
 GET  /api/monitors
+GET  /api/monitors/recommendations
+POST /api/monitors/recommendations/{recommendationId}/approve
+POST /api/monitors/recommendations/{recommendationId}/reject
 GET  /api/monitors/{monitorId}
 GET  /api/monitors/{monitorId}/runs
 POST /api/monitors/{monitorId}/run-now
 GET  /api/data360/diagnostics
 POST /api/data360/diagnostics/smoke
 ```
+
+## State And Scheduling
+
+The default state store is JDBC-backed H2:
+
+```properties
+app.state.store=jdbc
+spring.datasource.url=jdbc:h2:file:./data/data360-agent-console;AUTO_SERVER=TRUE
+```
+
+Use `app.state.store=memory` only for throwaway local experiments. JDBC mode keeps
+PlanSpec drafts, setup runs, step output snapshots, approval records, audit events,
+monitor definitions/runs/recommendations, monitor leases, and Connect API
+idempotency records.
+
+Tests use an in-memory H2 datasource via `src/test/resources/application.properties`
+so local runs do not create file-backed database state.
+
+The monitor scheduler is disabled by default. Enable it when you want background
+goal-health checks:
+
+```properties
+app.monitors.scheduler.enabled=true
+app.monitors.scheduler.fixed-delay-ms=60000
+```
+
+The scheduler claims due monitors with a short lease before running them. Cadence
+values currently map to minute, hourly, daily, or weekly intervals. Manual
+`run-now` still works regardless of the scheduler.
 
 ## Data 360 MCP
 
@@ -246,10 +281,9 @@ The Connect client is typed by PlanSpec action:
 - `data360.identityRuleset.get` -> `GET /services/data/{version}/ssot/identity-resolutions`
 - `data360.monitor.metric` -> Connect query execution against a monitor SQL/query context
 
-Mutation calls are locally idempotent by run, step, and resolved input so duplicate
-approval clicks do not replay successful create/publish/activation calls in the
-same process. Production deployment should back this idempotency store with durable
-storage.
+Mutation calls are idempotent by run, step, and resolved input so duplicate
+approval clicks do not replay successful create/publish/activation calls. In the
+default JDBC mode, those idempotency records are durable.
 
 Before approving setup against a real org, use the read-only diagnostics endpoint
 or the **Check Data 360** button in the PlanSpec Lab:
