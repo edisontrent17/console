@@ -11,7 +11,7 @@ import java.util.Map;
 @WorkflowInterface
 public interface Data360PlanWorkflow {
     @WorkflowMethod
-    String run(PlanSpec plan);
+    String run(String runId, PlanSpec plan);
 
     @SignalMethod
     void approveStep(String stepId);

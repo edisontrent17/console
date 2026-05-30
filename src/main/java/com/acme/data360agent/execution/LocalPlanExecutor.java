@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,11 +51,11 @@ public class LocalPlanExecutor implements PlanExecutor {
     public PlanRun approveStep(String runId, String stepId) {
         var run = store.withRunLock(runId, lockedRun -> {
             var runRef = lockedRun;
-            var planStep = planStep(runRef, stepId);
+            var planStep = PlanRunSupport.planStep(runRef, stepId);
             if (!planStep.needsApproval()) {
                 throw new IllegalArgumentException("Step does not require approval: " + stepId);
             }
-            var current = stepRun(runRef, stepId);
+            var current = PlanRunSupport.stepRun(runRef, stepId);
             if (current.getStatus() == StepStatus.SUCCEEDED || current.getStatus() == StepStatus.SKIPPED) {
                 return runRef;
             }
@@ -95,7 +94,7 @@ public class LocalPlanExecutor implements PlanExecutor {
                     }
                     return null;
                 }
-                var stepRun = stepRun(run, next.id());
+                var stepRun = PlanRunSupport.stepRun(run, next.id());
                 if (next.needsApproval() && !run.getApprovedSteps().contains(next.id())) {
                     stepRun.setStatus(StepStatus.WAITING_APPROVAL);
                     run.setStatus(RunStatus.WAITING_APPROVAL);
@@ -120,7 +119,7 @@ public class LocalPlanExecutor implements PlanExecutor {
                 var resolved = resolveInput(runSnapshot, execution.step());
                 var result = data360Client.call(definition, execution.step(), resolved, new RunContext(runId, execution.plan().id(), execution.plan().context()));
                 store.withRunLock(runId, run -> {
-                    var stepRun = stepRun(run, execution.step().id());
+                    var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
                     stepRun.setOutput(result.output());
                     stepRun.setRaw(result.raw());
                     stepRun.setStatus(StepStatus.SUCCEEDED);
@@ -131,7 +130,7 @@ public class LocalPlanExecutor implements PlanExecutor {
                 });
             } catch (Exception e) {
                 store.withRunLock(runId, run -> {
-                    var stepRun = stepRun(run, execution.step().id());
+                    var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
                     stepRun.setError(e.getMessage());
                     stepRun.setStatus(StepStatus.FAILED);
                     stepRun.setFinishedAt(Instant.now());
@@ -150,11 +149,11 @@ public class LocalPlanExecutor implements PlanExecutor {
             if (step.phase() == PlanPhase.MONITOR) {
                 continue;
             }
-            var current = stepRun(run, step.id());
+            var current = PlanRunSupport.stepRun(run, step.id());
             if (current.getStatus() == StepStatus.SUCCEEDED || current.getStatus() == StepStatus.SKIPPED) {
                 continue;
             }
-            var depsReady = step.dependsOn().stream().allMatch(dep -> stepRun(run, dep).getStatus() == StepStatus.SUCCEEDED);
+            var depsReady = step.dependsOn().stream().allMatch(dep -> PlanRunSupport.stepRun(run, dep).getStatus() == StepStatus.SUCCEEDED);
             if (depsReady) {
                 return step;
             }
@@ -167,31 +166,17 @@ public class LocalPlanExecutor implements PlanExecutor {
             if (step.phase() != PlanPhase.MONITOR) {
                 continue;
             }
-            var current = stepRun(run, step.id());
+            var current = PlanRunSupport.stepRun(run, step.id());
             if (current.getStatus() != StepStatus.PENDING) {
                 continue;
             }
-            var depsReady = step.dependsOn().stream().allMatch(dep -> stepRun(run, dep).getStatus() == StepStatus.SUCCEEDED);
+            var depsReady = step.dependsOn().stream().allMatch(dep -> PlanRunSupport.stepRun(run, dep).getStatus() == StepStatus.SUCCEEDED);
             if (depsReady) {
                 current.setStatus(StepStatus.SKIPPED);
                 current.setOutput(Map.of("registeredAsMonitor", true));
                 current.setFinishedAt(Instant.now());
             }
         }
-    }
-
-    private StepRun stepRun(PlanRun run, String stepId) {
-        return run.getSteps().stream()
-                .filter(step -> step.getStepId().equals(stepId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown step: " + stepId));
-    }
-
-    private PlanStep planStep(PlanRun run, String stepId) {
-        return run.getPlan().steps().stream()
-                .filter(step -> step.id().equals(stepId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown step: " + stepId));
     }
 
     private void registerMonitors(PlanRun run) {
@@ -207,52 +192,7 @@ public class LocalPlanExecutor implements PlanExecutor {
     }
 
     private Map<String, Object> resolveInput(PlanRun run, PlanStep step) {
-        var resolved = new LinkedHashMap<>(step.input());
-        for (var binding : step.inputBindings().entrySet()) {
-            var sourceOutput = stepRun(run, binding.getValue().fromStep()).getOutput();
-            resolved.put(binding.getKey(), readJsonPath(sourceOutput, binding.getValue().path()));
-        }
-        resolveFromStep(run, resolved, "segmentIdFromStep", "segmentId");
-        resolveFromStep(run, resolved, "activationIdFromStep", "activationId");
-        resolveFromStep(run, resolved, "insightIdFromStep", "insightId");
-        if (resolved.containsKey("criteriaFromStep")) {
-            var source = String.valueOf(resolved.get("criteriaFromStep"));
-            var output = stepRun(run, source).getOutput();
-            resolved.put("criteria", Map.of(
-                    "sourceStep", source,
-                    "rowCount", output.getOrDefault("rowCount", 0),
-                    "sql", output.getOrDefault("sql", "")
-            ));
-        }
-        return Map.copyOf(resolved);
-    }
-
-    @SuppressWarnings("unchecked")
-    private Object readJsonPath(Map<String, Object> sourceOutput, String path) {
-        if (!path.startsWith("$.")) {
-            throw new IllegalArgumentException("Only simple $.field paths are supported.");
-        }
-        Object current = sourceOutput;
-        for (var part : path.substring(2).split("\\.")) {
-            if (!(current instanceof Map<?, ?> map) || !map.containsKey(part)) {
-                throw new IllegalStateException("Output path not found: " + path);
-            }
-            current = ((Map<String, Object>) map).get(part);
-        }
-        return current;
-    }
-
-    private void resolveFromStep(PlanRun run, Map<String, Object> resolved, String refKey, String outputKey) {
-        if (!resolved.containsKey(refKey)) {
-            return;
-        }
-        var source = String.valueOf(resolved.get(refKey));
-        var output = stepRun(run, source).getOutput();
-        var value = output.get(outputKey);
-        if (value == null) {
-            throw new IllegalStateException("Step " + source + " did not produce " + outputKey);
-        }
-        resolved.put(outputKey, value);
+        return PlanInputResolver.resolve(step, stepId -> PlanRunSupport.outputForStep(run, stepId));
     }
 
     private record ExecutionStep(PlanSpec plan, PlanStep step) {

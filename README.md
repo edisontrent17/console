@@ -11,7 +11,7 @@ The app keeps three boundaries separate:
 
 - **LangGraph4j planner** drafts a small `PlanSpec`, using Anthropic, OpenRouter, or deterministic fallback.
 - **PlanSpec** is the human-reviewable contract.
-- **Executor** runs approved steps, pauses for write/publish/activation approvals, and stores runtime outputs outside the plan.
+- **Executor** runs approved steps, pauses for write/publish/activation approvals, and stores runtime outputs outside the plan. Local mode is the default; Temporal mode is available for durable orchestration.
 - **Monitors** track goal health after setup and produce approval-gated recommendations.
 - **Durable state** stores drafts, runs, approvals, audit events, monitor leases, recommendations, and Connect idempotency records.
 
@@ -195,6 +195,45 @@ app.monitors.scheduler.fixed-delay-ms=60000
 The scheduler claims due monitors with a short lease before running them. Cadence
 values currently map to minute, hourly, daily, or weekly intervals. Manual
 `run-now` still works regardless of the scheduler.
+
+## Temporal Executor
+
+Local execution remains the default:
+
+```properties
+app.executor=local
+```
+
+Temporal execution is available behind the same `PlanExecutor` API:
+
+```bash
+export TEMPORAL_TARGET="127.0.0.1:7233"
+export TEMPORAL_NAMESPACE="default"
+export TEMPORAL_TASK_QUEUE="data360-plan-task-queue"
+mvn spring-boot:run -Dspring-boot.run.arguments='--app.executor=temporal'
+```
+
+Temporal mode creates a workflow per setup run, using workflow IDs shaped like:
+
+```text
+data360-plan-{runId}
+```
+
+The workflow owns the ordered execution loop, approval waits, cancellation signal,
+activity retries, and monitor-step skipping. Activities own the side effects:
+
+- `Data360Activities` executes Data 360/MCP/Connect calls through the configured `Data360Client`.
+- `PlanRunActivities` persists step/run state, approval records, audit events, and monitor registration.
+
+Worker startup is on by default in Temporal mode. For a web-only instance that
+only starts/signals workflows, disable the embedded worker:
+
+```properties
+app.temporal.worker-enabled=false
+```
+
+The Temporal workflow is covered by `Data360PlanWorkflowImplTest` using the
+Temporal in-memory test environment.
 
 ## Data 360 MCP
 

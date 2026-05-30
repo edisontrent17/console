@@ -62,11 +62,11 @@ Keep these responsibilities separate:
 
 - Planner: drafts a small plan, using LangGraph4j plus Anthropic, OpenRouter, or deterministic fallback.
 - PlanSpec: the reviewable contract. It should stay small and serializable.
-- Executor: runs approved steps in order and stores runtime outputs outside the plan.
+- Executor: runs approved steps in order and stores runtime outputs outside the plan. `LocalPlanExecutor` is default; `TemporalPlanExecutor` is the durable orchestration path.
 - Monitor service: registers monitor-phase steps and evaluates goal health after setup.
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
 - State stores: keep drafts, runs, approvals, audit events, monitor state, and Connect idempotency durable.
-- Temporal: production orchestration boundary, not the local demo runner yet.
+- Temporal: production orchestration boundary for durable setup execution.
 
 ## Key Java Packages
 
@@ -78,7 +78,7 @@ Keep these responsibilities separate:
 - `operation/`: allowed operation registry and effect metadata.
 - `state/`: shared JSON/timestamp state codec for JDBC stores.
 - `support/`: small cross-cutting helpers such as ID generation.
-- `temporal/`: workflow/activity interfaces and notes for production wiring.
+- `temporal/`: workflow/activity interfaces, workflow implementation, executor adapter, worker lifecycle, and tests.
 - `library/`: reusable solution templates.
 - `scenario/`: publicly grounded customer scenario packs.
 - `demo/`: Dormant Revenue Recovery demo API.
@@ -117,6 +117,33 @@ The execute path should not be broadly agentic by default.
 - Keep execution deterministic and auditable.
 - Use `PlanStore.withRunLock` for run mutations. Do not synchronize on a freshly loaded JDBC `PlanRun`.
 - Keep secrets, org credentials, and bearer tokens out of source files and logs.
+
+## Temporal Mode
+
+Temporal mode is enabled with:
+
+```properties
+app.executor=temporal
+app.temporal.target=127.0.0.1:7233
+app.temporal.namespace=default
+app.temporal.task-queue=data360-plan-task-queue
+```
+
+Design rules:
+
+- `TemporalPlanExecutor` should only create runs, start workflows, and signal approvals.
+- `Data360PlanWorkflowImpl` owns deterministic orchestration: step order, approval waits, retryable activities, cancellation, and monitor-step skipping.
+- Workflow code must not inject Spring beans, call wall-clock APIs, or mutate JDBC directly.
+- `Data360ActivitiesImpl` is the only Temporal activity that calls the configured Data 360 client.
+- `PlanRunActivitiesImpl` is the only Temporal activity that persists run state, approvals, audit events, and monitor registration.
+- Keep input binding logic in `PlanInputResolver`; do not reimplement it in Temporal or Local executors.
+- Use `app.temporal.worker-enabled=false` for web-only processes that should start/signal workflows without polling tasks.
+
+Test Temporal changes with:
+
+```bash
+mvn -Dtest=Data360PlanWorkflowImplTest test
+```
 
 ## State Store
 
