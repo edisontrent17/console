@@ -90,6 +90,7 @@ function renderAccounts() {
             selectedAccountId = row.dataset.accountId;
             renderAccounts();
             renderEvidence();
+            renderActions();
         });
     });
 }
@@ -124,9 +125,11 @@ function renderEvidence() {
 
 function renderActions() {
     const selected = selectedAccount();
-    const focused = demo.actions.filter((action) => !action.accountId || action.accountId === selected?.id);
+    const accountActions = demo.actions.filter((action) => action.accountId === selected?.id);
+    const sharedActions = demo.actions.filter((action) => !action.accountId);
+    const focused = selected ? [...accountActions, ...sharedActions] : demo.actions;
     const ordered = [...focused.filter((action) => action.status !== "Executed"), ...focused.filter((action) => action.status === "Executed")];
-    const queue = ordered.slice(0, 2);
+    const queue = ordered.slice(0, 3);
     const hidden = Math.max(0, ordered.length - queue.length);
     const waiting = demo.actions.filter((action) => action.status === "Waiting Approval").length;
 

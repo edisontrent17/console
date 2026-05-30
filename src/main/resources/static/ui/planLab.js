@@ -17,16 +17,32 @@ let recommendations = [];
 let recommendationUnavailable = null;
 let approvalHistory = [];
 let approvalHistoryUnavailable = null;
+let selectedStepId = null;
 
 export async function initPlanLab() {
     $("scenarioSelect").addEventListener("change", selectScenario);
     $("generatePlanButton").addEventListener("click", generatePlan);
     $("startPlanButton").addEventListener("click", startPlan);
     $("data360SmokeButton").addEventListener("click", smokeData360);
+    $("goalInput").addEventListener("input", resetCurrentDraft);
     $("planSpecPreview").addEventListener("click", async (event) => {
         const button = event.target.closest("button[data-approve-step]");
-        if (!button || !currentRun) return;
-        await approvePlanStep(button.dataset.approveStep);
+        if (button && currentRun) {
+            await approvePlanStep(button.dataset.approveStep);
+            return;
+        }
+        const step = event.target.closest("[data-step-id]");
+        if (!step) return;
+        selectedStepId = step.dataset.stepId;
+        renderPlanDraft();
+    });
+    $("planSpecPreview").addEventListener("keydown", (event) => {
+        if (!["Enter", " "].includes(event.key) || event.target.closest("button")) return;
+        const step = event.target.closest("[data-step-id]");
+        if (!step) return;
+        event.preventDefault();
+        selectedStepId = step.dataset.stepId;
+        renderPlanDraft();
     });
     $("monitorList").addEventListener("click", async (event) => {
         const button = event.target.closest("button[data-monitor-id]");
@@ -92,6 +108,18 @@ function selectScenario() {
     const scenario = selectedScenario();
     if (!scenario) return;
     $("goalInput").value = scenario.defaultUtterances?.[0] || scenario.name;
+    resetCurrentDraft();
+}
+
+function resetCurrentDraft() {
+    currentDraft = null;
+    currentRun = null;
+    selectedStepId = null;
+    approvalHistory = [];
+    approvalHistoryUnavailable = null;
+    $("plannerStatus").textContent = "Ready";
+    $("startPlanButton").disabled = true;
+    renderPlanDraft();
 }
 
 async function generatePlan() {
@@ -110,6 +138,7 @@ async function generatePlan() {
             }
         });
         currentRun = null;
+        selectedStepId = currentDraft.plan.steps[0]?.id || null;
         approvalHistory = [];
         approvalHistoryUnavailable = null;
         renderPlanDraft();
@@ -173,10 +202,12 @@ function renderPlanDraft() {
     if (!currentDraft) {
         $("planSpecPreview").className = "plan-preview empty";
         $("planSpecPreview").textContent = "No plan generated.";
+        renderStepInspector(null, null);
         return;
     }
     const plan = currentDraft.plan;
     const runSteps = currentRun ? Object.fromEntries(currentRun.steps.map((step) => [step.stepId, step])) : {};
+    selectedStepId ||= plan.steps[0]?.id || null;
     $("planSpecPreview").className = "plan-preview";
     $("planSpecPreview").innerHTML = `
         <div class="plan-head">
@@ -194,6 +225,8 @@ function renderPlanDraft() {
         </div>
         ${renderApprovalHistory()}
     `;
+    const selectedStep = plan.steps.find((step) => step.id === selectedStepId) || plan.steps[0];
+    renderStepInspector(selectedStep, selectedStep ? runSteps[selectedStep.id] : null);
 }
 
 function renderPlanIssues(issues) {
@@ -210,17 +243,56 @@ function renderPlanIssues(issues) {
 
 function renderPlanStep(step, runStep) {
     const waiting = runStep?.status === "WAITING_APPROVAL";
+    const status = runStep?.status || "PENDING";
     return `
-        <article class="plan-step ${slug(step.phase)}">
+        <article class="plan-step ${slug(step.phase)} ${selectedStepId === step.id ? "selected" : ""}" data-step-id="${escapeHtml(step.id)}" tabindex="0" aria-current="${selectedStepId === step.id ? "true" : "false"}" aria-label="Inspect ${escapeHtml(step.title)}">
             <div>
                 <strong>${escapeHtml(step.title)}</strong>
-                <p>${escapeHtml(step.action)} · ${escapeHtml(step.phase)}${runStep ? ` · ${escapeHtml(runStep.status)}` : ""}</p>
-                ${renderStepMeta(step, runStep)}
+                <p>${escapeHtml(step.id)}</p>
             </div>
-            <span>${step.needsApproval ? "Approval" : "Auto"}</span>
+            <p>${escapeHtml(step.action)}</p>
+            <span>${escapeHtml(step.phase)}</span>
+            <span class="status-token ${slug(status)}">${escapeHtml(status)}</span>
+            <span class="status-token ${step.needsApproval ? "waiting-approval" : "active"}">${step.needsApproval ? "Approval" : "Auto"}</span>
             ${waiting ? `<button class="secondary small" data-approve-step="${escapeHtml(step.id)}">Approve</button>` : ""}
         </article>
     `;
+}
+
+function renderStepInspector(step, runStep) {
+    const inspector = $("stepInspector");
+    if (!inspector) return;
+    if (!step) {
+        inspector.className = "step-inspector empty";
+        inspector.textContent = "Select a plan step.";
+        return;
+    }
+    const status = runStep?.status || "PENDING";
+    inspector.className = "step-inspector";
+    inspector.innerHTML = `
+        <strong>${escapeHtml(step.title)}</strong>
+        <p>${escapeHtml(step.id)} · ${escapeHtml(status)}</p>
+        <dl>
+            <div><dt>Phase</dt><dd>${escapeHtml(step.phase)}</dd></div>
+            <div><dt>Action</dt><dd>${escapeHtml(step.action)}</dd></div>
+            <div><dt>Approval</dt><dd>${step.needsApproval ? "Required" : "Automatic"}</dd></div>
+            <div><dt>Timing</dt><dd>${renderStepTimingText(runStep)}</dd></div>
+        </dl>
+        <div class="step-detail-grid">
+            ${renderObjectPreview("Input", step.input || {})}
+            ${renderObjectPreview("Bindings", step.inputBindings || {})}
+            ${renderObjectPreview("Output", runStep?.output || {})}
+            ${renderObjectPreview("Raw", runStep?.raw || {})}
+        </div>
+        ${runStep?.error ? `<div class="issue error">${escapeHtml(runStep.error)}</div>` : ""}
+    `;
+}
+
+function renderStepTimingText(runStep) {
+    if (!runStep?.startedAt && !runStep?.finishedAt) return "Not started";
+    const started = runStep.startedAt ? `Started ${formatDateTime(runStep.startedAt)}` : "Not started";
+    const finished = runStep.finishedAt ? `Finished ${formatDateTime(runStep.finishedAt)}` : "In progress";
+    return `${started} · ${finished}`;
 }
 
 function renderPlanReviewSummary(plan) {
@@ -268,27 +340,6 @@ function renderRunTimeline(steps, runSteps) {
     `;
 }
 
-function renderStepMeta(step, runStep) {
-    const input = step.input || {};
-    const bindings = step.inputBindings || {};
-    const output = runStep?.output || {};
-    const raw = runStep?.raw || {};
-    const error = runStep?.error;
-    return `
-        <details class="step-details">
-            <summary>Review details</summary>
-            <div class="step-detail-grid">
-                ${renderObjectPreview("Input", input)}
-                ${renderObjectPreview("Bindings", bindings)}
-                ${renderObjectPreview("Output", output)}
-                ${renderObjectPreview("Raw", raw)}
-            </div>
-            ${error ? `<div class="issue error">${escapeHtml(error)}</div>` : ""}
-            ${renderStepTiming(runStep)}
-        </details>
-    `;
-}
-
 function renderObjectPreview(label, value) {
     const empty = !value || (typeof value === "object" && !Object.keys(value).length);
     return `
@@ -297,13 +348,6 @@ function renderObjectPreview(label, value) {
             <pre>${escapeHtml(empty ? "No data" : JSON.stringify(value, null, 2))}</pre>
         </div>
     `;
-}
-
-function renderStepTiming(runStep) {
-    if (!runStep?.startedAt && !runStep?.finishedAt) return "";
-    const started = runStep.startedAt ? `Started ${formatDateTime(runStep.startedAt)}` : "Not started";
-    const finished = runStep.finishedAt ? `Finished ${formatDateTime(runStep.finishedAt)}` : "In progress";
-    return `<p class="step-timing">${escapeHtml(started)} · ${escapeHtml(finished)}</p>`;
 }
 
 function renderApprovalHistory() {

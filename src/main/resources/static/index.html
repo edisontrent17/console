@@ -3,139 +3,207 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Data360 Goal Cockpit</title>
+    <title>Data 360 Goal Workbench</title>
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<header class="topbar">
-    <div>
-        <h1>Data360 Goal Cockpit</h1>
-        <p>Dormant revenue recovery</p>
-    </div>
-    <div class="topbar-actions">
-        <span id="currentUser" class="user-pill">Checking auth</span>
-        <button id="resetButton" class="ghost">Reset</button>
-        <span id="runStatus" class="status-pill">Loading</span>
-    </div>
-</header>
-
-<main class="page">
-    <section class="hero-panel">
-        <div class="hero-copy">
-            <p class="eyebrow">Active Goal</p>
-            <h2 id="goalCommand">Recover signed customers with no activation.</h2>
-        </div>
-        <div class="hero-metrics">
+<div class="app-shell">
+    <aside class="workspace-rail" aria-label="Workspace">
+        <div class="brand-lockup">
+            <span>D360</span>
             <div>
-                <strong id="recoverableRevenue">$0</strong>
+                <strong>Goal Workbench</strong>
+                <small>Data 360 setup</small>
+            </div>
+        </div>
+
+        <nav class="rail-nav" aria-label="Primary">
+            <a class="active" href="#plan-review">Plan Review</a>
+            <a href="#execution">Execution</a>
+            <a href="#monitors">Monitors</a>
+            <a href="#audit">Audit</a>
+        </nav>
+
+        <div class="rail-section">
+            <p>Environment</p>
+            <dl>
+                <div><dt>Org</dt><dd>demo-org</dd></div>
+                <div><dt>Dataspace</dt><dd>default</dd></div>
+                <div><dt>Client</dt><dd id="data360Diagnostics">Checking Data 360 client...</dd></div>
+            </dl>
+        </div>
+    </aside>
+
+    <div class="workspace-main">
+        <header class="record-header">
+            <div class="record-title">
+                <p>Goal</p>
+                <h1 id="goalCommand">Recover signed customers with no activation.</h1>
+                <div class="record-meta" aria-label="Context">
+                    <span>Sandbox</span>
+                    <span>Data 360</span>
+                    <span>Sales Cloud</span>
+                    <span>SendGrid</span>
+                </div>
+            </div>
+            <div class="record-actions">
+                <span id="currentUser" class="user-pill">Checking auth</span>
+                <button id="resetButton" class="ghost">Reset demo</button>
+                <span id="runStatus" class="status-pill">Loading</span>
+            </div>
+        </header>
+
+        <section class="metric-strip" aria-label="Goal metrics">
+            <div>
                 <span>Recoverable revenue</span>
+                <strong id="recoverableRevenue">$0</strong>
             </div>
             <div>
-                <strong id="accountsIdentified">0</strong>
                 <span>Eligible audience</span>
+                <strong id="accountsIdentified">0</strong>
             </div>
             <div>
-                <strong id="actionsWaiting">0</strong>
                 <span>Actions waiting</span>
+                <strong id="actionsWaiting">0</strong>
             </div>
-        </div>
-    </section>
+            <div>
+                <span>Approvals</span>
+                <strong id="approvalCount">0</strong>
+            </div>
+        </section>
 
-    <section class="panel planner-panel">
-        <div class="section-title">
-            <p>PlanSpec Lab</p>
-            <span id="plannerStatus" class="mini-badge">Ready</span>
-        </div>
-        <div class="planner-grid">
-            <div class="planner-form">
-                <label for="scenarioSelect">Scenario</label>
-                <select id="scenarioSelect"></select>
-                <label for="goalInput">Goal</label>
-                <textarea id="goalInput" rows="4">Recover dormant high-value accounts</textarea>
-                <div class="button-row">
-                    <button id="generatePlanButton" class="secondary">Generate PlanSpec</button>
-                    <button id="startPlanButton" class="ghost" disabled>Start Setup</button>
-                    <button id="data360SmokeButton" class="ghost">Check Data 360</button>
+        <nav class="workspace-tabs" aria-label="Workbench sections">
+            <button class="active" data-tab-target="plan-review">Plan Review</button>
+            <button data-tab-target="execution">Execution</button>
+            <button data-tab-target="monitors">Monitors</button>
+            <button data-tab-target="audit">Audit</button>
+        </nav>
+
+        <main class="workspace-content">
+            <section id="plan-review" class="workbench-section active">
+                <div class="plan-workbench">
+                    <section class="panel plan-input-panel">
+                        <div class="section-title">
+                            <p>Request</p>
+                            <span id="plannerStatus" class="mini-badge">Ready</span>
+                        </div>
+                        <div class="planner-form">
+                            <label for="scenarioSelect">Scenario</label>
+                            <select id="scenarioSelect"></select>
+                            <label for="goalInput">Goal</label>
+                            <textarea id="goalInput" rows="4">Recover dormant high-value accounts</textarea>
+                            <div class="button-row">
+                                <button id="generatePlanButton" class="secondary">Draft plan</button>
+                                <button id="startPlanButton" class="ghost" disabled>Start run</button>
+                                <button id="data360SmokeButton" class="ghost">Test connection</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="panel plan-review-panel">
+                        <div class="section-title">
+                            <p>PlanSpec</p>
+                        </div>
+                        <div id="planSpecPreview" class="plan-preview empty">No plan drafted.</div>
+                    </section>
+
+                    <aside class="panel step-inspector-panel">
+                        <div class="section-title">
+                            <p>Step Inspector</p>
+                            <span class="mini-badge">Review</span>
+                        </div>
+                        <div id="stepInspector" class="step-inspector empty">Select a plan step.</div>
+                    </aside>
                 </div>
-                <div id="data360Diagnostics" class="diagnostics-line">Checking Data 360 client...</div>
-            </div>
-            <div>
-                <h3>PlanSpec</h3>
-                <div id="planSpecPreview" class="plan-preview empty">No plan generated.</div>
-            </div>
-            <div>
-                <h3>Monitors</h3>
-                <div id="monitorList" class="monitor-list empty">No monitors registered.</div>
-                <h3 class="subsection-heading">Recommendations</h3>
-                <div id="recommendationList" class="recommendation-list empty">Recommendation API not checked.</div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <section class="main-grid">
-        <aside class="panel account-panel">
-            <div class="section-title">
-                <p>Priority Samples</p>
-            </div>
-            <div id="accountList" class="account-list loading">Loading samples...</div>
-        </aside>
+            <section id="execution" class="workbench-section">
+                <div class="execution-grid">
+                    <aside class="panel account-panel">
+                        <div class="section-title">
+                            <p>Priority Accounts</p>
+                        </div>
+                        <div id="accountList" class="account-list loading">Loading samples...</div>
+                    </aside>
 
-        <section class="panel focus-panel">
-            <div class="section-title">
-                <p>Evidence</p>
-                <span id="selectedPriority" class="mini-badge">Select</span>
-            </div>
-            <div id="selectedAccount" class="selected-account empty">Choose an account.</div>
-            <div id="evidenceList" class="evidence-list"></div>
+                    <section class="panel focus-panel">
+                        <div class="section-title">
+                            <p>Evidence</p>
+                            <span id="selectedPriority" class="mini-badge">Select</span>
+                        </div>
+                        <div id="selectedAccount" class="selected-account empty">Choose an account.</div>
+                        <div id="evidenceList" class="evidence-list"></div>
+                    </section>
 
-            <details class="more-context">
-                <summary>Data360 context and plan</summary>
-                <div class="context-grid">
-                    <div>
-                        <h3>Trusted Context</h3>
+                    <aside class="panel action-panel">
+                        <div class="section-title">
+                            <p>Work Queue</p>
+                        </div>
+                        <div id="approvalQueue" class="approval-list loading">Loading approvals...</div>
+                    </aside>
+                </div>
+            </section>
+
+            <section id="monitors" class="workbench-section">
+                <div class="monitor-grid">
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Goal Monitors</p>
+                        </div>
+                        <div id="monitorList" class="monitor-list empty">No monitors registered.</div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Recommendations</p>
+                        </div>
+                        <div id="recommendationList" class="recommendation-list empty">Recommendation API not checked.</div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Activation</p>
+                            <span id="emailMode" class="mini-badge">Demo</span>
+                        </div>
+                        <div id="emailActivation" class="email-activation loading">Loading email activation...</div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Recovery Funnel</p>
+                        </div>
+                        <div id="recoveryFunnel" class="funnel-list loading">Loading funnel...</div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Impact</p>
+                        </div>
+                        <div id="impactMetrics" class="metric-list loading">Loading metrics...</div>
+                    </section>
+                </div>
+            </section>
+
+            <section id="audit" class="workbench-section">
+                <div class="audit-grid">
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Trusted Context</p>
+                        </div>
                         <div id="signalSources" class="compact-list loading">Loading...</div>
-                    </div>
-                    <div>
-                        <h3>Plan</h3>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-title">
+                            <p>Run Plan</p>
+                        </div>
                         <div id="planStages" class="compact-list loading">Loading...</div>
-                    </div>
+                    </section>
                 </div>
-            </details>
-        </section>
-
-        <aside class="panel action-panel">
-            <div class="section-title">
-                <p>Next Actions</p>
-                <span id="approvalCount" class="mini-badge">0</span>
-            </div>
-            <div id="approvalQueue" class="approval-list loading">Loading approvals...</div>
-        </aside>
-    </section>
-
-    <section class="bottom-grid">
-        <section class="panel">
-            <div class="section-title">
-                <p>SendGrid Activation</p>
-                <span id="emailMode" class="mini-badge">Demo</span>
-            </div>
-            <div id="emailActivation" class="email-activation loading">Loading email activation...</div>
-        </section>
-
-        <section class="panel">
-            <div class="section-title">
-                <p>Recovery Funnel</p>
-            </div>
-            <div id="recoveryFunnel" class="funnel-list loading">Loading funnel...</div>
-        </section>
-
-        <section class="panel">
-            <div class="section-title">
-                <p>Impact</p>
-            </div>
-            <div id="impactMetrics" class="metric-list loading">Loading metrics...</div>
-        </section>
-    </section>
-</main>
+            </section>
+        </main>
+    </div>
+</div>
 
 <script type="module" src="/ui/app.js"></script>
 </body>
