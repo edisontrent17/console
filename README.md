@@ -41,6 +41,11 @@ versioned JSON Schema at `schemas/planspec.schema.json`; XML can be added later
 as an import/export format that compiles into canonical JSON before validation
 and execution.
 
+Tool/API details live outside PlanSpec. Draft creation resolves each capability
+URI into an immutable `OperationBindingSnapshot`; starting a run freezes that
+binding list onto the run, and local/Temporal execution uses those snapshots
+instead of asking the model to choose tools at execution time.
+
 ## Real Scenario Packs
 
 The scenario library contains publicly grounded Data 360/Agentforce goal packs:
@@ -283,6 +288,10 @@ effects:
 
 - `Data360Activities` executes Data 360/MCP/Connect calls through the configured `Data360Client`.
 - `PlanRunActivities` persists step/run state, approval records, audit events, and monitor registration.
+
+Workflow start receives the approved `OperationBindingSnapshot` list and never
+constructs an operation registry during replay. This keeps Temporal deterministic
+and makes the approved call boundary auditable.
 
 Worker startup is on by default in Temporal mode. For a web-only instance that
 only starts/signals workflows, disable the embedded worker:

@@ -58,9 +58,9 @@ public class PlanController {
         var draft = store.draft(planId).orElseThrow(() -> new IllegalArgumentException("Plan not found: " + planId));
         var validation = validator.validate(draft.plan());
         if (!validation.ok()) {
-            return new PlanDraft(draft.plan(), validation, draft.graphStages());
+            return new PlanDraft(draft.plan(), validation, draft.graphStages(), draft.operationBindings());
         }
-        return executor.start(draft.plan());
+        return executor.start(draft.plan(), draft.operationBindings());
     }
 
     @GetMapping("/runs/{runId}")

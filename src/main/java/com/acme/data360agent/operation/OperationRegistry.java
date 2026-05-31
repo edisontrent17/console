@@ -10,6 +10,8 @@ import java.util.Map;
 @Component
 public class OperationRegistry {
     private final Map<Data360Action, OperationDefinition> definitions;
+    private final Map<Data360Action, OperationBinding> bindings;
+    private final OperationCatalogSnapshot snapshot;
 
     public OperationRegistry() {
         var defs = new EnumMap<Data360Action, OperationDefinition>(Data360Action.class);
@@ -134,6 +136,11 @@ public class OperationRegistry {
                 List.of("cadence", "threshold")
         ));
         definitions = Map.copyOf(defs);
+
+        var operationBindings = new EnumMap<Data360Action, OperationBinding>(Data360Action.class);
+        definitions.forEach((action, definition) -> operationBindings.put(action, definition.binding()));
+        bindings = Map.copyOf(operationBindings);
+        snapshot = OperationCatalogSnapshot.from(definitions);
     }
 
     public OperationDefinition require(Data360Action action) {
@@ -144,7 +151,27 @@ public class OperationRegistry {
         return definition;
     }
 
+    public OperationBindingSnapshot bindingFor(Data360Action action) {
+        return OperationBindingSnapshot.data360Mcp(require(action));
+    }
+
     public Map<Data360Action, OperationDefinition> all() {
         return definitions;
+    }
+
+    public OperationBinding binding(Data360Action action) {
+        var binding = bindings.get(action);
+        if (binding == null) {
+            throw new IllegalArgumentException("No operation binding for " + action.value());
+        }
+        return binding;
+    }
+
+    public Map<Data360Action, OperationBinding> allBindings() {
+        return bindings;
+    }
+
+    public OperationCatalogSnapshot snapshot() {
+        return snapshot;
     }
 }

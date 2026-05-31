@@ -65,6 +65,8 @@ Keep these responsibilities separate:
 
 - Planner: drafts a small plan, using LangGraph4j plus Anthropic, OpenRouter, or deterministic fallback.
 - PlanSpec: the reviewable contract. It should stay small and serializable.
+- Operation bindings: immutable call-boundary snapshots resolved from PlanSpec
+  capability URIs and frozen onto a run before execution.
 - Executor: runs approved steps in order and stores runtime outputs outside the plan. `LocalPlanExecutor` is default; `TemporalPlanExecutor` is the durable orchestration path.
 - Monitor service: registers monitor-phase steps and evaluates goal health after setup.
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
@@ -100,6 +102,8 @@ a workflow engine:
 - Step input is the API/action parameters for that step, not arbitrary hidden state.
 - Step output belongs in runtime execution records such as `StepRun`, not in the
   static plan.
+- Tool names, MCP facade calls, Connect paths, schema hashes, and binding
+  versions belong in `OperationBindingSnapshot`, not in PlanSpec.
 - Dependencies should stay simple and explicit.
 - Use only simple `inputBindings` with `fromStep` and `$.field` paths when a later
   step needs a prior output.
@@ -121,6 +125,10 @@ The execute path should not be broadly agentic by default.
 - Route side effects through named operations such as query, create segment, publish
   segment, create activation, or run activation.
 - Keep execution deterministic and auditable.
+- `PlanController` must pass the draft's `operationBindings` to `PlanExecutor.start`.
+  Do not let execution silently re-resolve tools after approval.
+- `LocalPlanExecutor` and `TemporalPlanExecutor` should call the configured
+  `Data360Client` with the frozen binding snapshot from the run.
 - Use `PlanStore.withRunLock` for run mutations. Do not synchronize on a freshly loaded JDBC `PlanRun`.
 - Keep secrets, org credentials, and bearer tokens out of source files and logs.
 
@@ -139,6 +147,9 @@ Design rules:
 
 - `TemporalPlanExecutor` should only create runs, start workflows, and signal approvals.
 - `Data360PlanWorkflowImpl` owns deterministic orchestration: step order, approval waits, retryable activities, cancellation, and monitor-step skipping.
+- `Data360PlanWorkflowImpl` receives frozen `OperationBindingSnapshot` values at
+  workflow start. Workflow code must not construct `OperationRegistry` or perform
+  MCP discovery during replay.
 - Workflow code must not inject Spring beans, call wall-clock APIs, or mutate JDBC directly.
 - `Data360ActivitiesImpl` is the only Temporal activity that calls the configured Data 360 client.
 - `PlanRunActivitiesImpl` is the only Temporal activity that persists run state, approvals, audit events, and monitor registration.
@@ -197,6 +208,10 @@ Current adapter mapping:
 
 If new Salesforce MCPs are added, wrap them behind typed `Data360Action` or operation
 definitions. Do not let template authors call raw tools directly.
+
+The generic MCP package under `mcp/` is discovery/read-only infrastructure for
+`tools/list`, `search`, and `payload_examples`. Execution should still enter
+through `Data360Client` and an approved `OperationBindingSnapshot`.
 
 ## Connect API Mode
 

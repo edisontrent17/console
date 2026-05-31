@@ -3,6 +3,7 @@ package com.acme.data360agent.execution;
 import com.acme.data360agent.audit.AuditService;
 import com.acme.data360agent.data360.Data360Client;
 import com.acme.data360agent.monitor.MonitorService;
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +22,6 @@ import java.util.concurrent.Executors;
 @ConditionalOnProperty(name = "app.executor", havingValue = "local", matchIfMissing = true)
 public class LocalPlanExecutor implements PlanExecutor {
     private final PlanStore store;
-    private final OperationRegistry operations;
     private final Data360Client data360Client;
     private final MonitorService monitorService;
     private final AuditService audit;
@@ -29,7 +30,6 @@ public class LocalPlanExecutor implements PlanExecutor {
     @Autowired
     public LocalPlanExecutor(PlanStore store, OperationRegistry operations, Data360Client data360Client, MonitorService monitorService, AuditService audit) {
         this.store = store;
-        this.operations = operations;
         this.data360Client = data360Client;
         this.monitorService = monitorService;
         this.audit = audit;
@@ -41,7 +41,12 @@ public class LocalPlanExecutor implements PlanExecutor {
 
     @Override
     public PlanRun start(PlanSpec plan) {
-        var run = store.createRun(plan);
+        return start(plan, null);
+    }
+
+    @Override
+    public PlanRun start(PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
+        var run = store.createRun(plan, operationBindings);
         event(run, null, "run_started", Map.of("status", run.getStatus().name()));
         resumeAsync(run.getId());
         return run;
@@ -99,14 +104,14 @@ public class LocalPlanExecutor implements PlanExecutor {
                     stepRun.setStatus(StepStatus.WAITING_APPROVAL);
                     run.setStatus(RunStatus.WAITING_APPROVAL);
                     store.saveRun(run);
-                    event(run, next.id(), "step_waiting_approval", Map.of("action", next.action().value()));
+                    event(run, next.id(), "step_waiting_approval", stepDetail(run, next));
                     return null;
                 }
                 stepRun.setStatus(StepStatus.RUNNING);
                 stepRun.setStartedAt(Instant.now());
                 run.setStatus(RunStatus.RUNNING);
                 store.saveRun(run);
-                event(run, next.id(), "step_started", Map.of("action", next.action().value()));
+                event(run, next.id(), "step_started", stepDetail(run, next));
                 return new ExecutionStep(run.getPlan(), next);
             });
             if (execution == null) {
@@ -114,10 +119,11 @@ public class LocalPlanExecutor implements PlanExecutor {
             }
 
             try {
-                var definition = operations.require(execution.step().action());
                 var runSnapshot = store.run(runId).orElseThrow(() -> new IllegalArgumentException("Run not found: " + runId));
+                var binding = runSnapshot.bindingForResource(execution.step().action().resource());
+                var definition = OperationBindingDefinitions.from(binding);
                 var resolved = resolveInput(runSnapshot, execution.step());
-                var result = data360Client.call(definition, execution.step(), resolved, new RunContext(runId, execution.plan().id(), execution.plan().context()));
+                var result = data360Client.call(definition, binding, execution.step(), resolved, new RunContext(runId, execution.plan().id(), execution.plan().context()));
                 store.withRunLock(runId, run -> {
                     var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
                     stepRun.setOutput(result.output());
@@ -125,7 +131,7 @@ public class LocalPlanExecutor implements PlanExecutor {
                     stepRun.setStatus(StepStatus.SUCCEEDED);
                     stepRun.setFinishedAt(Instant.now());
                     store.saveRun(run);
-                    event(run, execution.step().id(), "step_succeeded", Map.of("action", execution.step().action().value()));
+                    event(run, execution.step().id(), "step_succeeded", stepDetail(run, execution.step()));
                     return run;
                 });
             } catch (Exception e) {
@@ -193,6 +199,13 @@ public class LocalPlanExecutor implements PlanExecutor {
 
     private Map<String, Object> resolveInput(PlanRun run, PlanStep step) {
         return PlanInputResolver.resolve(step, stepId -> PlanRunSupport.outputForStep(run, stepId));
+    }
+
+    private Map<String, Object> stepDetail(PlanRun run, PlanStep step) {
+        return Map.of(
+                "action", step.action().value(),
+                "binding", run.bindingForResource(step.action().resource()).auditSummary()
+        );
     }
 
     private record ExecutionStep(PlanSpec plan, PlanStep step) {

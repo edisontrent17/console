@@ -2,6 +2,7 @@ package com.acme.data360agent.planner;
 
 import com.acme.data360agent.llm.LlmGateway;
 import com.acme.data360agent.llm.LlmCompletion;
+import com.acme.data360agent.operation.OperationBindingCatalog;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanPhase;
@@ -47,7 +48,7 @@ class LlmPlanGeneratorTest {
                 .thenReturn(new LlmCompletion("mock", "model", repairedPlanJson()));
         var operations = new OperationRegistry();
         var generator = new LlmPlanGenerator(llm, new ObjectMapper(), new ScenarioLibrary(), operations);
-        var planner = new LangGraphData360Planner(generator, new PlanValidator(operations));
+        var planner = new LangGraphData360Planner(generator, new PlanValidator(operations), new OperationBindingCatalog(operations));
 
         var draft = planner.draft(new PlanRequest(
                 "fedex_dormant_reactivation",

@@ -1,12 +1,10 @@
 package com.acme.data360agent.temporal;
 
-import com.acme.data360agent.data360.Data360CallResult;
 import com.acme.data360agent.execution.PlanInputResolver;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.StepStatus;
 import com.acme.data360agent.operation.Effect;
-import com.acme.data360agent.operation.OperationDefinition;
-import com.acme.data360agent.operation.OperationRegistry;
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
@@ -52,6 +50,7 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
 
     private final Set<String> approvedSteps = new LinkedHashSet<>();
     private final Map<String, String> approvalActorsByStep = new LinkedHashMap<>();
+    private final Map<String, OperationBindingSnapshot> bindingsByResource = new LinkedHashMap<>();
     private final Map<String, StepStatus> stepStatuses = new LinkedHashMap<>();
     private final Map<String, Map<String, Object>> outputsByStep = new LinkedHashMap<>();
     private RunStatus runStatus = RunStatus.RUNNING;
@@ -60,8 +59,8 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
     private String cancelReason;
 
     @Override
-    public String run(String runId, PlanSpec plan) {
-        initialize(plan);
+    public String run(String runId, PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
+        initialize(plan, operationBindings);
         while (cancelReason == null) {
             skipReadyMonitorSteps(runId, plan);
             var next = nextRunnableStep(plan);
@@ -113,12 +112,16 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         );
     }
 
-    private void initialize(PlanSpec plan) {
+    private void initialize(PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
         if (!stepStatuses.isEmpty()) {
             return;
         }
+        for (var binding : operationBindings == null ? List.<OperationBindingSnapshot>of() : operationBindings) {
+            bindingsByResource.put(binding.resource(), binding);
+        }
         for (var step : plan.steps()) {
             stepStatuses.put(step.id(), StepStatus.PENDING);
+            bindingFor(step);
         }
     }
 
@@ -143,9 +146,9 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         stepStatuses.put(step.id(), StepStatus.RUNNING);
         state.stepStarted(runId, plan.id(), step.id(), step.action().value());
         try {
-            var operation = operation(step);
+            var binding = bindingFor(step);
             var resolved = PlanInputResolver.resolve(step, this::outputForStep);
-            Data360CallResult result = data360(operation).executeStep(runId, plan.id(), plan.context(), operation, step, resolved);
+            var result = data360(binding).executeStep(new ActivityCommand(runId, plan.id(), plan.context(), binding, step, resolved));
             outputsByStep.put(step.id(), result.output());
             stepStatuses.put(step.id(), StepStatus.SUCCEEDED);
             state.stepSucceeded(runId, plan.id(), step.id(), step.action().value(), result.output(), result.raw());
@@ -158,12 +161,16 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         }
     }
 
-    private OperationDefinition operation(PlanStep step) {
-        return new OperationRegistry().require(step.action());
+    private OperationBindingSnapshot bindingFor(PlanStep step) {
+        var binding = bindingsByResource.get(step.action().resource());
+        if (binding == null) {
+            throw new IllegalArgumentException("No operation binding snapshot for resource: " + step.action().resource());
+        }
+        return binding;
     }
 
-    private Data360Activities data360(OperationDefinition operation) {
-        return operation.effect() == Effect.READ ? data360Reads : data360Mutations;
+    private Data360Activities data360(OperationBindingSnapshot binding) {
+        return binding.effect() == Effect.READ ? data360Reads : data360Mutations;
     }
 
     private Map<String, Object> outputForStep(String stepId) {

@@ -148,6 +148,7 @@ public class PlanValidator {
             validateAslState(entry.getKey(), entry.getValue(), definition.states(), issues);
         }
         validateAslTraversal(definition, issues);
+        validateAslStepProjection(plan, issues);
     }
 
     private void validateAslState(String stateName, AslState state, Map<String, AslState> states, ArrayList<ValidationIssue> issues) {
@@ -239,6 +240,33 @@ public class PlanValidator {
         unreachable.removeAll(visited);
         if (!unreachable.isEmpty()) {
             issues.add(ValidationIssue.error(null, "ASL definition contains unreachable states: " + String.join(", ", unreachable)));
+        }
+    }
+
+    private void validateAslStepProjection(PlanSpec plan, ArrayList<ValidationIssue> issues) {
+        if (plan.steps().isEmpty()) {
+            return;
+        }
+        List<PlanStep> derivedSteps;
+        try {
+            derivedSteps = AslPlanCompiler.toSteps(plan.definition());
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        if (derivedSteps.size() != plan.steps().size()) {
+            issues.add(ValidationIssue.error(null, "Submitted steps must match the ASL definition-derived steps."));
+            return;
+        }
+        for (var index = 0; index < derivedSteps.size(); index++) {
+            var expected = derivedSteps.get(index);
+            var actual = plan.steps().get(index);
+            if (!expected.id().equals(actual.id())
+                    || expected.action() != actual.action()
+                    || !expected.input().equals(actual.input())
+                    || !expected.inputBindings().equals(actual.inputBindings())) {
+                issues.add(ValidationIssue.error(actual.id(), "Submitted steps must match the ASL definition-derived steps."));
+                return;
+            }
         }
     }
 

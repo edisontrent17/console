@@ -2,6 +2,8 @@ package com.acme.data360agent.plan;
 
 import com.acme.data360agent.operation.OperationRegistry;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,79 @@ class PlanValidatorTest {
 
         assertThat(result.ok()).isFalse();
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Task Resource must be a Data 360 capability URI"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "search",
+            "execute",
+            "d360_segment_create",
+            "arn:aws:lambda:us-east-1:123456789012:function:data360"
+    })
+    void rejectsRawToolNamesAndArnsAsAslResources(String resource) {
+        var plan = new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_bad_resource",
+                null,
+                "Bad resource",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "raw_call",
+                        Map.of("raw_call", AslState.task(
+                                "Call raw operation",
+                                resource,
+                                Map.of("query", "UnifiedIndividual"),
+                                "$.raw_call",
+                                null,
+                                true
+                        ))
+                ),
+                List.of()
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Task Resource must be a Data 360 capability URI"));
+    }
+
+    @Test
+    void rejectsSubmittedStepsThatConflictWithAslDefinition() {
+        var plan = new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_conflict",
+                null,
+                "Conflicting ASL and steps",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "preview",
+                        Map.of("preview", AslState.task(
+                                "Preview records",
+                                Data360Action.QUERY.resource(),
+                                Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                                "$.preview",
+                                null,
+                                true
+                        ))
+                ),
+                List.of(new PlanStep(
+                        "preview",
+                        "Preview records",
+                        Data360Action.CREATE_SEGMENT,
+                        Map.of("name", "Should Not Win", "criteria", Map.of()),
+                        List.of(),
+                        true
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Submitted steps must match the ASL definition-derived steps"));
     }
 
     @Test

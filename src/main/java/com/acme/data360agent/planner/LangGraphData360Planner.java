@@ -3,6 +3,7 @@ package com.acme.data360agent.planner;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanValidationResult;
 import com.acme.data360agent.plan.PlanValidator;
+import com.acme.data360agent.operation.OperationBindingCatalog;
 import org.bsc.langgraph4j.StateGraph;
 import org.bsc.langgraph4j.state.AgentState;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,12 @@ public class LangGraphData360Planner implements Data360Planner {
 
     private final LlmPlanGenerator generator;
     private final PlanValidator validator;
+    private final OperationBindingCatalog bindings;
 
-    public LangGraphData360Planner(LlmPlanGenerator generator, PlanValidator validator) {
+    public LangGraphData360Planner(LlmPlanGenerator generator, PlanValidator validator, OperationBindingCatalog bindings) {
         this.generator = generator;
         this.validator = validator;
+        this.bindings = bindings;
     }
 
     @Override
@@ -41,7 +44,8 @@ public class LangGraphData360Planner implements Data360Planner {
             return new PlanDraft(
                     state.<PlanSpec>value("plan").orElseThrow(),
                     state.<PlanValidationResult>value("validation").orElseThrow(),
-                    state.<List<String>>value("stages").orElse(List.of())
+                    state.<List<String>>value("stages").orElse(List.of()),
+                    bindings.snapshotsFor(state.<PlanSpec>value("plan").orElseThrow())
             );
         } catch (Exception e) {
             throw new IllegalStateException("LangGraph planner failed.", e);

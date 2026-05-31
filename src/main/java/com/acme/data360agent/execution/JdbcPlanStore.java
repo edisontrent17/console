@@ -1,5 +1,6 @@
 package com.acme.data360agent.execution;
 
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.planner.PlanDraft;
 import com.acme.data360agent.state.JsonStateCodec;
@@ -26,6 +27,8 @@ public class JdbcPlanStore implements PlanStore {
     private static final TypeReference<List<StepSnapshot>> STEPS = new TypeReference<>() {
     };
     private static final TypeReference<LinkedHashSet<String>> APPROVALS = new TypeReference<>() {
+    };
+    private static final TypeReference<List<OperationBindingSnapshot>> OPERATION_BINDINGS = new TypeReference<>() {
     };
 
     private final JdbcTemplate jdbc;
@@ -77,16 +80,17 @@ public class JdbcPlanStore implements PlanStore {
         var planJson = codec.write(run.getPlan());
         var stepsJson = codec.write(run.getSteps().stream().map(StepSnapshot::from).toList());
         var approvalsJson = codec.write(run.getApprovedSteps());
+        var operationBindingsJson = codec.write(run.getOperationBindings());
         var updated = jdbc.update("""
                 UPDATE plan_runs
-                SET status = ?, plan_json = ?, steps_json = ?, approved_steps_json = ?, updated_at = CURRENT_TIMESTAMP
+                SET status = ?, plan_json = ?, steps_json = ?, approved_steps_json = ?, operation_bindings_json = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE run_id = ?
-                """, run.getStatus().name(), planJson, stepsJson, approvalsJson, run.getId());
+                """, run.getStatus().name(), planJson, stepsJson, approvalsJson, operationBindingsJson, run.getId());
         if (updated == 0) {
             jdbc.update("""
-                    INSERT INTO plan_runs (run_id, plan_id, status, plan_json, steps_json, approved_steps_json, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    """, run.getId(), run.getPlan().id(), run.getStatus().name(), planJson, stepsJson, approvalsJson, codec.timestamp(run.getCreatedAt()));
+                    INSERT INTO plan_runs (run_id, plan_id, status, plan_json, steps_json, approved_steps_json, operation_bindings_json, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """, run.getId(), run.getPlan().id(), run.getStatus().name(), planJson, stepsJson, approvalsJson, operationBindingsJson, codec.timestamp(run.getCreatedAt()));
         }
         return run;
     }
@@ -109,6 +113,10 @@ public class JdbcPlanStore implements PlanStore {
             run.setStatus(RunStatus.valueOf(rs.getString("status")));
             run.getApprovedSteps().clear();
             run.getApprovedSteps().addAll(codec.read(rs.getString("approved_steps_json"), APPROVALS));
+            var operationBindingsJson = rs.getString("operation_bindings_json");
+            if (operationBindingsJson != null && !operationBindingsJson.isBlank()) {
+                run.setOperationBindings(codec.read(operationBindingsJson, OPERATION_BINDINGS));
+            }
             var snapshots = codec.read(rs.getString("steps_json"), STEPS);
             for (var snapshot : snapshots) {
                 run.getSteps().stream()

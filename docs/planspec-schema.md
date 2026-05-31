@@ -74,8 +74,18 @@ The key rule remains:
 
 ```text
 PlanSpec Resource = stable Data 360 capability URI
-Executor binding = Temporal activity -> MCP or Connect API call
+OperationBindingSnapshot = approved execution binding for that capability URI
+Executor binding = Temporal activity/local executor -> MCP or Connect API call
 ```
+
+Operation bindings are deliberately outside the PlanSpec schema. A PlanSpec state
+does not name `search`, `execute`, `d360_segment_create`, or an HTTP endpoint.
+When a draft is created, the app resolves each capability URI into an immutable
+`OperationBindingSnapshot` with transport, facade tool, underlying tool, effect,
+approval requirement, parameter schema hash, and binding version. That binding
+list is saved with the draft, copied onto the run at approval/start time, and
+persisted in `plan_runs.operation_bindings_json` so Temporal replay and local
+execution use the same frozen call boundary.
 
 So this is valid:
 

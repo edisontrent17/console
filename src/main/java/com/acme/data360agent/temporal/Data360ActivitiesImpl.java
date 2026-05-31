@@ -1,14 +1,9 @@
 package com.acme.data360agent.temporal;
 
-import com.acme.data360agent.data360.Data360CallResult;
 import com.acme.data360agent.data360.Data360Client;
+import com.acme.data360agent.execution.OperationBindingDefinitions;
 import com.acme.data360agent.execution.RunContext;
-import com.acme.data360agent.operation.OperationDefinition;
-import com.acme.data360agent.plan.PlanContext;
-import com.acme.data360agent.plan.PlanStep;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
 public class Data360ActivitiesImpl implements Data360Activities {
@@ -19,7 +14,15 @@ public class Data360ActivitiesImpl implements Data360Activities {
     }
 
     @Override
-    public Data360CallResult executeStep(String runId, String planId, PlanContext context, OperationDefinition operation, PlanStep step, Map<String, Object> resolvedInput) {
-        return data360Client.call(operation, step, resolvedInput, new RunContext(runId, planId, context));
+    public ActivityResult executeStep(ActivityCommand command) {
+        var operation = OperationBindingDefinitions.from(command.binding());
+        var result = data360Client.call(
+                operation,
+                command.binding(),
+                command.step(),
+                command.resolvedInput(),
+                new RunContext(command.runId(), command.planId(), command.context())
+        );
+        return new ActivityResult(result.output(), result.raw());
     }
 }

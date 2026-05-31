@@ -1,7 +1,6 @@
 package com.acme.data360agent.temporal;
 
-import com.acme.data360agent.data360.Data360CallResult;
-import com.acme.data360agent.operation.OperationDefinition;
+import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanPhase;
@@ -50,7 +49,13 @@ class Data360PlanWorkflowImplTest {
                 .setWorkflowId("test-run-1")
                 .setTaskQueue(TASK_QUEUE)
                 .build());
-        WorkflowClient.start(workflow::run, "run_1", plan());
+        var plan = plan();
+        var registry = new OperationRegistry();
+        var operationBindings = plan.steps().stream()
+                .map(step -> registry.bindingFor(step.action()))
+                .distinct()
+                .toList();
+        WorkflowClient.start(workflow::run, "run_1", plan, operationBindings);
 
         waitForStatus(workflow, "WAITING_APPROVAL");
         assertThat(workflow.status()).containsEntry("waitingStepId", "create_segment");
@@ -124,12 +129,15 @@ class Data360PlanWorkflowImplTest {
 
     private static class FakeData360Activities implements Data360Activities {
         @Override
-        public Data360CallResult executeStep(String runId, String planId, PlanContext context, OperationDefinition operation, PlanStep step, Map<String, Object> resolvedInput) {
-            if (step.action() == Data360Action.CREATE_SEGMENT) {
-                assertThat(resolvedInput).containsKey("criteria");
-                return new Data360CallResult(Map.of("segmentId", "seg_temporal"), Map.of("mode", "test"));
+        public ActivityResult executeStep(ActivityCommand command) {
+            assertThat(command.binding().resource()).isEqualTo(command.step().action().resource());
+            if (command.step().action() == Data360Action.CREATE_SEGMENT) {
+                assertThat(command.binding().underlyingTool()).isEqualTo("d360_segment_create");
+                assertThat(command.resolvedInput()).containsKey("criteria");
+                return new ActivityResult(Map.of("segmentId", "seg_temporal"), Map.of("mode", "test"));
             }
-            return new Data360CallResult(Map.of("rowCount", 2, "sql", resolvedInput.get("sql")), Map.of("mode", "test"));
+            assertThat(command.binding().underlyingTool()).isEqualTo("d360_query_sql");
+            return new ActivityResult(Map.of("rowCount", 2, "sql", command.resolvedInput().get("sql")), Map.of("mode", "test"));
         }
     }
 

@@ -7,12 +7,14 @@ import com.acme.data360agent.execution.PlanRun;
 import com.acme.data360agent.execution.PlanRunSupport;
 import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.execution.StepStatus;
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.plan.PlanSpec;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,13 +34,18 @@ public class TemporalPlanExecutor implements PlanExecutor {
 
     @Override
     public PlanRun start(PlanSpec plan) {
-        var run = store.createRun(plan);
+        return start(plan, null);
+    }
+
+    @Override
+    public PlanRun start(PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
+        var run = store.createRun(plan, operationBindings);
         audit.event(run.getId(), plan.id(), null, "run_started", Map.of("status", run.getStatus().name(), "executor", "temporal"));
         var workflow = client.newWorkflowStub(Data360PlanWorkflow.class, WorkflowOptions.newBuilder()
                 .setWorkflowId(properties.workflowId(run.getId()))
                 .setTaskQueue(properties.resolvedTaskQueue())
                 .build());
-        WorkflowClient.start(workflow::run, run.getId(), plan);
+        WorkflowClient.start(workflow::run, run.getId(), plan, run.getOperationBindings());
         return run;
     }
 
