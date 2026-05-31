@@ -36,6 +36,36 @@ class PlanValidatorTest {
     }
 
     @Test
+    void rejectsRawToolOrUrlResourcesInAslDefinition() {
+        var plan = new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_bad_resource",
+                null,
+                "Bad resource",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "call_tool",
+                        Map.of("call_tool", AslState.task(
+                                "Call a raw tool",
+                                "https://example.com/services/data",
+                                Map.of("body", Map.of()),
+                                "$.call_tool",
+                                null,
+                                true
+                        ))
+                ),
+                List.of()
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Task Resource must be a Data 360 capability URI"));
+    }
+
+    @Test
     void rejectsQueryWithoutLimit() {
         var plan = new PlanSpec(
                 "plan_test",

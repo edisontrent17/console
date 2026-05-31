@@ -6,6 +6,7 @@ import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.plan.PlanValidationResult;
 import com.acme.data360agent.scenario.CustomerScenario;
 import com.acme.data360agent.scenario.ScenarioLibrary;
 import com.acme.data360agent.support.Ids;
@@ -40,22 +41,22 @@ public class LlmPlanGenerator {
                 You draft small, auditable Data 360 PlanSpec JSON.
                 Return only JSON. No markdown. No commentary.
 
-                PlanSpec is the governance contract. It is not a workflow engine.
+                PlanSpec is the governance contract. It is a governed Amazon States Language profile that Temporal executes.
 
-                Use only the allowed actions listed in the prompt.
+                Use only the allowed Data 360 capability resources listed in the prompt.
 
                 Rules:
-                - Keep the plan ordered.
-                - Use phases exactly as: discover, setup, monitor.
-                - Discover steps inspect or preview current Data 360 state.
-                - Setup steps create or publish Data 360 assets through governed Connect API operations.
-                - Monitor steps define goal-health checks after setup.
+                - Emit definition.Version="1.0" and definition.QueryLanguage="JSONPath".
+                - Use only Task states.
+                - Every state name must be snake_case or lower camel case and start with a letter.
+                - Use Resource as a stable Data 360 capability URI, never a tool name.
+                - Use Parameters for human-reviewable domain parameters, not raw HTTP payloads.
+                - Use ResultPath exactly as "$.<stateName>".
+                - Use Next for ordered flow and End=true on the final state.
                 - Every query must be SELECT-only and include LIMIT.
-                - Any create, update, publish, calculated insight run, or activation step must set needsApproval=true.
-                - Use data360.runActivation only if the user explicitly asks to run, send, or execute an activation.
-                - Do not include raw MCP tool names, API URLs, prompts, loops, code, retries, timers, or arbitrary expressions.
-                - Step inputs must be human-reviewable domain parameters, not raw HTTP payloads.
-                - Prefer dependsOn. If step output is needed, use inputBindings with simple JSON paths like {"segmentId":{"fromStep":"create_segment","path":"$.segmentId"}}.
+                - Use urn:salesforce:data360:capability:activation.run only if the user explicitly asks to run, send, or execute an activation.
+                - Do not include raw MCP tool names, API URLs, AWS ARNs, Credentials, prompts, loops, code, Retry, Catch, Map, Parallel, timers, or arbitrary expressions.
+                - If step output is needed, prefer domain references like segmentIdFromStep, activationIdFromStep, insightIdFromStep, criteriaFromStep, or queryFromStep.
                 - Keep monitors read-only. A monitor can recommend follow-up later, but it must not silently mutate Data 360.
                 """;
         var user = """
@@ -63,7 +64,7 @@ public class LlmPlanGenerator {
 
                 Required JSON shape:
                 {
-                  "schemaVersion": "2026-05-31",
+                  "schemaVersion": "data360-asl-profile-2026-05-31",
                   "id": "plan_<short id>",
                   "scenarioId": "...",
                   "goal": "...",
@@ -72,21 +73,32 @@ public class LlmPlanGenerator {
                     "dataspace": "...",
                     "environment": "sandbox|production"
                   },
-                  "steps": [
-                    {
-                      "id": "snake_case",
-                      "title": "...",
-                      "phase": "discover|setup|monitor",
-                      "action": "data360.query",
-                      "input": {},
-                      "dependsOn": [],
-                      "inputBindings": {},
-                      "needsApproval": false
+                  "definition": {
+                    "Version": "1.0",
+                    "QueryLanguage": "JSONPath",
+                    "StartAt": "inspect_model",
+                    "States": {
+                      "inspect_model": {
+                        "Type": "Task",
+                        "Comment": "Inspect Data 360 metadata",
+                        "Resource": "urn:salesforce:data360:capability:metadata.describe",
+                        "Parameters": {"objects": ["UnifiedIndividual", "Segment", "Activation"]},
+                        "ResultPath": "$.inspect_model",
+                        "Next": "preview_audience"
+                      },
+                      "preview_audience": {
+                        "Type": "Task",
+                        "Comment": "Preview the candidate audience",
+                        "Resource": "urn:salesforce:data360:capability:query",
+                        "Parameters": {"sql": "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 100", "limit": 100},
+                        "ResultPath": "$.preview_audience",
+                        "End": true
+                      }
                     }
-                  ]
+                  }
                 }
 
-                Allowed actions:
+                Allowed capability resources:
                 %s
 
                 Ground this plan in the selected public customer scenario:
@@ -94,13 +106,60 @@ public class LlmPlanGenerator {
 
                 User goal: %s
                 Context: %s
-                """.formatted(allowedActions(), toJson(scenario), request.goal(), request.context());
+                """.formatted(allowedResources(), toJson(scenario), request.goal(), request.context());
 
         var completion = llm.completeJson(system, user);
         try {
             return objectMapper.readValue(extractJson(completion.text()), PlanSpec.class);
         } catch (Exception e) {
             throw new IllegalStateException("%s returned invalid PlanSpec JSON: %s".formatted(completion.provider(), completion.text()), e);
+        }
+    }
+
+    public boolean canRepair() {
+        return llm.configured();
+    }
+
+    public PlanSpec repair(PlanRequest request, PlanSpec invalidPlan, PlanValidationResult validation) {
+        if (!llm.configured()) {
+            return invalidPlan;
+        }
+        var system = """
+                You repair Data 360 PlanSpec JSON.
+                Return only JSON. No markdown. No commentary.
+
+                The corrected PlanSpec must use the governed Amazon States Language profile:
+                - schemaVersion must be data360-asl-profile-2026-05-31.
+                - definition.Version must be "1.0".
+                - definition.QueryLanguage must be "JSONPath".
+                - Use only Task states.
+                - Use only allowed Data 360 capability Resource URIs.
+                - ResultPath must be "$.<stateName>".
+                - Use exactly one of Next or End=true per Task state.
+                - Do not include raw MCP tool names, API URLs, AWS ARNs, Credentials, Retry, Catch, Map, Parallel, code, or arbitrary expressions.
+                - Preserve the user's goal and scenario unless they are clearly malformed.
+                """;
+        var user = """
+                Repair this PlanSpec so every validator passes.
+
+                Validation issues:
+                %s
+
+                Allowed capability resources:
+                %s
+
+                Original request:
+                %s
+
+                Invalid PlanSpec:
+                %s
+                """.formatted(toJson(validation), allowedResources(), toJson(request), toJson(invalidPlan));
+
+        var completion = llm.completeJson(system, user);
+        try {
+            return objectMapper.readValue(extractJson(completion.text()), PlanSpec.class);
+        } catch (Exception e) {
+            throw new IllegalStateException("%s returned invalid repaired PlanSpec JSON: %s".formatted(completion.provider(), completion.text()), e);
         }
     }
 
@@ -213,18 +272,22 @@ public class LlmPlanGenerator {
         return new PlanSpec(Ids.prefixed("plan"), scenario.id(), request.goal(), request.context(), steps);
     }
 
-    private List<String> allowedActions() {
+    private List<String> allowedResources() {
         return operations.all().keySet().stream()
-                .map(Data360Action::value)
+                .map(Data360Action::resource)
                 .sorted()
                 .toList();
     }
 
     private String toJson(CustomerScenario scenario) {
+        return toJson((Object) scenario);
+    }
+
+    private String toJson(Object value) {
         try {
-            return objectMapper.writeValueAsString(scenario);
+            return objectMapper.writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to serialize scenario.", e);
+            throw new IllegalStateException("Unable to serialize planner payload.", e);
         }
     }
 

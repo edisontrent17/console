@@ -64,10 +64,11 @@ export default class PlanWorkspace extends LightningElement {
 
     get reviewStats() {
         const steps = this.plan?.steps || [];
+        const states = Object.keys(this.plan?.definition?.States || {});
         return [
-            { label: "Steps", value: number(steps.length) },
+            { label: "ASL states", value: number(states.length || steps.length) },
             { label: "Approval gates", value: number(steps.filter((step) => step.needsApproval).length) },
-            { label: "Bindings", value: number(steps.reduce((total, step) => total + Object.keys(step.inputBindings || {}).length, 0)) },
+            { label: "StartAt", value: this.plan?.definition?.StartAt || "n/a" },
             { label: "Monitors", value: number(steps.filter((step) => slug(step.phase) === "monitor").length) }
         ];
     }
@@ -91,9 +92,12 @@ export default class PlanWorkspace extends LightningElement {
     get planRows() {
         return (this.plan?.steps || []).map((step, index) => {
             const runStep = this.runStepMap.get(step.id);
+            const aslState = this.plan?.definition?.States?.[step.id] || {};
             const status = runStep?.status || "PENDING";
             return {
                 ...step,
+                resource: aslState.Resource || step.action,
+                resultPath: aslState.ResultPath || `$.${step.id}`,
                 index: index + 1,
                 status,
                 key: step.id,
@@ -118,7 +122,14 @@ export default class PlanWorkspace extends LightningElement {
     }
 
     get selectedStep() {
-        return (this.plan?.steps || []).find((step) => step.id === this.selectedStepId) || this.plan?.steps?.[0];
+        const step = (this.plan?.steps || []).find((item) => item.id === this.selectedStepId) || this.plan?.steps?.[0];
+        if (!step) return step;
+        const aslState = this.plan?.definition?.States?.[step.id] || {};
+        return {
+            ...step,
+            resource: aslState.Resource || step.action,
+            resultPath: aslState.ResultPath || `$.${step.id}`
+        };
     }
 
     get selectedRunStep() {
@@ -145,7 +156,9 @@ export default class PlanWorkspace extends LightningElement {
     }
 
     get selectedPreviews() {
+        const aslState = this.plan?.definition?.States?.[this.selectedStep?.id] || {};
         return [
+            { label: "ASL State", value: toJson(aslState) },
             { label: "Input", value: toJson(this.selectedStep?.input || {}) },
             { label: "Bindings", value: toJson(this.selectedStep?.inputBindings || {}) },
             { label: "Output", value: toJson(this.selectedRunStep?.output || {}) },

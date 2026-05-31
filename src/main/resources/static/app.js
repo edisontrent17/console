@@ -11481,7 +11481,7 @@ const $fragment2$4 = parseFragment`<label class="slds-form-element__label${0}"${
 const $fragment3$4 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
 const $fragment4$4 = parseFragment`<div class="slds-form-element${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Goal</label><div class="slds-form-element__control${0}"${2}><textarea${"a4:id"} class="slds-textarea${0}"${2}>${"t5"}</textarea></div></div>`;
 const $fragment5$4 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button></div>`;
-const $fragment6$4 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Human-approved setup plan before any Data 360 mutation</p></div></header>`;
+const $fragment6$4 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Governed ASL profile before any Data 360 mutation</p></div></header>`;
 const $fragment7$3 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
 const $fragment8$2 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
 const $fragment9$2 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
@@ -11489,7 +11489,7 @@ const $fragment10$2 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${
 const $fragment11$2 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
 const $fragment12$2 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
 const $fragment13$2 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
-const $fragment14$2 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Action</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
+const $fragment14$2 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
 const $fragment15$2 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
 const $fragment16$1 = parseFragment`<td${3}>${"t1"}</td>`;
 const $fragment17$1 = parseFragment`<td${3}>${"t1"}</td>`;
@@ -11502,7 +11502,7 @@ const $fragment23 = parseFragment`<p class="slds-text-body_small slds-text-color
 const $fragment24 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
 const $fragment25 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
 const $fragment26 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
-const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t25"}</dd></div></dl>`;
+const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
 const $fragment28 = parseFragment`<article class="json-preview${0}"${2}><strong${3}>${"t2"}</strong><pre${3}>${"t4"}</pre></article>`;
 const stc0$4 = {
   classMap: {
@@ -11717,7 +11717,7 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
       attrs: {
         "title": row.title
       }
-    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$1, 47, [api_static_part(1, null, api_dynamic_text(row.action))]), api_static_fragment($fragment17$1, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$1, 51, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$1, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$1, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$1, 51, [api_static_part(1, {
       className: api_normalize_class_name(row.statusClass)
     }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$1, 53, [api_static_part(1, {
       className: api_normalize_class_name(row.approvalClass)
@@ -11731,7 +11731,7 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
     }, null)]) : null])]);
   }))])]) : null, $cmp.hasDraft ? api_element("section", stc16, api_flatten([api_static_fragment($fragment21$1, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
     return api_static_fragment($fragment22, api_key(61, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
-  }) : stc17, !$cmp.hasApprovalRows ? api_static_fragment($fragment23, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18, [api_static_fragment($fragment24, 66), api_element("div", stc19, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(25, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20, api_iterator($cmp.selectedPreviews, function (preview) {
+  }) : stc17, !$cmp.hasApprovalRows ? api_static_fragment($fragment23, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18, [api_static_fragment($fragment24, 66), api_element("div", stc19, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20, api_iterator($cmp.selectedPreviews, function (preview) {
     return api_static_fragment($fragment28, api_key(76, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
   })) : null])])])];
   /*LWC compiler v9.2.2*/
@@ -11839,15 +11839,16 @@ class PlanWorkspace extends LightningElement {
   }
   get reviewStats() {
     const steps = this.plan?.steps || [];
+    const states = Object.keys(this.plan?.definition?.States || {});
     return [{
-      label: "Steps",
-      value: number(steps.length)
+      label: "ASL states",
+      value: number(states.length || steps.length)
     }, {
       label: "Approval gates",
       value: number(steps.filter(step => step.needsApproval).length)
     }, {
-      label: "Bindings",
-      value: number(steps.reduce((total, step) => total + Object.keys(step.inputBindings || {}).length, 0))
+      label: "StartAt",
+      value: this.plan?.definition?.StartAt || "n/a"
     }, {
       label: "Monitors",
       value: number(steps.filter(step => slug(step.phase) === "monitor").length)
@@ -11869,9 +11870,12 @@ class PlanWorkspace extends LightningElement {
   get planRows() {
     return (this.plan?.steps || []).map((step, index) => {
       const runStep = this.runStepMap.get(step.id);
+      const aslState = this.plan?.definition?.States?.[step.id] || {};
       const status = runStep?.status || "PENDING";
       return {
         ...step,
+        resource: aslState.Resource || step.action,
+        resultPath: aslState.ResultPath || `$.${step.id}`,
         index: index + 1,
         status,
         key: step.id,
@@ -11893,7 +11897,14 @@ class PlanWorkspace extends LightningElement {
     }));
   }
   get selectedStep() {
-    return (this.plan?.steps || []).find(step => step.id === this.selectedStepId) || this.plan?.steps?.[0];
+    const step = (this.plan?.steps || []).find(item => item.id === this.selectedStepId) || this.plan?.steps?.[0];
+    if (!step) return step;
+    const aslState = this.plan?.definition?.States?.[step.id] || {};
+    return {
+      ...step,
+      resource: aslState.Resource || step.action,
+      resultPath: aslState.ResultPath || `$.${step.id}`
+    };
   }
   get selectedRunStep() {
     return this.selectedStep ? this.runStepMap.get(this.selectedStep.id) : null;
@@ -11914,7 +11925,11 @@ class PlanWorkspace extends LightningElement {
     return this.selectedStep?.needsApproval ? "Required" : "Automatic";
   }
   get selectedPreviews() {
+    const aslState = this.plan?.definition?.States?.[this.selectedStep?.id] || {};
     return [{
+      label: "ASL State",
+      value: toJson(aslState)
+    }, {
       label: "Input",
       value: toJson(this.selectedStep?.input || {})
     }, {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +37,8 @@ public class PlanValidator {
         if (!PlanSpec.CURRENT_SCHEMA_VERSION.equals(plan.schemaVersion())) {
             issues.add(ValidationIssue.error(null, "Unsupported PlanSpec schemaVersion: " + plan.schemaVersion()));
         }
+
+        validateAslProfile(plan, issues);
 
         if (plan.steps().size() > MAX_STEPS) {
             issues.add(ValidationIssue.error(null, "Plan cannot contain more than " + MAX_STEPS + " steps."));
@@ -113,6 +116,130 @@ public class PlanValidator {
             validatePhase(step, definition, issues);
         }
         return new PlanValidationResult(List.copyOf(issues));
+    }
+
+    private void validateAslProfile(PlanSpec plan, ArrayList<ValidationIssue> issues) {
+        var definition = plan.definition();
+        if (definition == null) {
+            issues.add(ValidationIssue.error(null, "PlanSpec must include an ASL definition."));
+            return;
+        }
+        if (!AslStateMachine.VERSION.equals(definition.version())) {
+            issues.add(ValidationIssue.error(null, "ASL definition.Version must be " + AslStateMachine.VERSION + "."));
+        }
+        if (!AslStateMachine.QUERY_LANGUAGE.equals(definition.queryLanguage())) {
+            issues.add(ValidationIssue.error(null, "Data 360 ASL profile supports only QueryLanguage=JSONPath."));
+        }
+        if (!hasNonBlank(definition.startAt())) {
+            issues.add(ValidationIssue.error(null, "ASL definition.StartAt is required."));
+        }
+        if (definition.states().isEmpty()) {
+            issues.add(ValidationIssue.error(null, "ASL definition.States must contain at least one state."));
+            return;
+        }
+        if (definition.states().size() > MAX_STEPS) {
+            issues.add(ValidationIssue.error(null, "ASL definition cannot contain more than " + MAX_STEPS + " states."));
+        }
+        if (hasNonBlank(definition.startAt()) && !definition.states().containsKey(definition.startAt())) {
+            issues.add(ValidationIssue.error(null, "ASL definition.StartAt must reference an existing state."));
+        }
+
+        for (var entry : definition.states().entrySet()) {
+            validateAslState(entry.getKey(), entry.getValue(), definition.states(), issues);
+        }
+        validateAslTraversal(definition, issues);
+    }
+
+    private void validateAslState(String stateName, AslState state, Map<String, AslState> states, ArrayList<ValidationIssue> issues) {
+        if (!hasNonBlank(stateName) || !STEP_ID.matcher(stateName).matches()) {
+            issues.add(ValidationIssue.error(stateName, "ASL state names must start with a letter and contain only letters, numbers, underscores, or hyphens."));
+        }
+        if (state == null) {
+            issues.add(ValidationIssue.error(stateName, "ASL state is missing."));
+            return;
+        }
+        if (!"Task".equals(state.type())) {
+            issues.add(ValidationIssue.error(stateName, "Data 360 ASL profile currently supports only Task states."));
+        }
+        if (!hasNonBlank(state.resource())) {
+            issues.add(ValidationIssue.error(stateName, "Task Resource is required."));
+        } else {
+            try {
+                Data360Action.fromResource(state.resource());
+            } catch (IllegalArgumentException e) {
+                issues.add(ValidationIssue.error(stateName, "Task Resource must be a Data 360 capability URI, not a raw tool, URL, or AWS ARN."));
+            }
+        }
+        if (hasNonBlank(state.inputPath())) {
+            issues.add(ValidationIssue.error(stateName, "InputPath is reserved for a later profile. Use Parameters with explicit fields."));
+        }
+        if (hasNonBlank(state.outputPath())) {
+            issues.add(ValidationIssue.error(stateName, "OutputPath is reserved for a later profile. Use ResultPath with $.stateName."));
+        }
+        if (!state.retry().isEmpty() || !state.catchers().isEmpty()) {
+            issues.add(ValidationIssue.error(stateName, "Retry and Catch are reserved for a later profile; Temporal owns retries in this version."));
+        }
+        if (state.timeoutSeconds() != null && (state.timeoutSeconds() < 1 || state.timeoutSeconds() > 300)) {
+            issues.add(ValidationIssue.error(stateName, "TimeoutSeconds must be between 1 and 300."));
+        }
+        if (state.heartbeatSeconds() != null) {
+            issues.add(ValidationIssue.error(stateName, "HeartbeatSeconds is reserved for a later profile."));
+        }
+        if (!hasNonBlank(state.resultPath())) {
+            issues.add(ValidationIssue.error(stateName, "Task ResultPath is required and must be $.stateName."));
+        } else if (!state.resultPath().equals("$." + stateName)) {
+            issues.add(ValidationIssue.error(stateName, "Task ResultPath must be $." + stateName + "."));
+        }
+
+        var hasNext = hasNonBlank(state.next());
+        var ends = Boolean.TRUE.equals(state.end());
+        if (hasNext == ends) {
+            issues.add(ValidationIssue.error(stateName, "Task state must set exactly one of Next or End=true."));
+        }
+        if (hasNext && !states.containsKey(state.next())) {
+            issues.add(ValidationIssue.error(stateName, "Task Next must reference an existing state: " + state.next()));
+        }
+        validateAslParameters(stateName, state.parameters(), issues);
+    }
+
+    private void validateAslParameters(String stateName, Map<String, Object> parameters, ArrayList<ValidationIssue> issues) {
+        for (var entry : parameters.entrySet()) {
+            var key = entry.getKey();
+            if (!hasNonBlank(key)) {
+                issues.add(ValidationIssue.error(stateName, "Parameters keys cannot be blank."));
+                continue;
+            }
+            if (key.endsWith(".$")) {
+                var path = String.valueOf(entry.getValue());
+                if (!path.matches("^\\$\\.[A-Za-z][A-Za-z0-9_-]{0,63}\\.[A-Za-z][A-Za-z0-9_.-]*$")) {
+                    issues.add(ValidationIssue.error(stateName, "Dynamic Parameters must use simple $.state.field paths."));
+                }
+            }
+        }
+    }
+
+    private void validateAslTraversal(AslStateMachine definition, ArrayList<ValidationIssue> issues) {
+        if (definition == null || !hasNonBlank(definition.startAt()) || !definition.states().containsKey(definition.startAt())) {
+            return;
+        }
+        var visited = new LinkedHashSet<String>();
+        var current = definition.startAt();
+        while (current != null && !current.isBlank()) {
+            if (!visited.add(current)) {
+                issues.add(ValidationIssue.error(current, "ASL definition contains a cycle."));
+                return;
+            }
+            var state = definition.states().get(current);
+            if (state == null || !"Task".equals(state.type())) {
+                return;
+            }
+            current = Boolean.TRUE.equals(state.end()) ? null : state.next();
+        }
+        var unreachable = new LinkedHashSet<>(definition.states().keySet());
+        unreachable.removeAll(visited);
+        if (!unreachable.isEmpty()) {
+            issues.add(ValidationIssue.error(null, "ASL definition contains unreachable states: " + String.join(", ", unreachable)));
+        }
     }
 
     private void validateQuery(PlanStep step, ArrayList<ValidationIssue> issues) {

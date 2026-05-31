@@ -32,12 +32,14 @@ The current PlanSpec phases are:
 - `setup`: create, update, publish, or activate Data 360 assets through governed operations
 - `monitor`: evaluate goal-health metrics after setup
 
-PlanSpec deliberately stays small. It supports ordered steps, dependencies,
-typed inputs, approval flags, and simple `inputBindings`. It does not support
-loops, arbitrary expressions, raw HTTP, custom retries, or generated code.
-The canonical PlanSpec schema is versioned JSON Schema at
-`schemas/planspec.schema.json`; XML can be added later as an import/export format
-that compiles into canonical JSON before validation and execution.
+PlanSpec deliberately stays small. It is now a governed Amazon States Language
+profile: `definition.StartAt`, `definition.States`, `Task`, `Resource`,
+`Parameters`, `ResultPath`, `Next`, and `End`. `Resource` must be a stable Data
+360 capability URI such as `urn:salesforce:data360:capability:segment.create`,
+not an MCP tool name, raw HTTP URL, or AWS ARN. The canonical PlanSpec schema is
+versioned JSON Schema at `schemas/planspec.schema.json`; XML can be added later
+as an import/export format that compiles into canonical JSON before validation
+and execution.
 
 ## Real Scenario Packs
 
@@ -237,6 +239,18 @@ app.monitors.scheduler.fixed-delay-ms=60000
 The scheduler claims due monitors with a short lease before running them. Cadence
 values currently map to minute, hourly, daily, or weekly intervals. Manual
 `run-now` still works regardless of the scheduler.
+
+## PlanSpec Validation
+
+PlanSpec is validated in layers: standard ASL shape, the stricter Data 360 ASL
+profile, and per-capability input rules before execution. The LangGraph planner
+uses validation feedback to repair invalid model output before returning a draft.
+Developers and agents can run the bundled ASL validator against a PlanSpec file:
+
+```bash
+npm run validate:asl
+npm run validate:asl -- path/to/plan.json
+```
 
 ## Temporal Executor
 

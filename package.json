@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/copy-slds.mjs && rollup -c",
-    "check": "npm run build"
+    "check": "npm run build",
+    "validate:asl": "node scripts/validate-planspec-asl.mjs"
   },
   "dependencies": {
     "@lwc/synthetic-shadow": "9.2.2",
@@ -16,6 +17,7 @@
     "@lwc/rollup-plugin": "9.2.2",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@rollup/plugin-replace": "^6.0.2",
+    "asl-validator": "^4.0.0",
     "rollup": "4.60.4"
   }
 }

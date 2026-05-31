@@ -21,20 +21,18 @@ class PlanSpecSchemaTest {
         assertThat(schema.path("$schema").asText()).isEqualTo("https://json-schema.org/draft/2020-12/schema");
         assertThat(schema.at("/properties/schemaVersion/const").asText()).isEqualTo(PlanSpec.CURRENT_SCHEMA_VERSION);
         assertThat(textValues(schema.path("required")))
-                .containsExactly("schemaVersion", "id", "goal", "context", "steps");
+                .containsExactly("schemaVersion", "id", "goal", "context", "definition");
+        assertThat(schema.at("/$defs/stateMachine/properties/Version/const").asText()).isEqualTo(AslStateMachine.VERSION);
+        assertThat(schema.at("/$defs/stateMachine/properties/QueryLanguage/const").asText()).isEqualTo(AslStateMachine.QUERY_LANGUAGE);
     }
 
     @Test
-    void actionAndPhaseEnumsMatchJavaModel() throws Exception {
+    void capabilityResourceEnumMatchesJavaModel() throws Exception {
         var schema = readSchema();
 
-        var schemaActions = textValues(schema.at("/$defs/data360Action/enum"));
-        var javaActions = Arrays.stream(Data360Action.values()).map(Data360Action::value).toList();
-        assertThat(schemaActions).containsExactlyElementsOf(javaActions);
-
-        var schemaPhases = textValues(schema.at("/$defs/phase/enum"));
-        var javaPhases = Arrays.stream(PlanPhase.values()).map(PlanPhase::value).toList();
-        assertThat(schemaPhases).containsExactlyElementsOf(javaPhases);
+        var schemaResources = textValues(schema.at("/$defs/capabilityResource/enum"));
+        var javaResources = Arrays.stream(Data360Action.values()).map(Data360Action::resource).toList();
+        assertThat(schemaResources).containsExactlyElementsOf(javaResources);
     }
 
     private static JsonNode readSchema() throws Exception {

@@ -1,7 +1,7 @@
 # PlanSpec Schema
 
-PlanSpec is a versioned Data 360 governance contract. The canonical wire format
-is JSON and the canonical schema is:
+PlanSpec is now a governed Amazon States Language profile. The canonical wire
+format is JSON, and the canonical schema lives at:
 
 ```text
 schemas/planspec.schema.json
@@ -10,37 +10,92 @@ schemas/planspec.schema.json
 The current schema version is:
 
 ```text
-2026-05-31
+data360-asl-profile-2026-05-31
 ```
 
-Every generated plan must include `schemaVersion`. The runtime defaults missing
-versions to the current version for backward compatibility with older drafts, but
-new planners and examples should always emit the field explicitly.
+## Contract Layers
 
-## Why JSON Schema Is Canonical
+PlanSpec uses ASL shape for the executable graph:
 
-PlanSpec is consumed by the Java executor, the LWC UI, the LLM planner, and Data
-360 Connect API adapters. Those surfaces already use JSON. JSON Schema also fits
-the PlanSpec shape well because `steps[*].input` is action-specific: the schema
-can say that `data360.createSegment` requires `name` plus `criteria` or
-`criteriaFromStep`, while `data360.monitor.metric` requires a threshold.
+- `definition.Version`
+- `definition.QueryLanguage`
+- `definition.StartAt`
+- `definition.States`
+- `Task` states
+- `Resource`
+- `Parameters`
+- `ResultPath`
+- `Next` / `End`
 
-XML is possible as an import/export representation, but it should not be the
-canonical execution contract yet. XSD is strong for fixed trees and Salesforce
-Metadata API-style documents, but PlanSpec has discriminated action inputs and
-JSON-path bindings. In XML, we would either use generic `<param>` elements and
-lose useful XSD validation, or create a large action-specific XSD that is harder
-for the LLM, browser UI, and Connect API layer to work with.
+The Data 360 profile deliberately narrows ASL:
 
-Use XML only if we need a Salesforce package-style artifact or administrator
-handoff format. In that case, convert XML into the canonical JSON PlanSpec before
-validation and execution.
+- only `Task` states are executable in this version
+- `Resource` must be a Salesforce Data 360 capability URI
+- raw AWS ARNs, HTTP URLs, MCP tool names, and arbitrary callouts are rejected
+- `QueryLanguage` must be `JSONPath`
+- `ResultPath` must be `$.stateName`
+- `Retry`, `Catch`, `InputPath`, `OutputPath`, `Map`, and `Parallel` are reserved
+- Temporal owns durable execution, retries, approval waits, and audit history
+
+The API still exposes a derived `steps` view for the current UI and executor.
+New planners should emit `definition`, not author `steps` directly.
+
+## Agent Draft And Repair Loop
+
+The planner should use validators as tools:
+
+```text
+draft ASL PlanSpec
+  -> standard ASL validation
+  -> Data 360 ASL profile validation
+  -> capability input validation
+  -> repair with concrete validator errors when needed
+  -> approve
+  -> Temporal execution
+```
+
+The repo includes the standard `asl-validator` package for local ASL checks. It
+validates the embedded `definition` object and disables AWS ARN checks because
+this profile uses Salesforce capability URNs:
+
+```bash
+npm run validate:asl
+npm run validate:asl -- path/to/plan.json
+```
+
+## Why ASL Profile, Not Full ASL
+
+Full ASL is a workflow language. It is too broad for model-authored Data 360
+setup plans because it can represent execution details that should stay outside
+the approval contract. The profile gives us the standard state-machine shape
+while keeping governance enforceable.
+
+The key rule remains:
+
+```text
+PlanSpec Resource = stable Data 360 capability URI
+Executor binding = Temporal activity -> MCP or Connect API call
+```
+
+So this is valid:
+
+```text
+urn:salesforce:data360:capability:segment.create
+```
+
+This is not valid PlanSpec:
+
+```text
+d360_segment_create
+https://example.salesforce.com/services/data/...
+arn:aws:lambda:...
+```
 
 ## Minimal Example
 
 ```json
 {
-  "schemaVersion": "2026-05-31",
+  "schemaVersion": "data360-asl-profile-2026-05-31",
   "id": "plan_reactivate_dormant_accounts",
   "scenarioId": "fedex_dormant_reactivation",
   "goal": "Recover dormant high-value accounts",
@@ -49,55 +104,54 @@ validation and execution.
     "dataspace": "default",
     "environment": "sandbox"
   },
-  "steps": [
-    {
-      "id": "preview_audience",
-      "title": "Preview the candidate audience",
-      "phase": "discover",
-      "action": "data360.query",
-      "input": {
-        "sql": "SELECT unified_account_id, account_name FROM UnifiedAccount LIMIT 100",
-        "limit": 100
-      },
-      "dependsOn": [],
-      "inputBindings": {},
-      "needsApproval": false
-    },
-    {
-      "id": "create_segment",
-      "title": "Create dormant account segment",
-      "phase": "setup",
-      "action": "data360.createSegment",
-      "input": {
-        "name": "Dormant High Value Accounts",
-        "criteriaFromStep": "preview_audience"
-      },
-      "dependsOn": [
-        "preview_audience"
-      ],
-      "inputBindings": {},
-      "needsApproval": true
-    },
-    {
-      "id": "monitor_goal",
-      "title": "Monitor recovered revenue",
-      "phase": "monitor",
-      "action": "data360.monitor.metric",
-      "input": {
-        "metric": "recovered_revenue",
-        "cadence": "daily",
-        "threshold": {
-          "operator": "<",
-          "value": 100000
+  "definition": {
+    "Version": "1.0",
+    "QueryLanguage": "JSONPath",
+    "StartAt": "preview_audience",
+    "States": {
+      "preview_audience": {
+        "Type": "Task",
+        "Comment": "Preview the candidate audience",
+        "Resource": "urn:salesforce:data360:capability:query",
+        "Parameters": {
+          "sql": "SELECT unified_account_id, account_name FROM UnifiedAccount LIMIT 100",
+          "limit": 100
         },
-        "queryFromStep": "preview_audience"
+        "ResultPath": "$.preview_audience",
+        "Next": "create_segment"
       },
-      "dependsOn": [
-        "create_segment"
-      ],
-      "inputBindings": {},
-      "needsApproval": false
+      "create_segment": {
+        "Type": "Task",
+        "Comment": "Create dormant account segment",
+        "Resource": "urn:salesforce:data360:capability:segment.create",
+        "Parameters": {
+          "name": "Dormant High Value Accounts",
+          "criteriaFromStep": "preview_audience"
+        },
+        "ResultPath": "$.create_segment",
+        "Next": "monitor_goal"
+      },
+      "monitor_goal": {
+        "Type": "Task",
+        "Comment": "Monitor recovered revenue",
+        "Resource": "urn:salesforce:data360:capability:monitor.metric",
+        "Parameters": {
+          "metric": "recovered_revenue",
+          "cadence": "daily",
+          "threshold": {
+            "operator": "<",
+            "value": 100000
+          },
+          "queryFromStep": "preview_audience"
+        },
+        "ResultPath": "$.monitor_goal",
+        "End": true
+      }
     }
-  ]
+  }
 }
 ```
+
+At runtime, Java compiles this ASL profile into internal `PlanStep` objects.
+The same local and Temporal executors then run approved setup steps and register
+monitor states after setup succeeds.

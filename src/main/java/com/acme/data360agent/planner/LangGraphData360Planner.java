@@ -15,6 +15,8 @@ import static org.bsc.langgraph4j.action.AsyncNodeAction.node_async;
 
 @Service
 public class LangGraphData360Planner implements Data360Planner {
+    private static final int MAX_REPAIR_ATTEMPTS = 2;
+
     private final LlmPlanGenerator generator;
     private final PlanValidator validator;
 
@@ -54,10 +56,17 @@ public class LangGraphData360Planner implements Data360Planner {
     }
 
     private Map<String, Object> validatePlan(AgentState state) {
+        PlanRequest request = state.<PlanRequest>value("request").orElseThrow();
         PlanSpec plan = state.<PlanSpec>value("plan").orElseThrow();
-        PlanValidationResult validation = validator.validate(plan);
         var stages = appendStage(state, "validate_plan");
-        return Map.of("validation", validation, "stages", stages);
+        PlanValidationResult validation = validator.validate(plan);
+        for (var attempt = 1; !validation.ok() && generator.canRepair() && attempt <= MAX_REPAIR_ATTEMPTS; attempt++) {
+            stages.add("repair_plan_" + attempt);
+            plan = generator.repair(request, plan, validation);
+            stages.add("validate_repair_" + attempt);
+            validation = validator.validate(plan);
+        }
+        return Map.of("plan", plan, "validation", validation, "stages", stages);
     }
 
     @SuppressWarnings("unchecked")

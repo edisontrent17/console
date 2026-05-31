@@ -40,7 +40,7 @@
                 <header class="slds-media slds-media_center slds-has-flexi-truncate">
                     <div class="slds-media__body">
                         <h2 class="slds-card__header-title">PlanSpec</h2>
-                        <p class="slds-text-body_small slds-text-color_weak">Human-approved setup plan before any Data 360 mutation</p>
+                        <p class="slds-text-body_small slds-text-color_weak">Governed ASL profile before any Data 360 mutation</p>
                     </div>
                 </header>
                 <template if:true={hasDraft}>
@@ -99,7 +99,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Step</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Capability</th>
                                     <th scope="col">Phase</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Gate</th>
@@ -113,7 +113,7 @@
                                             <div class="slds-truncate" title={row.title}>{row.title}</div>
                                             <span>{row.id}</span>
                                         </th>
-                                        <td>{row.action}</td>
+                                        <td>{row.resource}</td>
                                         <td>{row.phase}</td>
                                         <td><span class={row.statusClass}>{row.status}</span></td>
                                         <td><span class={row.approvalClass}>{row.approvalLabel}</span></td>
@@ -169,6 +169,7 @@
                         <div><dt>Step</dt><dd>{selectedStep.id}</dd></div>
                         <div><dt>Phase</dt><dd>{selectedStep.phase}</dd></div>
                         <div><dt>Action</dt><dd>{selectedStep.action}</dd></div>
+                        <div><dt>ResultPath</dt><dd>{selectedStep.resultPath}</dd></div>
                         <div><dt>Approval</dt><dd>{selectedApproval}</dd></div>
                         <div><dt>Timing</dt><dd>{selectedTiming}</dd></div>
                     </dl>
