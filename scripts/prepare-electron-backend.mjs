@@ -19,7 +19,7 @@ await cp(targetJar, packagedJar);
 const runtimeTarget = path.join(backendDir, "runtime");
 await rm(runtimeTarget, { recursive: true, force: true });
 
-if (runtimeSource && existsSync(path.join(runtimeSource, "bin", javaBinaryName()))) {
+if (runtimeSource && hasJavaBinary(runtimeSource)) {
     const sourceStat = await stat(runtimeSource);
     if (!sourceStat.isDirectory()) {
         throw new Error(`D360_DESKTOP_JAVA_HOME is not a directory: ${runtimeSource}`);
@@ -32,4 +32,10 @@ if (runtimeSource && existsSync(path.join(runtimeSource, "bin", javaBinaryName()
 
 function javaBinaryName() {
     return process.platform === "win32" ? "java.exe" : "java";
+}
+
+function hasJavaBinary(runtimePath) {
+    return existsSync(path.join(runtimePath, "bin", javaBinaryName()))
+        || existsSync(path.join(runtimePath, "bin", "java.exe"))
+        || existsSync(path.join(runtimePath, "bin", "java"));
 }
