@@ -10,6 +10,9 @@ public enum Data360Action {
     SEARCH("data360.search"),
     METADATA_DESCRIBE("data360.metadata.describe"),
     QUERY("data360.query"),
+    CREATE_SNOWFLAKE_DATA_STREAM("data360.dataStream.snowflake.create"),
+    CREATE_CRM_DATA_STREAM("data360.dataStream.crm.create"),
+    CREATE_MAPPING("data360.mapping.create"),
     CREATE_CALCULATED_INSIGHT("data360.calculatedInsight.create"),
     RUN_CALCULATED_INSIGHT("data360.calculatedInsight.run"),
     CREATE_SEGMENT("data360.createSegment"),
@@ -18,6 +21,8 @@ public enum Data360Action {
     CREATE_ACTIVATION("data360.createActivation"),
     RUN_ACTIVATION("data360.runActivation"),
     GET_IDENTITY_RULESET("data360.identityRuleset.get"),
+    CREATE_IDENTITY_RULESET("data360.identityResolution.ruleset.create"),
+    RUN_IDENTITY_RESOLUTION("data360.identityResolution.run"),
     MONITOR_METRIC("data360.monitor.metric");
 
     private final String value;
@@ -36,6 +41,9 @@ public enum Data360Action {
             case SEARCH -> "urn:salesforce:data360:capability:search";
             case METADATA_DESCRIBE -> "urn:salesforce:data360:capability:metadata.describe";
             case QUERY -> "urn:salesforce:data360:capability:query";
+            case CREATE_SNOWFLAKE_DATA_STREAM -> "urn:salesforce:data360:capability:dataStream.snowflake.create";
+            case CREATE_CRM_DATA_STREAM -> "urn:salesforce:data360:capability:dataStream.crm.create";
+            case CREATE_MAPPING -> "urn:salesforce:data360:capability:mapping.create";
             case CREATE_CALCULATED_INSIGHT -> "urn:salesforce:data360:capability:calculatedInsight.create";
             case RUN_CALCULATED_INSIGHT -> "urn:salesforce:data360:capability:calculatedInsight.run";
             case CREATE_SEGMENT -> "urn:salesforce:data360:capability:segment.create";
@@ -44,6 +52,8 @@ public enum Data360Action {
             case CREATE_ACTIVATION -> "urn:salesforce:data360:capability:activation.create";
             case RUN_ACTIVATION -> "urn:salesforce:data360:capability:activation.run";
             case GET_IDENTITY_RULESET -> "urn:salesforce:data360:capability:identityRuleset.get";
+            case CREATE_IDENTITY_RULESET -> "urn:salesforce:data360:capability:identityResolution.ruleset.create";
+            case RUN_IDENTITY_RESOLUTION -> "urn:salesforce:data360:capability:identityResolution.run";
             case MONITOR_METRIC -> "urn:salesforce:data360:capability:monitor.metric";
         };
     }
@@ -60,11 +70,16 @@ public enum Data360Action {
         return switch (this) {
             case CREATE_CALCULATED_INSIGHT,
                     RUN_CALCULATED_INSIGHT,
+                    CREATE_SNOWFLAKE_DATA_STREAM,
+                    CREATE_CRM_DATA_STREAM,
+                    CREATE_MAPPING,
                     CREATE_SEGMENT,
                     UPDATE_SEGMENT,
                     PUBLISH_SEGMENT,
                     CREATE_ACTIVATION,
-                    RUN_ACTIVATION -> true;
+                    RUN_ACTIVATION,
+                    CREATE_IDENTITY_RULESET,
+                    RUN_IDENTITY_RESOLUTION -> true;
             default -> false;
         };
     }

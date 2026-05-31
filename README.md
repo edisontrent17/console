@@ -45,6 +45,9 @@ Tool/API details live outside PlanSpec. Draft creation resolves each capability
 URI into an immutable `OperationBindingSnapshot`; starting a run freezes that
 binding list onto the run, and local/Temporal execution uses those snapshots
 instead of asking the model to choose tools at execution time.
+Bindings now include output contracts. That lets validation prove that dynamic
+ASL parameters such as `unifiedProfileObjectApiName.$` actually reference a
+declared output of an earlier capability like identity resolution.
 
 ## Real Scenario Packs
 
@@ -323,6 +326,9 @@ The MCP adapter compiles MVP actions to the server's facade tools:
 - `data360.search` -> `search`
 - `data360.metadata.describe` -> `execute(d360_metadata_describe)`
 - `data360.query` -> `execute(d360_query_sql)`
+- `data360.dataStream.snowflake.create` -> `execute(d360_datastream_create_snowflake)`
+- `data360.dataStream.crm.create` -> `execute(d360_datastream_create_sfdc)`
+- `data360.mapping.create` -> `execute(d360_dmo_mapping_create)`
 - `data360.calculatedInsight.create` -> `execute(d360_calculated_insight_create)`
 - `data360.calculatedInsight.run` -> `execute(d360_calculated_insight_run)`
 - `data360.createSegment` -> `execute(d360_segment_create)`
@@ -331,6 +337,8 @@ The MCP adapter compiles MVP actions to the server's facade tools:
 - `data360.createActivation` -> `execute(d360_activation_create)`
 - `data360.runActivation` -> mock-only until a target-specific Data 360 MCP operation is mapped
 - `data360.identityRuleset.get` -> `execute(d360_identity_ruleset_get)`
+- `data360.identityResolution.ruleset.create` -> `execute(d360_ir_create)`
+- `data360.identityResolution.run` -> `execute(d360_ir_run)`
 - `data360.monitor.metric` -> mock/local monitor evaluation
 
 ## Data 360 Connect API
@@ -378,6 +386,9 @@ The Connect client is typed by PlanSpec action:
 
 - `data360.metadata.describe` -> `GET /api/v1/metadata/`
 - `data360.query` -> `POST /services/data/{version}/ssot/query-sql`
+- `data360.dataStream.snowflake.create` -> `POST /services/data/{version}/ssot/data-streams`
+- `data360.dataStream.crm.create` -> `POST /services/data/{version}/ssot/data-streams`
+- `data360.mapping.create` -> `POST /services/data/{version}/ssot/data-model-object-mappings`
 - `data360.calculatedInsight.create` -> `POST /services/data/{version}/ssot/calculated-insights`
 - `data360.calculatedInsight.run` -> `POST /services/data/{version}/ssot/calculated-insights/{id}/actions/run`
 - `data360.createSegment` -> `POST /services/data/{version}/ssot/segments`
@@ -386,6 +397,8 @@ The Connect client is typed by PlanSpec action:
 - `data360.createActivation` -> `POST /services/data/{version}/ssot/activations`
 - `data360.runActivation` -> `POST /services/data/{version}/ssot/activations/{id}/actions/publish`
 - `data360.identityRuleset.get` -> `GET /services/data/{version}/ssot/identity-resolutions`
+- `data360.identityResolution.ruleset.create` -> `POST /services/data/{version}/ssot/identity-resolutions`
+- `data360.identityResolution.run` -> `POST /services/data/{version}/ssot/identity-resolutions/{id}/actions/run-now`
 - `data360.monitor.metric` -> Connect query execution against a monitor SQL/query context
 
 Mutation calls are idempotent by run, step, and resolved input so duplicate

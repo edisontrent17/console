@@ -55,6 +55,9 @@ public class LlmPlanGenerator {
                 - Use Next for ordered flow and End=true on the final state.
                 - Every query must be SELECT-only and include LIMIT.
                 - Use urn:salesforce:data360:capability:activation.run only if the user explicitly asks to run, send, or execute an activation.
+                - Use dynamic Parameters such as "rulesetId.$": "$.create_identity_ruleset.rulesetId" when a step needs prior output.
+                - If identity resolution output is needed by calculated insights, bind "unifiedProfileObjectApiName.$" and "unifiedProfileIdField.$" from the identityResolution.run result.
+                - Prefer semantic calculated insight parameters for runtime model outputs. Do not concatenate SQL with runtime object names.
                 - Do not include raw MCP tool names, API URLs, AWS ARNs, Credentials, prompts, loops, code, Retry, Catch, Map, Parallel, timers, or arbitrary expressions.
                 - If step output is needed, prefer domain references like segmentIdFromStep, activationIdFromStep, insightIdFromStep, criteriaFromStep, or queryFromStep.
                 - Keep monitors read-only. A monitor can recommend follow-up later, but it must not silently mutate Data 360.
@@ -136,6 +139,8 @@ public class LlmPlanGenerator {
                 - Use only allowed Data 360 capability Resource URIs.
                 - ResultPath must be "$.<stateName>".
                 - Use exactly one of Next or End=true per Task state.
+                - Dynamic Parameters ending in ".$" must reference declared outputs from earlier steps.
+                - When calculated insights depend on identity resolution runtime output, bind the IR output fields instead of hard-coding unified object names.
                 - Do not include raw MCP tool names, API URLs, AWS ARNs, Credentials, Retry, Catch, Map, Parallel, code, or arbitrary expressions.
                 - Preserve the user's goal and scenario unless they are clearly malformed.
                 """;

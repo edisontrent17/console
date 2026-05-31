@@ -80,6 +80,8 @@ public class HttpData360ConnectClient implements Data360Client {
                     "sql", input.get("sql"),
                     "sqlParameters", input.getOrDefault("sqlParameters", List.of())
             ));
+            case CREATE_SNOWFLAKE_DATA_STREAM, CREATE_CRM_DATA_STREAM -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/data-streams"), dataspaceParams(context), Map.copyOf(input));
+            case CREATE_MAPPING -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/data-model-object-mappings"), dataspaceParams(context), Map.copyOf(input));
             case CREATE_CALCULATED_INSIGHT -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/calculated-insights"), dataspaceParams(context), calculatedInsightBody(input));
             case RUN_CALCULATED_INSIGHT -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/calculated-insights/" + encode(required(input, "insightId")) + "/actions/run"), Map.of(), null);
             case CREATE_SEGMENT -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/segments"), dataspaceParams(context), segmentBody(input, context));
@@ -88,6 +90,8 @@ public class HttpData360ConnectClient implements Data360Client {
             case CREATE_ACTIVATION -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/activations"), Map.of(), activationBody(input, context));
             case RUN_ACTIVATION -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/activations/" + encode(required(input, "activationId")) + "/actions/publish"), Map.of(), Map.of("fullRefresh", input.getOrDefault("fullRefresh", false)));
             case GET_IDENTITY_RULESET -> identityResolutionRequest(input);
+            case CREATE_IDENTITY_RULESET -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/identity-resolutions"), dataspaceParams(context), Map.copyOf(input));
+            case RUN_IDENTITY_RESOLUTION -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/identity-resolutions/" + encode(required(input, "rulesetId")) + "/actions/run-now"), Map.of(), null);
             case MONITOR_METRIC -> monitorMetricRequest(input, context);
         };
     }
@@ -154,8 +158,24 @@ public class HttpData360ConnectClient implements Data360Client {
         body.put("apiName", apiName);
         body.put("description", input.getOrDefault("description", ""));
         body.put("definitionType", input.getOrDefault("definitionType", "CALCULATED_METRIC"));
-        body.put("expression", input.getOrDefault("sql", input.get("definition")));
+        body.put("expression", input.getOrDefault("sql", input.getOrDefault("definition", input.get("semanticDefinition"))));
+        body.put("semanticDefinition", semanticInsightDefinition(input));
         return dropNulls(body);
+    }
+
+    private Map<String, Object> semanticInsightDefinition(Map<String, Object> input) {
+        if (!input.containsKey("unifiedProfileObjectApiName") && !input.containsKey("measure")) {
+            return null;
+        }
+        var definition = new LinkedHashMap<String, Object>();
+        definition.put("unifiedProfileObjectApiName", input.get("unifiedProfileObjectApiName"));
+        definition.put("unifiedProfileIdField", input.get("unifiedProfileIdField"));
+        definition.put("transactionObjectApiName", input.get("transactionObjectApiName"));
+        definition.put("transactionCustomerKeyField", input.get("transactionCustomerKeyField"));
+        definition.put("measure", input.get("measure"));
+        definition.put("groupBy", input.get("groupBy"));
+        definition.entrySet().removeIf(entry -> entry.getValue() == null);
+        return Map.copyOf(definition);
     }
 
     private Map<String, Object> segmentBody(Map<String, Object> input, RunContext context) {
@@ -197,8 +217,20 @@ public class HttpData360ConnectClient implements Data360Client {
             case RUN_ACTIVATION -> withPrimaryId(raw, "activationId", "activationId", "id");
             case CREATE_CALCULATED_INSIGHT -> withPrimaryId(raw, "insightId", "apiName", "id", "insightId");
             case RUN_CALCULATED_INSIGHT -> raw;
+            case CREATE_SNOWFLAKE_DATA_STREAM, CREATE_CRM_DATA_STREAM -> withPrimaryId(raw, "dataStreamId", "id", "dataStreamId", "name", "developerName");
+            case CREATE_MAPPING -> withPrimaryId(raw, "mappingId", "id", "mappingId", "name", "developerName");
+            case CREATE_IDENTITY_RULESET -> withPrimaryId(raw, "rulesetId", "id", "rulesetId", "name", "developerName");
+            case RUN_IDENTITY_RESOLUTION -> normalizeIdentityResolutionRun(raw);
             case SEARCH, METADATA_DESCRIBE, GET_IDENTITY_RULESET -> raw;
         };
+    }
+
+    private Map<String, Object> normalizeIdentityResolutionRun(Map<String, Object> raw) {
+        var output = new LinkedHashMap<>(raw);
+        output.putIfAbsent("jobId", raw.getOrDefault("id", raw.get("jobId")));
+        output.putIfAbsent("unifiedProfileObjectApiName", raw.getOrDefault("unifiedProfileObjectApiName", "UnifiedIndividual"));
+        output.putIfAbsent("unifiedProfileIdField", raw.getOrDefault("unifiedProfileIdField", "UnifiedIndividualId"));
+        return Map.copyOf(output);
     }
 
     private Map<String, Object> normalizeQuery(Map<String, Object> raw) {

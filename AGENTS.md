@@ -104,6 +104,9 @@ a workflow engine:
   static plan.
 - Tool names, MCP facade calls, Connect paths, schema hashes, and binding
   versions belong in `OperationBindingSnapshot`, not in PlanSpec.
+- If a step uses `Parameters` keys ending in `.$`, the referenced output must be
+  declared on the source capability contract and the target input must be declared
+  on the consuming capability contract.
 - Dependencies should stay simple and explicit.
 - Use only simple `inputBindings` with `fromStep` and `$.field` paths when a later
   step needs a prior output.
@@ -129,6 +132,10 @@ The execute path should not be broadly agentic by default.
   Do not let execution silently re-resolve tools after approval.
 - `LocalPlanExecutor` and `TemporalPlanExecutor` should call the configured
   `Data360Client` with the frozen binding snapshot from the run.
+- Runtime data dependencies should use ASL dynamic parameters plus contract
+  validation. For IR-to-CI flows, bind identity resolution outputs such as
+  `unifiedProfileObjectApiName` into calculated insight inputs; do not hard-code
+  runtime unified model names in generated SQL.
 - Use `PlanStore.withRunLock` for run mutations. Do not synchronize on a freshly loaded JDBC `PlanRun`.
 - Keep secrets, org credentials, and bearer tokens out of source files and logs.
 

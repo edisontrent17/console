@@ -149,6 +149,7 @@ class LocalPlanExecutorTest {
                 Effect.READ,
                 false,
                 Map.of("type", "object", "requiredAllOf", List.of("sql"), "requiredAnyOf", List.of()),
+                Map.of("type", "object", "properties", Map.of("rowCount", "number")),
                 null,
                 "test-binding"
         );

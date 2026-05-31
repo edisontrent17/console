@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -52,6 +53,7 @@ public class PlanValidator {
         var isProduction = plan.context() != null && "production".equals(plan.context().environment());
 
         var seen = new HashSet<String>();
+        var priorSteps = new LinkedHashMap<String, PlanStep>();
         for (var step : plan.steps()) {
             if (!hasNonBlank(step.id())) {
                 issues.add(ValidationIssue.error(null, "Step id is required and cannot be blank."));
@@ -73,8 +75,10 @@ public class PlanValidator {
             for (var binding : step.inputBindings().entrySet()) {
                 if (!hasNonBlank(binding.getValue().fromStep())) {
                     issues.add(ValidationIssue.error(step.id(), "Input binding source step cannot be blank."));
-                } else if (!seen.contains(binding.getValue().fromStep())) {
+                } else if (!priorSteps.containsKey(binding.getValue().fromStep())) {
                     issues.add(ValidationIssue.error(step.id(), "Input binding must refer to an earlier step: " + binding.getValue().fromStep()));
+                } else {
+                    validateInputBindingContract(step, binding.getKey(), binding.getValue(), priorSteps.get(binding.getValue().fromStep()), issues);
                 }
                 if (!hasNonBlank(binding.getValue().path()) || !binding.getValue().path().startsWith("$.")) {
                     issues.add(ValidationIssue.error(step.id(), "Input binding path must start with $."));
@@ -89,13 +93,13 @@ public class PlanValidator {
             validateRawUrls(step, input, issues);
 
             for (var required : definition.requiredAllOf()) {
-                if (!hasNonBlank(input.get(required))) {
+                if (!hasParameter(step, required)) {
                     issues.add(ValidationIssue.error(step.id(), "Missing required input: " + required));
                 }
             }
 
             if (!definition.requiredAnyOf().isEmpty()) {
-                var hasOne = definition.requiredAnyOf().stream().anyMatch(key -> hasNonBlank(input.get(key)));
+                var hasOne = definition.requiredAnyOf().stream().anyMatch(key -> hasParameter(step, key));
                 if (!hasOne) {
                     issues.add(ValidationIssue.error(step.id(), "Requires one of: " + String.join(", ", definition.requiredAnyOf())));
                 }
@@ -114,8 +118,23 @@ public class PlanValidator {
             }
             validateActionInput(step, issues);
             validatePhase(step, definition, issues);
+            priorSteps.put(step.id(), step);
         }
         return new PlanValidationResult(List.copyOf(issues));
+    }
+
+    private void validateInputBindingContract(PlanStep step, String inputName, InputBinding binding, PlanStep sourceStep, ArrayList<ValidationIssue> issues) {
+        if (!hasNonBlank(binding.path()) || !binding.path().startsWith("$.")) {
+            return;
+        }
+        var target = operations.require(step.action());
+        if (!target.acceptsInput(inputName)) {
+            issues.add(ValidationIssue.error(step.id(), "Input binding target is not declared for " + step.action().value() + ": " + inputName));
+        }
+        var source = operations.require(sourceStep.action());
+        if (!source.producesOutputPath(binding.path())) {
+            issues.add(ValidationIssue.error(step.id(), "Input binding references output not produced by " + sourceStep.action().value() + ": " + binding.fromStep() + binding.path().substring(1)));
+        }
     }
 
     private void validateAslProfile(PlanSpec plan, ArrayList<ValidationIssue> issues) {
@@ -338,6 +357,10 @@ public class PlanValidator {
             return false;
         }
         return !(value instanceof String string) || !string.isBlank();
+    }
+
+    private boolean hasParameter(PlanStep step, String key) {
+        return hasNonBlank(step.input().get(key)) || step.inputBindings().containsKey(key);
     }
 
     private void validateRawUrls(PlanStep step, Map<String, Object> input, ArrayList<ValidationIssue> issues) {

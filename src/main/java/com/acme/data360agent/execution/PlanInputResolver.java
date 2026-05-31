@@ -19,6 +19,7 @@ public final class PlanInputResolver {
         resolveFromStep(resolved, outputForStep, "segmentIdFromStep", "segmentId");
         resolveFromStep(resolved, outputForStep, "activationIdFromStep", "activationId");
         resolveFromStep(resolved, outputForStep, "insightIdFromStep", "insightId");
+        resolveFromStep(resolved, outputForStep, "rulesetIdFromStep", "rulesetId");
         if (resolved.containsKey("criteriaFromStep")) {
             var source = String.valueOf(resolved.get("criteriaFromStep"));
             var output = outputForStep.apply(source);

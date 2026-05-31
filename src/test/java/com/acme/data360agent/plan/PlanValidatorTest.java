@@ -141,6 +141,57 @@ class PlanValidatorTest {
     }
 
     @Test
+    void acceptsIdentityResolutionOutputsFeedingCalculatedInsightInputs() {
+        var plan = identityResolutionToCalculatedInsightPlan(
+                "unifiedProfileObjectApiName.$",
+                "$.run_identity_resolution.unifiedProfileObjectApiName"
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).as(result.issues().toString()).isTrue();
+    }
+
+    @Test
+    void rejectsBindingToOutputMissingFromSourceCapabilityContract() {
+        var plan = identityResolutionToCalculatedInsightPlan(
+                "unifiedProfileObjectApiName.$",
+                "$.run_identity_resolution.notARealOutput"
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("not produced by data360.identityResolution.run"));
+    }
+
+    @Test
+    void rejectsBindingToNestedPathBelowScalarSourceOutput() {
+        var plan = identityResolutionToCalculatedInsightPlan(
+                "unifiedProfileObjectApiName.$",
+                "$.run_identity_resolution.unifiedProfileObjectApiName.notARealNestedField"
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("not produced by data360.identityResolution.run"));
+    }
+
+    @Test
+    void rejectsBindingToInputMissingFromTargetCapabilityContract() {
+        var plan = identityResolutionToCalculatedInsightPlan(
+                "unknownCiInput.$",
+                "$.run_identity_resolution.unifiedProfileObjectApiName"
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Input binding target is not declared for data360.calculatedInsight.create"));
+    }
+
+    @Test
     void rejectsQueryWithoutLimit() {
         var plan = new PlanSpec(
                 "plan_test",
@@ -434,5 +485,57 @@ class PlanValidatorTest {
         assertThat(result.ok()).isFalse();
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Segment name must be 1-80"));
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Activation destination must be nonblank"));
+    }
+
+    private PlanSpec identityResolutionToCalculatedInsightPlan(String dynamicInputKey, String dynamicPath) {
+        return new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_ir_to_ci",
+                null,
+                "Create LTV on unified data",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "create_identity_ruleset",
+                        Map.of(
+                                "create_identity_ruleset", AslState.task(
+                                        "Create identity ruleset",
+                                        Data360Action.CREATE_IDENTITY_RULESET.resource(),
+                                        Map.of(
+                                                "name", "Travel Customer Identity Ruleset",
+                                                "rules", List.of(Map.of("name", "Exact external id", "fields", List.of("externalCustomerId")))
+                                        ),
+                                        "$.create_identity_ruleset",
+                                        "run_identity_resolution",
+                                        false
+                                ),
+                                "run_identity_resolution", AslState.task(
+                                        "Run identity resolution",
+                                        Data360Action.RUN_IDENTITY_RESOLUTION.resource(),
+                                        Map.of("rulesetId.$", "$.create_identity_ruleset.rulesetId"),
+                                        "$.run_identity_resolution",
+                                        "create_lifetime_value_insight",
+                                        false
+                                ),
+                                "create_lifetime_value_insight", AslState.task(
+                                        "Create LTV calculated insight",
+                                        Data360Action.CREATE_CALCULATED_INSIGHT.resource(),
+                                        Map.of(
+                                                "name", "Travel Customer Lifetime Value",
+                                                dynamicInputKey, dynamicPath,
+                                                "unifiedProfileIdField.$", "$.run_identity_resolution.unifiedProfileIdField",
+                                                "transactionObjectApiName", "TravelItinerary",
+                                                "transactionCustomerKeyField", "externalCustomerId",
+                                                "measure", Map.of("type", "SUM", "field", "transactionAmount", "alias", "lifetime_value")
+                                        ),
+                                        "$.create_lifetime_value_insight",
+                                        null,
+                                        true
+                                )
+                        )
+                ),
+                List.of()
+        );
     }
 }

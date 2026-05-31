@@ -15,6 +15,7 @@ public record OperationBindingSnapshot(
         Effect effect,
         boolean requiresApproval,
         Map<String, Object> parameterSchema,
+        Map<String, Object> outputSchema,
         String schemaHash,
         String bindingVersion
 ) implements Serializable {
@@ -27,7 +28,10 @@ public record OperationBindingSnapshot(
         transport = transport == null ? OperationTransport.INTERNAL : transport;
         effect = effect == null ? Effect.READ : effect;
         parameterSchema = parameterSchema == null ? Map.of() : Map.copyOf(parameterSchema);
-        schemaHash = schemaHash == null || schemaHash.isBlank() ? hash(parameterSchema) : schemaHash;
+        outputSchema = outputSchema == null ? Map.of() : Map.copyOf(outputSchema);
+        schemaHash = schemaHash == null || schemaHash.isBlank()
+                ? hash(Map.of("parameters", parameterSchema, "outputs", outputSchema))
+                : schemaHash;
         bindingVersion = bindingVersion == null || bindingVersion.isBlank() ? DEFAULT_BINDING_VERSION : bindingVersion;
     }
 
@@ -44,6 +48,7 @@ public record OperationBindingSnapshot(
                 definition.effect(),
                 definition.alwaysRequiresApproval(),
                 parameterSchema(definition),
+                outputSchema(definition),
                 null,
                 DEFAULT_BINDING_VERSION
         );
@@ -59,15 +64,24 @@ public record OperationBindingSnapshot(
                 "effect", effect.name(),
                 "requiresApproval", requiresApproval,
                 "schemaHash", schemaHash,
-                "bindingVersion", bindingVersion
+                "bindingVersion", bindingVersion,
+                "outputFields", outputSchema.getOrDefault("properties", Map.of())
         );
     }
 
     private static Map<String, Object> parameterSchema(OperationDefinition definition) {
         return Map.of(
                 "type", "object",
+                "properties", Map.copyOf(definition.inputFields()),
                 "requiredAllOf", List.copyOf(definition.requiredAllOf()),
                 "requiredAnyOf", List.copyOf(definition.requiredAnyOf())
+        );
+    }
+
+    private static Map<String, Object> outputSchema(OperationDefinition definition) {
+        return Map.of(
+                "type", "object",
+                "properties", Map.copyOf(definition.outputFields())
         );
     }
 

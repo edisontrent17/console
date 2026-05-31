@@ -82,10 +82,45 @@ Operation bindings are deliberately outside the PlanSpec schema. A PlanSpec stat
 does not name `search`, `execute`, `d360_segment_create`, or an HTTP endpoint.
 When a draft is created, the app resolves each capability URI into an immutable
 `OperationBindingSnapshot` with transport, facade tool, underlying tool, effect,
-approval requirement, parameter schema hash, and binding version. That binding
-list is saved with the draft, copied onto the run at approval/start time, and
-persisted in `plan_runs.operation_bindings_json` so Temporal replay and local
-execution use the same frozen call boundary.
+approval requirement, input schema, output schema, schema hash, and binding
+version. That binding list is saved with the draft, copied onto the run at
+approval/start time, and persisted in `plan_runs.operation_bindings_json` so
+Temporal replay and local execution use the same frozen call boundary.
+
+Dynamic ASL parameters are allowed only when the source step's capability
+contract declares the referenced output and the target step's contract declares
+the input. For example, identity resolution can feed calculated insight setup:
+
+```json
+{
+  "run_identity_resolution": {
+    "Type": "Task",
+    "Resource": "urn:salesforce:data360:capability:identityResolution.run",
+    "Parameters": {
+      "rulesetId.$": "$.create_identity_ruleset.rulesetId"
+    },
+    "ResultPath": "$.run_identity_resolution",
+    "Next": "create_lifetime_value_insight"
+  },
+  "create_lifetime_value_insight": {
+    "Type": "Task",
+    "Resource": "urn:salesforce:data360:capability:calculatedInsight.create",
+    "Parameters": {
+      "name": "Travel Customer Lifetime Value",
+      "unifiedProfileObjectApiName.$": "$.run_identity_resolution.unifiedProfileObjectApiName",
+      "unifiedProfileIdField.$": "$.run_identity_resolution.unifiedProfileIdField",
+      "transactionObjectApiName": "TravelItinerary",
+      "measure": {
+        "type": "SUM",
+        "field": "transactionAmount",
+        "alias": "lifetime_value"
+      }
+    },
+    "ResultPath": "$.create_lifetime_value_insight",
+    "End": true
+  }
+}
+```
 
 So this is valid:
 

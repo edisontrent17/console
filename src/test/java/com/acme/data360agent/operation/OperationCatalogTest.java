@@ -81,4 +81,19 @@ class OperationCatalogTest {
         assertThat(registry.allBindings()).hasSize(Data360Action.values().length);
         assertThat(registry.snapshot().bindings()).hasSize(Data360Action.values().length);
     }
+
+    @Test
+    void identityResolutionRunDeclaresOutputsNeededByCalculatedInsights() {
+        var registry = new OperationRegistry();
+
+        var irBinding = registry.bindingFor(Data360Action.RUN_IDENTITY_RESOLUTION);
+        var ciDefinition = registry.require(Data360Action.CREATE_CALCULATED_INSIGHT);
+
+        @SuppressWarnings("unchecked")
+        var outputProperties = (Map<String, Object>) irBinding.outputSchema().get("properties");
+        assertThat(outputProperties).containsKey("unifiedProfileObjectApiName");
+        assertThat(outputProperties).containsKey("unifiedProfileIdField");
+        assertThat(ciDefinition.acceptsInput("unifiedProfileObjectApiName")).isTrue();
+        assertThat(ciDefinition.acceptsInput("unifiedProfileIdField")).isTrue();
+    }
 }

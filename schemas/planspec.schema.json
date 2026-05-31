@@ -177,6 +177,9 @@
         "urn:salesforce:data360:capability:search",
         "urn:salesforce:data360:capability:metadata.describe",
         "urn:salesforce:data360:capability:query",
+        "urn:salesforce:data360:capability:dataStream.snowflake.create",
+        "urn:salesforce:data360:capability:dataStream.crm.create",
+        "urn:salesforce:data360:capability:mapping.create",
         "urn:salesforce:data360:capability:calculatedInsight.create",
         "urn:salesforce:data360:capability:calculatedInsight.run",
         "urn:salesforce:data360:capability:segment.create",
@@ -185,6 +188,8 @@
         "urn:salesforce:data360:capability:activation.create",
         "urn:salesforce:data360:capability:activation.run",
         "urn:salesforce:data360:capability:identityRuleset.get",
+        "urn:salesforce:data360:capability:identityResolution.ruleset.create",
+        "urn:salesforce:data360:capability:identityResolution.run",
         "urn:salesforce:data360:capability:monitor.metric"
       ]
     },

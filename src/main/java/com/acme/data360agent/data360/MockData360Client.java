@@ -21,6 +21,9 @@ public class MockData360Client implements Data360Client {
             case SEARCH -> search(resolvedInput);
             case METADATA_DESCRIBE -> describeMetadata(resolvedInput);
             case QUERY -> query(resolvedInput);
+            case CREATE_SNOWFLAKE_DATA_STREAM -> createDataStream(resolvedInput);
+            case CREATE_CRM_DATA_STREAM -> createDataStream(resolvedInput);
+            case CREATE_MAPPING -> createMapping(resolvedInput);
             case CREATE_CALCULATED_INSIGHT -> createCalculatedInsight(resolvedInput);
             case RUN_CALCULATED_INSIGHT -> runCalculatedInsight(resolvedInput);
             case CREATE_SEGMENT -> createSegment(resolvedInput);
@@ -29,6 +32,8 @@ public class MockData360Client implements Data360Client {
             case CREATE_ACTIVATION -> createActivation(resolvedInput);
             case RUN_ACTIVATION -> runActivation(resolvedInput);
             case GET_IDENTITY_RULESET -> getIdentityRuleset(resolvedInput);
+            case CREATE_IDENTITY_RULESET -> createIdentityRuleset(resolvedInput);
+            case RUN_IDENTITY_RESOLUTION -> runIdentityResolution(resolvedInput);
             case MONITOR_METRIC -> monitorMetric(resolvedInput);
         };
         var raw = Map.<String, Object>of(
@@ -76,6 +81,7 @@ public class MockData360Client implements Data360Client {
     private Map<String, Object> createCalculatedInsight(Map<String, Object> input) {
         return Map.of(
                 "insightId", Ids.prefixed("ci"),
+                "apiName", input.getOrDefault("apiName", Ids.prefixed("Travel_LTV")),
                 "name", input.get("name"),
                 "status", "draft"
         );
@@ -135,6 +141,43 @@ public class MockData360Client implements Data360Client {
                 "rulesetId", input.getOrDefault("rulesetId", Ids.prefixed("irs")),
                 "rulesetName", input.getOrDefault("rulesetName", "Default Identity Resolution"),
                 "status", "active"
+        );
+    }
+
+    private Map<String, Object> createDataStream(Map<String, Object> input) {
+        return Map.of(
+                "dataStreamId", Ids.prefixed("ds"),
+                "dataStreamName", input.getOrDefault("streamName", Ids.prefixed("stream")),
+                "dloName", input.getOrDefault("dloName", ""),
+                "status", "draft"
+        );
+    }
+
+    private Map<String, Object> createMapping(Map<String, Object> input) {
+        return Map.of(
+                "mappingId", Ids.prefixed("map"),
+                "mappingName", input.getOrDefault("mappingName", Ids.prefixed("mapping")),
+                "sourceDloName", input.getOrDefault("sourceDloName", ""),
+                "targetDmoName", input.getOrDefault("targetDmoName", ""),
+                "status", "draft"
+        );
+    }
+
+    private Map<String, Object> createIdentityRuleset(Map<String, Object> input) {
+        return Map.of(
+                "rulesetId", Ids.prefixed("irs"),
+                "rulesetName", input.getOrDefault("name", "Travel Customer Identity Ruleset"),
+                "status", "draft"
+        );
+    }
+
+    private Map<String, Object> runIdentityResolution(Map<String, Object> input) {
+        return Map.of(
+                "rulesetId", input.get("rulesetId"),
+                "jobId", Ids.prefixed("job"),
+                "status", "completed",
+                "unifiedProfileObjectApiName", "UnifiedIndividual",
+                "unifiedProfileIdField", "UnifiedIndividualId"
         );
     }
 
