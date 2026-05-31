@@ -2,6 +2,7 @@ package com.acme.data360agent.data360;
 
 import com.acme.data360agent.config.AppProperties;
 import com.acme.data360agent.execution.RunContext;
+import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
@@ -19,11 +20,13 @@ public class Data360DiagnosticsService {
     private final AppProperties properties;
     private final Data360Client client;
     private final OperationRegistry operations;
+    private final McpSettingsService mcpSettings;
 
-    public Data360DiagnosticsService(AppProperties properties, Data360Client client, OperationRegistry operations) {
+    public Data360DiagnosticsService(AppProperties properties, Data360Client client, OperationRegistry operations, McpSettingsService mcpSettings) {
         this.properties = properties;
         this.client = client;
         this.operations = operations;
+        this.mcpSettings = mcpSettings;
     }
 
     public Data360DiagnosticsResult diagnostics() {
@@ -133,11 +136,7 @@ public class Data360DiagnosticsService {
     }
 
     private String mcpCommand() {
-        var data360 = properties.data360();
-        if (data360 == null || data360.mcp() == null) {
-            return "";
-        }
-        return data360.mcp().command();
+        return mcpSettings.commandFor("data360").orElse("");
     }
 
     private String preview(String value) {

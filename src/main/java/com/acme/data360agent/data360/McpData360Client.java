@@ -1,7 +1,7 @@
 package com.acme.data360agent.data360;
 
-import com.acme.data360agent.config.AppProperties;
 import com.acme.data360agent.execution.RunContext;
+import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.mcp.McpStdioClient;
 import com.acme.data360agent.mcp.McpToolCallResult;
 import com.acme.data360agent.operation.OperationBindingSnapshot;
@@ -22,11 +22,11 @@ public class McpData360Client implements Data360Client {
     private static final TypeReference<Map<String, Object>> MAP = new TypeReference<>() {
     };
 
-    private final AppProperties properties;
+    private final McpSettingsService mcpSettings;
     private final ObjectMapper objectMapper;
 
-    public McpData360Client(AppProperties properties, ObjectMapper objectMapper) {
-        this.properties = properties;
+    public McpData360Client(McpSettingsService mcpSettings, ObjectMapper objectMapper) {
+        this.mcpSettings = mcpSettings;
         this.objectMapper = objectMapper;
     }
 
@@ -37,11 +37,9 @@ public class McpData360Client implements Data360Client {
 
     @Override
     public Data360CallResult call(OperationDefinition operation, OperationBindingSnapshot binding, PlanStep step, Map<String, Object> resolvedInput, RunContext context) {
-        var command = properties.data360() == null || properties.data360().mcp() == null
-                ? null
-                : properties.data360().mcp().command();
+        var command = commandFor(binding.mcpServerId());
         if (command == null || command.isBlank()) {
-            throw new IllegalStateException("app.data360.mcp.command must point to the Data 360 MCP stdio server command.");
+            throw new IllegalStateException("Data 360 MCP is not enabled or no stdio command is configured for this organization.");
         }
 
         var facadeTool = facadeTool(binding, step);
@@ -65,6 +63,11 @@ public class McpData360Client implements Data360Client {
         audit.put("rawResult", raw.rawResult());
         audit.put("text", raw.text() == null ? "" : raw.text());
         return new Data360CallResult(normalizeOutput(raw), audit);
+    }
+
+    private String commandFor(String serverId) {
+        return mcpSettings.commandFor(serverId == null || serverId.isBlank() ? "data360" : serverId)
+                .orElse(null);
     }
 
     private Map<String, Object> compileArguments(OperationBindingSnapshot binding, PlanStep step, Map<String, Object> input) {

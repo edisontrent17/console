@@ -149,6 +149,23 @@
                             <button class="slds-button slds-button_brand" onclick={handleSaveLlmSettings} disabled={busy.saveSettings}>Save model settings</button>
                         </article>
 
+                        <article class="admin-panel mcp-panel">
+                            <h2>MCP Servers</h2>
+                            <template for:each={mcpServers} for:item="server">
+                                <div key={server.id} class="mcp-row">
+                                    <label class="mcp-toggle">
+                                        <input type="checkbox" checked={server.enabled} data-server-id={server.id} onchange={handleMcpEnabledChange}>
+                                        <span>
+                                            <strong>{server.label}</strong>
+                                            <small>{server.description}</small>
+                                        </span>
+                                    </label>
+                                    <input class="slds-input" data-server-id={server.id} value={server.command} placeholder="stdio command" oninput={handleMcpCommandChange}>
+                                </div>
+                            </template>
+                            <button class="slds-button slds-button_brand" onclick={handleSaveMcpSettings} disabled={busy.saveMcpSettings}>Save MCP selection</button>
+                        </article>
+
                         <article class="admin-panel">
                             <h2>Organizations</h2>
                             <div class="inline-form">

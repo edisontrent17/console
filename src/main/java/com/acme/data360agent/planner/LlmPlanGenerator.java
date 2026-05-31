@@ -1,6 +1,7 @@
 package com.acme.data360agent.planner;
 
 import com.acme.data360agent.llm.LlmGateway;
+import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanPhase;
@@ -23,12 +24,14 @@ public class LlmPlanGenerator {
     private final ObjectMapper objectMapper;
     private final ScenarioLibrary scenarios;
     private final OperationRegistry operations;
+    private final McpSettingsService mcpSettings;
 
-    public LlmPlanGenerator(LlmGateway llm, ObjectMapper objectMapper, ScenarioLibrary scenarios, OperationRegistry operations) {
+    public LlmPlanGenerator(LlmGateway llm, ObjectMapper objectMapper, ScenarioLibrary scenarios, OperationRegistry operations, McpSettingsService mcpSettings) {
         this.llm = llm;
         this.objectMapper = objectMapper;
         this.scenarios = scenarios;
         this.operations = operations;
+        this.mcpSettings = mcpSettings;
     }
 
     public PlanSpec generate(PlanRequest request) {
@@ -104,12 +107,15 @@ public class LlmPlanGenerator {
                 Allowed capability resources:
                 %s
 
+                Enabled MCP servers:
+                %s
+
                 Ground this plan in the selected public customer scenario:
                 %s
 
                 User goal: %s
                 Context: %s
-                """.formatted(allowedResources(), toJson(scenario), request.goal(), request.context());
+                """.formatted(allowedResources(), enabledMcpServers(), toJson(scenario), request.goal(), request.context());
 
         var completion = llm.completeJson(system, user);
         try {
@@ -153,12 +159,15 @@ public class LlmPlanGenerator {
                 Allowed capability resources:
                 %s
 
+                Enabled MCP servers:
+                %s
+
                 Original request:
                 %s
 
                 Invalid PlanSpec:
                 %s
-                """.formatted(toJson(validation), allowedResources(), toJson(request), toJson(invalidPlan));
+                """.formatted(toJson(validation), allowedResources(), enabledMcpServers(), toJson(request), toJson(invalidPlan));
 
         var completion = llm.completeJson(system, user);
         try {
@@ -280,6 +289,14 @@ public class LlmPlanGenerator {
     private List<String> allowedResources() {
         return operations.all().keySet().stream()
                 .map(Data360Action::resource)
+                .sorted()
+                .toList();
+    }
+
+    private List<String> enabledMcpServers() {
+        return mcpSettings.current().servers().stream()
+                .filter(server -> server.enabled() && server.commandConfigured())
+                .map(server -> "%s (%s)%s".formatted(server.id(), server.label(), server.executionServer() ? " [execution]" : " [discovery]"))
                 .sorted()
                 .toList();
     }

@@ -95,8 +95,10 @@ http://localhost:8080
 
 On first run in the `dev` profile, create the first organization and owner from
 the browser. After login, use **Admin** to save the Anthropic/OpenRouter provider,
-model, and API token for the web app. API tokens are stored encrypted and never
-returned to the browser.
+model, API token, and enabled MCP servers for the web app. API tokens are stored
+encrypted and never returned to the browser. MCP stdio commands are stored per
+organization; keep secrets in the MCP server environment rather than command-line
+arguments.
 
 If port 8080 is busy:
 
@@ -371,9 +373,15 @@ app.data360.client=mock
 To route calls through the Data 360 MCP stdio server, build `forcedotcom/d360-mcp-server` and start this app with:
 
 ```bash
-mvn spring-boot:run \
-  -Dspring-boot.run.arguments='--app.data360.client=mcp --app.data360.mcp.command="java -jar /absolute/path/to/data360-mcp-server-1.0.0.jar"'
+DATA360_MCP_COMMAND="java -jar /absolute/path/to/data360-mcp-server-1.0.0.jar" \
+  mvn spring-boot:run -Dspring-boot.run.arguments='--app.data360.client=mcp'
 ```
+
+The same command can be set from **Admin -> MCP Servers**. Snowflake and CRM MCP
+servers are selectable there too, using `SNOWFLAKE_MCP_COMMAND` and
+`SALESFORCE_CRM_MCP_COMMAND` as optional defaults. PlanSpec continues to use
+capability URIs, not raw MCP tool names; MCP selection is outside the approved
+PlanSpec and is resolved through org settings at execution time.
 
 The MCP adapter compiles MVP actions to the server's facade tools:
 

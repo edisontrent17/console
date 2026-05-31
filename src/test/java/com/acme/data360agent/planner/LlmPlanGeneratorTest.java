@@ -2,6 +2,9 @@ package com.acme.data360agent.planner;
 
 import com.acme.data360agent.llm.LlmGateway;
 import com.acme.data360agent.llm.LlmCompletion;
+import com.acme.data360agent.mcp.McpServerSetting;
+import com.acme.data360agent.mcp.McpSettings;
+import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.operation.OperationBindingCatalog;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.PlanContext;
@@ -22,7 +25,7 @@ class LlmPlanGeneratorTest {
         var llm = mock(LlmGateway.class);
         when(llm.configured()).thenReturn(false);
         var operations = new OperationRegistry();
-        var generator = new LlmPlanGenerator(llm, new ObjectMapper(), new ScenarioLibrary(), operations);
+        var generator = new LlmPlanGenerator(llm, new ObjectMapper(), new ScenarioLibrary(), operations, mcpSettings());
 
         var plan = generator.generate(new PlanRequest(
                 null,
@@ -47,7 +50,7 @@ class LlmPlanGeneratorTest {
                 .thenReturn(new LlmCompletion("mock", "model", invalidPlanJson()))
                 .thenReturn(new LlmCompletion("mock", "model", repairedPlanJson()));
         var operations = new OperationRegistry();
-        var generator = new LlmPlanGenerator(llm, new ObjectMapper(), new ScenarioLibrary(), operations);
+        var generator = new LlmPlanGenerator(llm, new ObjectMapper(), new ScenarioLibrary(), operations, mcpSettings());
         var planner = new LangGraphData360Planner(generator, new PlanValidator(operations), new OperationBindingCatalog(operations));
 
         var draft = planner.draft(new PlanRequest(
@@ -87,6 +90,14 @@ class LlmPlanGeneratorTest {
                   }
                 }
                 """;
+    }
+
+    private McpSettingsService mcpSettings() {
+        var settings = mock(McpSettingsService.class);
+        when(settings.current()).thenReturn(new McpSettings("org", java.util.List.of(
+                new McpServerSetting("data360", "Salesforce Data 360 MCP", "Data 360", true, true, true, "d360", "d360")
+        )));
+        return settings;
     }
 
     private String repairedPlanJson() {

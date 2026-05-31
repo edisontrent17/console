@@ -59,6 +59,8 @@ export default class Data360Console extends LightningElement {
     settingsProvider = "anthropic";
     settingsModel = "claude-sonnet-4-6";
     settingsApiKey = "";
+    mcpSettings = null;
+    mcpServers = [];
     organizations = [];
     selectedAdminOrgId = "";
     organizationUsers = [];
@@ -216,6 +218,7 @@ export default class Data360Console extends LightningElement {
             this.loadMonitors(),
             this.loadRecommendations(),
             this.loadLlmSettings(),
+            this.loadMcpSettings(),
             this.loadOrganizations()
         ]);
     }
@@ -279,6 +282,15 @@ export default class Data360Console extends LightningElement {
             this.llmSettings = await request("/api/llm-settings");
             this.settingsProvider = this.llmSettings.provider || "anthropic";
             this.settingsModel = this.llmSettings.model || this.settingsModel;
+        } catch (error) {
+            this.error = error.message;
+        }
+    }
+
+    async loadMcpSettings() {
+        try {
+            this.mcpSettings = await request("/api/mcp-settings");
+            this.mcpServers = this.mcpSettings.servers || [];
         } catch (error) {
             this.error = error.message;
         }
@@ -587,6 +599,40 @@ export default class Data360Console extends LightningElement {
             this.error = error.message;
         } finally {
             this.setBusy("saveSettings", false);
+        }
+    }
+
+    handleMcpEnabledChange(event) {
+        const serverId = event.target.dataset.serverId;
+        this.mcpServers = this.mcpServers.map((server) => server.id === serverId
+            ? { ...server, enabled: event.target.checked }
+            : server);
+    }
+
+    handleMcpCommandChange(event) {
+        const serverId = event.target.dataset.serverId;
+        this.mcpServers = this.mcpServers.map((server) => server.id === serverId
+            ? { ...server, command: event.target.value, commandConfigured: Boolean(event.target.value?.trim()) }
+            : server);
+    }
+
+    async handleSaveMcpSettings() {
+        this.setBusy("saveMcpSettings", true);
+        this.error = null;
+        try {
+            const body = {
+                servers: this.mcpServers.map((server) => ({
+                    id: server.id,
+                    enabled: server.enabled,
+                    command: server.command
+                }))
+            };
+            this.mcpSettings = await request("/api/mcp-settings", { method: "PUT", body });
+            this.mcpServers = this.mcpSettings.servers || [];
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.setBusy("saveMcpSettings", false);
         }
     }
 
