@@ -11987,7 +11987,7 @@ const $fragment16$1 = parseFragment`<td${3}>${"t1"}</td>`;
 const $fragment17$1 = parseFragment`<td${3}>${"t1"}</td>`;
 const $fragment18$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
 const $fragment19$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment20 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
+const $fragment20$1 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
 const $fragment21 = parseFragment`<h3${3}>Approval history</h3>`;
 const $fragment22 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
 const $fragment23 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
@@ -12213,7 +12213,7 @@ function tmpl$3($api, $cmp, $slotset, $ctx) {
       className: api_normalize_class_name(row.statusClass)
     }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$1, 53, [api_static_part(1, {
       className: api_normalize_class_name(row.approvalClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20, 56, [api_static_part(0, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20$1, 56, [api_static_part(0, {
       on: _m7 || ($ctx._m7 = {
         "click": api_bind($cmp.handleApproveStep)
       }),
@@ -12847,16 +12847,17 @@ const $fragment6 = parseFragment`<a${"c0"}${"a0:href"}${"a0:data-tab"}${2}>${"t1
 const $fragment7 = parseFragment`<div class="side-footer${0}"${2}><span${3}>${"t2"}</span><span${3}>${"t4"}</span><button class="slds-button slds-button_neutral${0}"${2}>Log out</button></div>`;
 const $fragment8 = parseFragment`<h2${3}>Model</h2>`;
 const $fragment9 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
-const $fragment10 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
-const $fragment11 = parseFragment`<h2${3}>Organizations</h2>`;
-const $fragment12 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
-const $fragment13 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
-const $fragment14 = parseFragment`<h2${3}>Users</h2>`;
-const $fragment15 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
-const $fragment16 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
-const $fragment17 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment18 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
-const $fragment19 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
+const $fragment10 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
+const $fragment11 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
+const $fragment12 = parseFragment`<h2${3}>Organizations</h2>`;
+const $fragment13 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
+const $fragment14 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
+const $fragment15 = parseFragment`<h2${3}>Users</h2>`;
+const $fragment16 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
+const $fragment17 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
+const $fragment18 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment19 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
+const $fragment20 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
 const stc0 = {
   classMap: {
     "app-frame": true
@@ -12964,49 +12965,52 @@ const stc23 = {
   key: 45
 };
 const stc24 = {
-  "data-field": "settingsModel"
+  "slds-select": true
 };
 const stc25 = {
-  key: 47
+  "data-field": "settingsModel"
 };
 const stc26 = {
-  classMap: {
-    "admin-panel": true
-  },
-  key: 51
+  key: 49
 };
 const stc27 = {
   classMap: {
-    "inline-form": true
+    "admin-panel": true
   },
-  key: 54
+  key: 53
 };
 const stc28 = {
+  classMap: {
+    "inline-form": true
+  },
+  key: 56
+};
+const stc29 = {
   "data-field": "newOrganizationName",
   "placeholder": "Organization name"
 };
-const stc29 = {
+const stc30 = {
   classMap: {
     "admin-panel": true
   },
-  key: 60
+  key: 62
 };
-const stc30 = {
+const stc31 = {
   classMap: {
     "user-form": true
   },
-  key: 63
+  key: 65
 };
-const stc31 = {
+const stc32 = {
   "data-field": "newUserName",
   "placeholder": "Name"
 };
-const stc32 = {
+const stc33 = {
   "type": "email",
   "data-field": "newUserEmail",
   "placeholder": "Email"
 };
-const stc33 = {
+const stc34 = {
   "type": "password",
   "data-field": "newUserPassword",
   "placeholder": "Temporary password"
@@ -13192,17 +13196,21 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     attrs: {
       "selected": $cmp.settingsProviderIsOpenRouter ? "" : null
     }
-  }, null)]), api_element("label", stc23, [api_text("Model"), api_element("input", {
-    classMap: stc5,
-    attrs: stc24,
-    props: {
-      "value": $cmp.settingsModel
-    },
+  }, null)]), api_element("label", stc23, [api_text("Model"), api_element("select", {
+    classMap: stc24,
+    attrs: stc25,
     key: 46,
     on: _m18 || ($ctx._m18 = {
-      "input": api_bind($cmp.handleFieldChange)
+      "change": api_bind($cmp.handleFieldChange)
     })
-  })]), api_element("label", stc25, [api_text("API token"), api_element("input", {
+  }, api_iterator($cmp.settingsModelOptions, function (option) {
+    return api_static_fragment($fragment10, api_key(48, option.value), [api_static_part(0, {
+      attrs: {
+        "value": option.value,
+        "selected": option.selected ? "" : null
+      }
+    }, null), api_static_part(1, null, api_dynamic_text(option.label))]);
+  }))]), api_element("label", stc26, [api_text("API token"), api_element("input", {
     classMap: stc5,
     attrs: {
       "type": "password",
@@ -13212,28 +13220,28 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     props: {
       "value": $cmp.settingsApiKey
     },
-    key: 48,
+    key: 50,
     on: _m19 || ($ctx._m19 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  })]), api_static_fragment($fragment10, 50, [api_static_part(0, {
+  })]), api_static_fragment($fragment11, 52, [api_static_part(0, {
     on: _m21 || ($ctx._m21 = {
       "click": api_bind($cmp.handleSaveLlmSettings)
     }),
     attrs: {
       "disabled": $cmp.busy.saveSettings ? "" : null
     }
-  }, null)])]), api_element("article", stc26, api_flatten([api_static_fragment($fragment11, 53), api_element("div", stc27, [api_element("input", {
+  }, null)])]), api_element("article", stc27, api_flatten([api_static_fragment($fragment12, 55), api_element("div", stc28, [api_element("input", {
     classMap: stc5,
-    attrs: stc28,
+    attrs: stc29,
     props: {
       "value": $cmp.newOrganizationName
     },
-    key: 55,
+    key: 57,
     on: _m22 || ($ctx._m22 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment12, 57, [api_static_part(0, {
+  }), api_static_fragment($fragment13, 59, [api_static_part(0, {
     on: _m24 || ($ctx._m24 = {
       "click": api_bind($cmp.handleCreateOrganization)
     }),
@@ -13241,7 +13249,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "disabled": $cmp.busy.createOrganization ? "" : null
     }
   }, null)])]), api_iterator($cmp.organizationRows, function (org) {
-    return api_static_fragment($fragment13, api_key(59, org.id), [api_static_part(0, {
+    return api_static_fragment($fragment14, api_key(61, org.id), [api_static_part(0, {
       on: _m26 || ($ctx._m26 = {
         "click": api_bind($cmp.handleSelectOrganization)
       }),
@@ -13250,37 +13258,37 @@ function tmpl($api, $cmp, $slotset, $ctx) {
         "data-organization-id": org.id
       }
     }, null), api_static_part(1, null, api_dynamic_text(org.name))]);
-  })])), api_element("article", stc29, api_flatten([api_static_fragment($fragment14, 62), api_element("div", stc30, [api_element("input", {
-    classMap: stc5,
-    attrs: stc31,
-    props: {
-      "value": $cmp.newUserName
-    },
-    key: 64,
-    on: _m27 || ($ctx._m27 = {
-      "input": api_bind($cmp.handleFieldChange)
-    })
-  }), api_element("input", {
+  })])), api_element("article", stc30, api_flatten([api_static_fragment($fragment15, 64), api_element("div", stc31, [api_element("input", {
     classMap: stc5,
     attrs: stc32,
     props: {
-      "value": $cmp.newUserEmail
+      "value": $cmp.newUserName
     },
-    key: 65,
-    on: _m28 || ($ctx._m28 = {
+    key: 66,
+    on: _m27 || ($ctx._m27 = {
       "input": api_bind($cmp.handleFieldChange)
     })
   }), api_element("input", {
     classMap: stc5,
     attrs: stc33,
     props: {
+      "value": $cmp.newUserEmail
+    },
+    key: 67,
+    on: _m28 || ($ctx._m28 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_element("input", {
+    classMap: stc5,
+    attrs: stc34,
+    props: {
       "value": $cmp.newUserPassword
     },
-    key: 66,
+    key: 68,
     on: _m29 || ($ctx._m29 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment15, 68, [api_static_part(0, {
+  }), api_static_fragment($fragment16, 70, [api_static_part(0, {
     on: _m31 || ($ctx._m31 = {
       "change": api_bind($cmp.handleFieldChange)
     })
@@ -13296,7 +13304,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     attrs: {
       "selected": $cmp.newUserRoleIsViewer ? "" : null
     }
-  }, null)]), api_static_fragment($fragment16, 70, [api_static_part(0, {
+  }, null)]), api_static_fragment($fragment17, 72, [api_static_part(0, {
     on: _m33 || ($ctx._m33 = {
       "click": api_bind($cmp.handleCreateUser)
     }),
@@ -13304,8 +13312,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "disabled": $cmp.busy.createUser ? "" : null
     }
   }, null)])]), api_iterator($cmp.userRows, function (item) {
-    return api_static_fragment($fragment17, api_key(72, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
-  })]))]) : null, $cmp.error ? api_static_fragment($fragment18, 74, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment19, 76, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
+    return api_static_fragment($fragment18, api_key(74, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
+  })]))]) : null, $cmp.error ? api_static_fragment($fragment19, 76, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment20, 78, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl = registerTemplate(tmpl);
@@ -13370,6 +13378,28 @@ const TABS = [{
   id: "admin",
   label: "Admin"
 }];
+const MODEL_OPTIONS = {
+  anthropic: [{
+    value: "claude-sonnet-4-6",
+    label: "Claude Sonnet 4.6"
+  }, {
+    value: "claude-opus-4-7",
+    label: "Claude Opus 4.7"
+  }, {
+    value: "claude-haiku-4-5",
+    label: "Claude Haiku 4.5"
+  }],
+  openrouter: [{
+    value: "anthropic/claude-sonnet-4.6",
+    label: "Anthropic Claude Sonnet 4.6"
+  }, {
+    value: "anthropic/claude-opus-4.7",
+    label: "Anthropic Claude Opus 4.7"
+  }, {
+    value: "anthropic/claude-haiku-4.5",
+    label: "Anthropic Claude Haiku 4.5"
+  }]
+};
 class Data360Console extends LightningElement {
   constructor(...args) {
     super(...args);
@@ -13407,7 +13437,7 @@ class Data360Console extends LightningElement {
     this.approvalHistoryUnavailable = null;
     this.llmSettings = null;
     this.settingsProvider = "anthropic";
-    this.settingsModel = "claude-sonnet-4-5";
+    this.settingsModel = "claude-sonnet-4-6";
     this.settingsApiKey = "";
     this.organizations = [];
     this.selectedAdminOrgId = "";
@@ -13482,6 +13512,19 @@ class Data360Console extends LightningElement {
   }
   get settingsProviderIsOpenRouter() {
     return this.settingsProvider === "openrouter";
+  }
+  get settingsModelOptions() {
+    const options = MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+    const selectedModel = this.settingsModel || options[0]?.value || "";
+    const hasSelected = options.some(option => option.value === selectedModel);
+    const visibleOptions = hasSelected || !selectedModel ? options : [{
+      value: selectedModel,
+      label: `Saved custom: ${selectedModel}`
+    }, ...options];
+    return visibleOptions.map(option => ({
+      ...option,
+      selected: option.value === selectedModel
+    }));
   }
   get settingsKeyStatus() {
     if (!this.llmSettings?.apiKeyConfigured) return "No token saved";
@@ -13610,7 +13653,11 @@ class Data360Console extends LightningElement {
     }
   }
   handleFieldChange(event) {
-    this[event.target.dataset.field] = event.target.value;
+    const field = event.target.dataset.field;
+    this[field] = event.target.value;
+    if (field === "settingsProvider") {
+      this.settingsModel = defaultModelForProvider(this.settingsProvider);
+    }
   }
   handleLoginKeydown(event) {
     if (event.key !== "Enter") return;
@@ -14006,6 +14053,9 @@ async function exportJson(defaultFileName, payload) {
   return {
     canceled: false
   };
+}
+function defaultModelForProvider(provider) {
+  return (MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic)[0]?.value || "";
 }
 
 const mount = document.getElementById("app");

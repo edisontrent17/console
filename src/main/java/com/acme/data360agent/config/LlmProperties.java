@@ -31,7 +31,7 @@ public record LlmProperties(
             if (model != null && !model.isBlank()) {
                 return model;
             }
-            return defaultModel == null || defaultModel.isBlank() ? "anthropic/claude-sonnet-4.5" : defaultModel;
+            return defaultModel == null || defaultModel.isBlank() ? "anthropic/claude-sonnet-4.6" : defaultModel;
         }
     }
 }

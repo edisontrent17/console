@@ -11,6 +11,19 @@ const TABS = [
     { id: "admin", label: "Admin" }
 ];
 
+const MODEL_OPTIONS = {
+    anthropic: [
+        { value: "claude-sonnet-4-6", label: "Claude Sonnet 4.6" },
+        { value: "claude-opus-4-7", label: "Claude Opus 4.7" },
+        { value: "claude-haiku-4-5", label: "Claude Haiku 4.5" }
+    ],
+    openrouter: [
+        { value: "anthropic/claude-sonnet-4.6", label: "Anthropic Claude Sonnet 4.6" },
+        { value: "anthropic/claude-opus-4.7", label: "Anthropic Claude Opus 4.7" },
+        { value: "anthropic/claude-haiku-4.5", label: "Anthropic Claude Haiku 4.5" }
+    ]
+};
+
 export default class Data360Console extends LightningElement {
     activeTab = "chat";
     authReady = false;
@@ -44,7 +57,7 @@ export default class Data360Console extends LightningElement {
 
     llmSettings = null;
     settingsProvider = "anthropic";
-    settingsModel = "claude-sonnet-4-5";
+    settingsModel = "claude-sonnet-4-6";
     settingsApiKey = "";
     organizations = [];
     selectedAdminOrgId = "";
@@ -135,6 +148,19 @@ export default class Data360Console extends LightningElement {
 
     get settingsProviderIsOpenRouter() {
         return this.settingsProvider === "openrouter";
+    }
+
+    get settingsModelOptions() {
+        const options = MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+        const selectedModel = this.settingsModel || options[0]?.value || "";
+        const hasSelected = options.some((option) => option.value === selectedModel);
+        const visibleOptions = hasSelected || !selectedModel
+            ? options
+            : [{ value: selectedModel, label: `Saved custom: ${selectedModel}` }, ...options];
+        return visibleOptions.map((option) => ({
+            ...option,
+            selected: option.value === selectedModel
+        }));
     }
 
     get settingsKeyStatus() {
@@ -286,7 +312,11 @@ export default class Data360Console extends LightningElement {
     }
 
     handleFieldChange(event) {
-        this[event.target.dataset.field] = event.target.value;
+        const field = event.target.dataset.field;
+        this[field] = event.target.value;
+        if (field === "settingsProvider") {
+            this.settingsModel = defaultModelForProvider(this.settingsProvider);
+        }
     }
 
     handleLoginKeydown(event) {
@@ -639,4 +669,8 @@ async function exportJson(defaultFileName, payload) {
     link.click();
     URL.revokeObjectURL(url);
     return { canceled: false };
+}
+
+function defaultModelForProvider(provider) {
+    return (MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic)[0]?.value || "";
 }

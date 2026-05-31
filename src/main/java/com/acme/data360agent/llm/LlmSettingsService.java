@@ -125,7 +125,7 @@ public class LlmSettingsService {
 
     private String fallbackModel(String provider) {
         if ("openrouter".equals(provider)) {
-            return llmProperties.openrouter() == null ? "anthropic/claude-sonnet-4.5" : llmProperties.openrouter().resolvedModel(llmProperties.model());
+            return llmProperties.openrouter() == null ? "anthropic/claude-sonnet-4.6" : llmProperties.openrouter().resolvedModel(llmProperties.model());
         }
         if (llmProperties.model() != null && !llmProperties.model().isBlank()) {
             return llmProperties.model();

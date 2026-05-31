@@ -45,13 +45,13 @@ class LlmSettingsServiceTest {
     void savesTokenWithoutReturningSecret() {
         var saved = settings.save(new LlmSettingsRequest(
                 "openrouter",
-                "anthropic/claude-sonnet-4.5",
+                "anthropic/claude-sonnet-4.6",
                 "sk-or-secret-token",
                 false
         ));
 
         assertThat(saved.provider()).isEqualTo("openrouter");
-        assertThat(saved.model()).isEqualTo("anthropic/claude-sonnet-4.5");
+        assertThat(saved.model()).isEqualTo("anthropic/claude-sonnet-4.6");
         assertThat(saved.apiKeyConfigured()).isTrue();
         assertThat(saved.apiKeyLast4()).isEqualTo("oken");
         assertThat(settings.effective().apiKey()).isEqualTo("sk-or-secret-token");

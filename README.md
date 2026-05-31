@@ -193,7 +193,7 @@ Anthropic direct:
 ```bash
 export APP_LLM_PROVIDER=anthropic
 export ANTHROPIC_API_KEY="..."
-export ANTHROPIC_MODEL="claude-sonnet-4-5"
+export ANTHROPIC_MODEL="claude-sonnet-4-6"
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 
@@ -202,7 +202,7 @@ OpenRouter:
 ```bash
 export APP_LLM_PROVIDER=openrouter
 export OPENROUTER_API_KEY="..."
-export OPENROUTER_MODEL="anthropic/claude-sonnet-4.5"
+export OPENROUTER_MODEL="anthropic/claude-sonnet-4.6"
 mvn spring-boot:run -Dspring-boot.run.profiles=dev
 ```
 

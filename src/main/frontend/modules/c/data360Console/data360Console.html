@@ -138,7 +138,13 @@
                                     <option value="openrouter" selected={settingsProviderIsOpenRouter}>OpenRouter</option>
                                 </select>
                             </label>
-                            <label>Model<input class="slds-input" data-field="settingsModel" value={settingsModel} oninput={handleFieldChange}></label>
+                            <label>Model
+                                <select class="slds-select" data-field="settingsModel" onchange={handleFieldChange}>
+                                    <template for:each={settingsModelOptions} for:item="option">
+                                        <option key={option.value} value={option.value} selected={option.selected}>{option.label}</option>
+                                    </template>
+                                </select>
+                            </label>
                             <label>API token<input class="slds-input" type="password" data-field="settingsApiKey" value={settingsApiKey} placeholder={settingsKeyStatus} oninput={handleFieldChange}></label>
                             <button class="slds-button slds-button_brand" onclick={handleSaveLlmSettings} disabled={busy.saveSettings}>Save model settings</button>
                         </article>
