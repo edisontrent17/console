@@ -21,6 +21,11 @@ export default class ChatWorkspace extends LightningElement {
         return `chip status ${slug(this.plannerStatus || "ready")}`;
     }
 
+    get chatScrollClass() {
+        const userMessages = (this.messages || []).filter((message) => message.role === "user").length;
+        return `chat-scroll ${userMessages === 0 && !this.currentDraft ? "empty" : ""}`;
+    }
+
     get messageRows() {
         const rows = this.messages?.length ? this.messages : [
             { role: "assistant", text: "What should Data 360 set up?", meta: "Describe the customer goal and the systems involved." }

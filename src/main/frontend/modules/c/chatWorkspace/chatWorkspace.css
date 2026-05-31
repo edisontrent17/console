@@ -80,6 +80,16 @@
     overflow-y: auto;
 }
 
+.chat-scroll.empty {
+    align-content: center;
+    padding-bottom: 5rem;
+}
+
+.chat-scroll.empty .message {
+    justify-self: center;
+    width: min(100%, 46rem);
+}
+
 .message {
     display: grid;
     grid-template-columns: 2.25rem minmax(0, 1fr);

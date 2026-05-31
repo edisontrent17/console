@@ -8,3 +8,5 @@ node_modules/
 *.log
 release/
 desktop/dist/
+test-results/
+playwright-report/

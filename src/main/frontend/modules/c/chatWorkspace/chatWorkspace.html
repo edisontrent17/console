@@ -12,7 +12,7 @@
             </div>
         </header>
 
-        <div class="chat-scroll">
+        <div class={chatScrollClass}>
             <template for:each={messageRows} for:item="message">
                 <article key={message.key} class={message.className}>
                     <div class="avatar">{message.avatar}</div>

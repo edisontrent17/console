@@ -48,8 +48,8 @@
                     </template>
                 </nav>
                 <div class="side-footer">
-                    <span>{userLabel}</span>
-                    <span>{modelLabel}</span>
+                    <span class="footer-user">{userLabel}</span>
+                    <span class="footer-model">{compactModelLabel}</span>
                     <button class="slds-button slds-button_neutral" onclick={handleLogout}>Log out</button>
                 </div>
             </aside>
@@ -129,6 +129,12 @@
                 </template>
 
                 <template if:true={isAdmin}>
+                    <header class="workspace-header">
+                        <div>
+                            <h1>Admin</h1>
+                            <p>Configure model access, MCP servers, organizations, and users.</p>
+                        </div>
+                    </header>
                     <section class="admin-grid">
                         <article class="admin-panel">
                             <h2>Model</h2>

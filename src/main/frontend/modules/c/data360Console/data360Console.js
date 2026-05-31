@@ -24,6 +24,16 @@ const MODEL_OPTIONS = {
     ]
 };
 
+const MODEL_LABELS = new Map([
+    ["claude-sonnet-4-6", "Claude Sonnet 4.6"],
+    ["claude-opus-4-7", "Claude Opus 4.7"],
+    ["claude-haiku-4-5", "Claude Haiku 4.5"],
+    ["anthropic/claude-sonnet-4.6", "Claude Sonnet 4.6"],
+    ["anthropic/claude-opus-4.7", "Claude Opus 4.7"],
+    ["anthropic/claude-haiku-4.5", "Claude Haiku 4.5"],
+    ["anthropic/claude-3.5-sonnet", "Claude 3.5 Sonnet"]
+]);
+
 export default class Data360Console extends LightningElement {
     activeTab = "chat";
     authReady = false;
@@ -141,7 +151,13 @@ export default class Data360Console extends LightningElement {
     get modelLabel() {
         if (!this.llmSettings) return "Model not configured";
         const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
-        return `${this.llmSettings.provider} / ${this.llmSettings.model} (${configured})`;
+        return `${providerLabel(this.llmSettings.provider)} / ${modelLabel(this.llmSettings.model)} (${configured})`;
+    }
+
+    get compactModelLabel() {
+        if (!this.llmSettings) return "Model not configured";
+        const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
+        return `${modelLabel(this.llmSettings.model)} (${configured})`;
     }
 
     get settingsProviderIsAnthropic() {
@@ -158,7 +174,7 @@ export default class Data360Console extends LightningElement {
         const hasSelected = options.some((option) => option.value === selectedModel);
         const visibleOptions = hasSelected || !selectedModel
             ? options
-            : [{ value: selectedModel, label: `Saved custom: ${selectedModel}` }, ...options];
+            : [{ value: selectedModel, label: `Current: ${modelLabel(selectedModel)}` }, ...options];
         return visibleOptions.map((option) => ({
             ...option,
             selected: option.value === selectedModel
@@ -719,4 +735,12 @@ async function exportJson(defaultFileName, payload) {
 
 function defaultModelForProvider(provider) {
     return (MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic)[0]?.value || "";
+}
+
+function providerLabel(provider) {
+    return provider === "openrouter" ? "OpenRouter" : "Anthropic";
+}
+
+function modelLabel(model) {
+    return MODEL_LABELS.get(model) || model || "Model not configured";
 }

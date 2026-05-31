@@ -11464,14 +11464,14 @@ ElementDescriptors.shadowRoot.get;
 
 function stylesheet$5(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f7f7f5;color: #181818;}.auth-screen", shadowSelector, " {display: grid;min-height: 100vh;place-items: center;padding: 1rem;}.auth-panel", shadowSelector, " {width: min(100%, 28rem);padding: 1.25rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 12px 36px rgba(24, 24, 24, 0.08);}.auth-brand", shadowSelector, ",.brand", shadowSelector, " {display: flex;align-items: center;gap: 0.75rem;}.auth-brand", shadowSelector, " {margin-bottom: 1.5rem;}.auth-brand", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.25rem;}.auth-brand", shadowSelector, " p", shadowSelector, ",.side-footer", shadowSelector, " span", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, ",.user-row", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 0.375rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.auth-form", shadowSelector, ",.user-form", shadowSelector, " {display: grid;gap: 0.75rem;}.auth-form", shadowSelector, " label", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, " {display: grid;gap: 0.25rem;font-weight: 700;}.side-nav", shadowSelector, " {position: fixed;inset: 0 auto 0 0;display: grid;grid-template-rows: auto minmax(0, 1fr) auto;width: 15rem;padding: 1rem;border-right: 1px solid #dddbda;background: #fff;}.brand", shadowSelector, " {min-height: 3rem;font-weight: 800;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: grid;align-content: start;gap: 0.25rem;padding-top: 1rem;}.nav-item", shadowSelector, ",.org-row", shadowSelector, " {display: block;min-width: 0;padding: 0.625rem 0.75rem;border: 1px solid transparent;border-radius: 0.5rem;color: #3e3e3c;text-decoration: none;font-weight: 700;}.nav-item:hover", shadowSelector, ",.nav-item.active", shadowSelector, ",.org-row:hover", shadowSelector, ",.org-row.selected", shadowSelector, " {border-color: #d8e6fe;background: #eef4ff;color: #032d60;}.side-footer", shadowSelector, " {display: grid;gap: 0.5rem;}.workspace", shadowSelector, " {min-height: 100vh;margin-left: 15rem;padding: 1rem;}.admin-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));gap: 0.75rem;}.admin-panel", shadowSelector, " {display: grid;align-content: start;gap: 0.875rem;padding: 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.admin-panel", shadowSelector, " h2", shadowSelector, " {margin: 0;font-size: 1rem;font-weight: 800;}.inline-form", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;}.org-row", shadowSelector, " {width: 100%;background: transparent;text-align: left;}.user-row", shadowSelector, " {display: grid;gap: 0.125rem;padding: 0.625rem 0;border-top: 1px solid #f3f2f2;}.mcp-panel", shadowSelector, " {align-content: start;}.mcp-row", shadowSelector, " {display: grid;gap: 0.5rem;padding: 0.75rem 0;border-top: 1px solid #f3f2f2;}.mcp-row:first-of-type", shadowSelector, " {border-top: 0;padding-top: 0;}.mcp-toggle", shadowSelector, " {display: grid;grid-template-columns: auto minmax(0, 1fr);align-items: start;gap: 0.5rem;color: #181818;}.mcp-toggle", shadowSelector, " input", shadowSelector, " {margin-top: 0.125rem;}.mcp-toggle", shadowSelector, " span", shadowSelector, " {display: grid;gap: 0.125rem;}.mcp-toggle", shadowSelector, " small", shadowSelector, " {color: #5c5c5c;font-weight: 400;line-height: 1.35;}.floating-alert", shadowSelector, ",.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;max-width: min(32rem, calc(100vw - 2rem));border-radius: 0.375rem;}.export-toast", shadowSelector, " {background: #eef8f1;color: #2e844a;}@media (max-width: 980px) {.side-nav", shadowSelector, " {position: static;width: auto;border-right: 0;border-bottom: 1px solid #dddbda;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: flex;overflow-x: auto;}.workspace", shadowSelector, " {margin-left: 0;}.admin-grid", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 640px) {.workspace", shadowSelector, " {padding: 0.5rem;}.inline-form", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f7f8fa;color: #181818;}.auth-screen", shadowSelector, " {display: grid;min-height: 100vh;place-items: center;padding: 1rem;}.auth-panel", shadowSelector, " {width: min(100%, 28rem);padding: 1.25rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 12px 36px rgba(24, 24, 24, 0.08);}.auth-brand", shadowSelector, ",.brand", shadowSelector, " {display: flex;align-items: center;gap: 0.75rem;}.auth-brand", shadowSelector, " {margin-bottom: 1.5rem;}.auth-brand", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.25rem;}.auth-brand", shadowSelector, " p", shadowSelector, ",.side-footer", shadowSelector, " span", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, ",.user-row", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 0.375rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.auth-form", shadowSelector, ",.user-form", shadowSelector, " {display: grid;gap: 0.75rem;}.auth-form", shadowSelector, " label", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, " {display: grid;gap: 0.25rem;font-weight: 700;}.side-nav", shadowSelector, " {position: fixed;inset: 0 auto 0 0;display: grid;grid-template-rows: auto minmax(0, 1fr) auto;width: 15rem;padding: 1rem;border-right: 1px solid #dddbda;background: #fff;box-shadow: 1px 0 0 rgba(24, 24, 24, 0.02);}.brand", shadowSelector, " {min-height: 3rem;font-weight: 800;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: grid;align-content: start;gap: 0.25rem;padding-top: 1rem;}.nav-item", shadowSelector, ",.org-row", shadowSelector, " {display: block;min-width: 0;padding: 0.625rem 0.75rem;border: 1px solid transparent;border-radius: 0.5rem;color: #3e3e3c;text-decoration: none;font-weight: 700;}.nav-item:hover", shadowSelector, ",.nav-item.active", shadowSelector, ",.org-row:hover", shadowSelector, ",.org-row.selected", shadowSelector, " {border-color: #d8e6fe;background: #eef4ff;color: #032d60;}.side-footer", shadowSelector, " {display: grid;gap: 0.5rem;}.footer-user", shadowSelector, " {color: #181818;font-weight: 700;}.footer-model", shadowSelector, " {display: block;max-width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}.workspace", shadowSelector, " {min-height: 100vh;margin-left: 15rem;padding: 1rem;}.workspace-header", shadowSelector, " {display: flex;align-items: flex-end;justify-content: space-between;max-width: 72rem;margin: 0 auto 0.75rem;padding: 0.25rem 0;}.workspace-header", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.375rem;font-weight: 800;}.workspace-header", shadowSelector, " p", shadowSelector, " {margin: 0.25rem 0 0;color: #5c5c5c;font-size: 0.875rem;}.admin-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));align-items: start;max-width: 72rem;margin: 0 auto;gap: 0.75rem;}.admin-panel", shadowSelector, " {display: grid;align-content: start;gap: 0.875rem;padding: 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.admin-panel", shadowSelector, " h2", shadowSelector, " {margin: 0;font-size: 1rem;font-weight: 800;}.inline-form", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;}.org-row", shadowSelector, " {width: 100%;background: transparent;text-align: left;}.user-row", shadowSelector, " {display: grid;gap: 0.125rem;padding: 0.625rem 0;border-top: 1px solid #f3f2f2;}.mcp-panel", shadowSelector, " {align-content: start;}.mcp-row", shadowSelector, " {display: grid;gap: 0.5rem;padding: 0.75rem 0;border-top: 1px solid #f3f2f2;}.mcp-row:first-of-type", shadowSelector, " {border-top: 0;padding-top: 0;}.mcp-toggle", shadowSelector, " {display: grid;grid-template-columns: auto minmax(0, 1fr);align-items: start;gap: 0.5rem;color: #181818;}.mcp-toggle", shadowSelector, " input", shadowSelector, " {margin-top: 0.125rem;}.mcp-toggle", shadowSelector, " span", shadowSelector, " {display: grid;gap: 0.125rem;}.mcp-toggle", shadowSelector, " small", shadowSelector, " {color: #5c5c5c;font-weight: 400;line-height: 1.35;}.mcp-row", shadowSelector, " .slds-input", shadowSelector, " {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;font-size: 0.8125rem;}.floating-alert", shadowSelector, ",.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;max-width: min(32rem, calc(100vw - 2rem));border-radius: 0.375rem;}.export-toast", shadowSelector, " {background: #eef8f1;color: #2e844a;}@media (max-width: 980px) {.side-nav", shadowSelector, " {position: static;width: auto;border-right: 0;border-bottom: 1px solid #dddbda;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: flex;overflow-x: auto;padding-top: 0.75rem;}.workspace", shadowSelector, " {margin-left: 0;}.side-footer", shadowSelector, " {padding-top: 0.75rem;}.admin-grid", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 640px) {.workspace", shadowSelector, " {padding: 0.5rem;}.workspace-header", shadowSelector, " {display: block;}.inline-form", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$5 = [stylesheet$5];
 
 function stylesheet$4(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".chat-shell", shadowSelector, " {display: grid;grid-template-rows: auto minmax(0, 1fr) auto auto;min-height: calc(100vh - 2rem);max-width: 980px;margin: 0 auto;}.chat-topbar", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;padding: 1.25rem 0;}.chat-topbar", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 700;}.chat-topbar", shadowSelector, " p", shadowSelector, ",.bubble", shadowSelector, " span", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.status-stack", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.chip", shadowSelector, " {display: inline-flex;align-items: center;min-height: 1.625rem;padding: 0 0.625rem;border: 1px solid #dddbda;border-radius: 999px;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;}.chip.status.ready", shadowSelector, ",.chip.status.succeeded", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #2e844a;}.chip.status.planning", shadowSelector, ",.chip.status.running", shadowSelector, ",.chip.status.review", shadowSelector, ",.chip.status.waiting-approval", shadowSelector, " {border-color: #ffba90;background: #fff7e0;color: #8a5a00;}.chip.status.error", shadowSelector, ",.chip.status.failed", shadowSelector, " {border-color: #ffb3b7;background: #fff1f2;color: #ba0517;}.chat-scroll", shadowSelector, " {display: grid;align-content: end;gap: 1rem;min-height: 0;padding: 1rem 0 1.5rem;overflow-y: auto;}.message", shadowSelector, " {display: grid;grid-template-columns: 2.25rem minmax(0, 1fr);gap: 0.75rem;align-items: flex-start;}.message.user", shadowSelector, " {grid-template-columns: minmax(0, 1fr) 2.25rem;}.message.user", shadowSelector, " .avatar", shadowSelector, " {grid-column: 2;grid-row: 1;}.message.user", shadowSelector, " .bubble", shadowSelector, " {grid-column: 1;justify-self: end;background: #032d60;color: #fff;}.message.user", shadowSelector, " .bubble", shadowSelector, " span", shadowSelector, " {color: #d8e6fe;}.avatar", shadowSelector, " {display: grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 999px;background: #eaf5fe;color: #032d60;font-size: 0.6875rem;font-weight: 800;}.bubble", shadowSelector, " {max-width: 45rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.bubble", shadowSelector, " p", shadowSelector, " {margin: 0;color: inherit;white-space: pre-wrap;}.bubble", shadowSelector, " span", shadowSelector, " {display: block;margin-top: 0.5rem;}.review-strip", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 1rem;margin-bottom: 0.75rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.review-strip", shadowSelector, " strong", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {display: block;}.review-actions", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.5rem;}.composer", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.75rem;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 8px 24px rgba(24, 24, 24, 0.08);}.composer-input", shadowSelector, " {min-height: 3.25rem;max-height: 12rem;resize: vertical;border: 0;outline: 0;color: #181818;font: inherit;}.send-button", shadowSelector, " {align-self: end;}@media (max-width: 720px) {.chat-shell", shadowSelector, " {min-height: calc(100vh - 1rem);}.chat-topbar", shadowSelector, ", .review-strip", shadowSelector, " {display: grid;}.status-stack", shadowSelector, ", .review-actions", shadowSelector, " {justify-content: flex-start;}.composer", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return [".chat-shell", shadowSelector, " {display: grid;grid-template-rows: auto minmax(0, 1fr) auto auto;min-height: calc(100vh - 2rem);max-width: 980px;margin: 0 auto;}.chat-topbar", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;padding: 1.25rem 0;}.chat-topbar", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 700;}.chat-topbar", shadowSelector, " p", shadowSelector, ",.bubble", shadowSelector, " span", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.status-stack", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.chip", shadowSelector, " {display: inline-flex;align-items: center;min-height: 1.625rem;padding: 0 0.625rem;border: 1px solid #dddbda;border-radius: 999px;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;}.chip.status.ready", shadowSelector, ",.chip.status.succeeded", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #2e844a;}.chip.status.planning", shadowSelector, ",.chip.status.running", shadowSelector, ",.chip.status.review", shadowSelector, ",.chip.status.waiting-approval", shadowSelector, " {border-color: #ffba90;background: #fff7e0;color: #8a5a00;}.chip.status.error", shadowSelector, ",.chip.status.failed", shadowSelector, " {border-color: #ffb3b7;background: #fff1f2;color: #ba0517;}.chat-scroll", shadowSelector, " {display: grid;align-content: end;gap: 1rem;min-height: 0;padding: 1rem 0 1.5rem;overflow-y: auto;}.chat-scroll.empty", shadowSelector, " {align-content: center;padding-bottom: 5rem;}.chat-scroll.empty", shadowSelector, " .message", shadowSelector, " {justify-self: center;width: min(100%, 46rem);}.message", shadowSelector, " {display: grid;grid-template-columns: 2.25rem minmax(0, 1fr);gap: 0.75rem;align-items: flex-start;}.message.user", shadowSelector, " {grid-template-columns: minmax(0, 1fr) 2.25rem;}.message.user", shadowSelector, " .avatar", shadowSelector, " {grid-column: 2;grid-row: 1;}.message.user", shadowSelector, " .bubble", shadowSelector, " {grid-column: 1;justify-self: end;background: #032d60;color: #fff;}.message.user", shadowSelector, " .bubble", shadowSelector, " span", shadowSelector, " {color: #d8e6fe;}.avatar", shadowSelector, " {display: grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 999px;background: #eaf5fe;color: #032d60;font-size: 0.6875rem;font-weight: 800;}.bubble", shadowSelector, " {max-width: 45rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.bubble", shadowSelector, " p", shadowSelector, " {margin: 0;color: inherit;white-space: pre-wrap;}.bubble", shadowSelector, " span", shadowSelector, " {display: block;margin-top: 0.5rem;}.review-strip", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 1rem;margin-bottom: 0.75rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.review-strip", shadowSelector, " strong", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {display: block;}.review-actions", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.5rem;}.composer", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.75rem;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 8px 24px rgba(24, 24, 24, 0.08);}.composer-input", shadowSelector, " {min-height: 3.25rem;max-height: 12rem;resize: vertical;border: 0;outline: 0;color: #181818;font: inherit;}.send-button", shadowSelector, " {align-self: end;}@media (max-width: 720px) {.chat-shell", shadowSelector, " {min-height: calc(100vh - 1rem);}.chat-topbar", shadowSelector, ", .review-strip", shadowSelector, " {display: grid;}.status-stack", shadowSelector, ", .review-actions", shadowSelector, " {justify-content: flex-start;}.composer", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$4 = [stylesheet$4];
@@ -11493,12 +11493,6 @@ const stc0$5 = {
 };
 const stc1$5 = {
   classMap: {
-    "chat-scroll": true
-  },
-  key: 3
-};
-const stc2$5 = {
-  classMap: {
     "bubble": true
   },
   key: 7
@@ -11508,11 +11502,14 @@ function tmpl$5($api, $cmp, $slotset, $ctx) {
   const {_m0, _m1, _m2, _m3} = $ctx;
   return [api_element("section", stc0$5, [api_static_fragment($fragment1$5, 2, [api_static_part(5, null, api_dynamic_text($cmp.subtitle)), api_static_part(7, {
     className: api_normalize_class_name($cmp.plannerStatusClass)
-  }, null), api_static_part(8, null, api_dynamic_text($cmp.plannerStatus)), api_static_part(10, null, api_dynamic_text($cmp.modelLabel)), api_static_part(12, null, api_dynamic_text($cmp.userLabel))]), api_element("div", stc1$5, api_iterator($cmp.messageRows, function (message) {
+  }, null), api_static_part(8, null, api_dynamic_text($cmp.plannerStatus)), api_static_part(10, null, api_dynamic_text($cmp.modelLabel)), api_static_part(12, null, api_dynamic_text($cmp.userLabel))]), api_element("div", {
+    className: api_normalize_class_name($cmp.chatScrollClass),
+    key: 3
+  }, api_iterator($cmp.messageRows, function (message) {
     return api_element("article", {
       className: api_normalize_class_name(message.className),
       key: api_key(4, message.key)
-    }, [api_static_fragment($fragment2$5, 6, [api_static_part(1, null, api_dynamic_text(message.avatar))]), api_element("div", stc2$5, [api_static_fragment($fragment3$5, 9, [api_static_part(1, null, api_dynamic_text(message.text))]), message.meta ? api_static_fragment($fragment4$5, 11, [api_static_part(1, null, api_dynamic_text(message.meta))]) : null])]);
+    }, [api_static_fragment($fragment2$5, 6, [api_static_part(1, null, api_dynamic_text(message.avatar))]), api_element("div", stc1$5, [api_static_fragment($fragment3$5, 9, [api_static_part(1, null, api_dynamic_text(message.text))]), message.meta ? api_static_fragment($fragment4$5, 11, [api_static_part(1, null, api_dynamic_text(message.meta))]) : null])]);
   })), $cmp.hasDraft ? api_static_fragment($fragment5$5, 13, [api_static_part(3, null, api_dynamic_text($cmp.planTitle)), api_static_part(5, null, api_dynamic_text($cmp.planSummary)), api_static_part(7, {
     on: _m0 || ($ctx._m0 = {
       "click": api_bind($cmp.handleExportPlanSpec)
@@ -11588,6 +11585,10 @@ class ChatWorkspace extends LightningElement {
   }
   get plannerStatusClass() {
     return `chip status ${slug(this.plannerStatus || "ready")}`;
+  }
+  get chatScrollClass() {
+    const userMessages = (this.messages || []).filter(message => message.role === "user").length;
+    return `chat-scroll ${userMessages === 0 && !this.currentDraft ? "empty" : ""}`;
   }
   get messageRows() {
     const rows = this.messages?.length ? this.messages : [{
@@ -11991,7 +11992,7 @@ const $fragment20$1 = parseFragment`<button class="slds-button slds-button_brand
 const $fragment21$1 = parseFragment`<h3${3}>Approval history</h3>`;
 const $fragment22$1 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
 const $fragment23$1 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
-const $fragment24 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
+const $fragment24$1 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
 const $fragment25 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
 const $fragment26 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
 const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
@@ -12223,7 +12224,7 @@ function tmpl$3($api, $cmp, $slotset, $ctx) {
     }, null)]) : null])]);
   }))])]) : null, $cmp.hasDraft ? api_element("section", stc16$1, api_flatten([api_static_fragment($fragment21$1, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
     return api_static_fragment($fragment22$1, api_key(61, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
-  }) : stc17$1, !$cmp.hasApprovalRows ? api_static_fragment($fragment23$1, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18$1, [api_static_fragment($fragment24, 66), api_element("div", stc19$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20$1, api_iterator($cmp.selectedPreviews, function (preview) {
+  }) : stc17$1, !$cmp.hasApprovalRows ? api_static_fragment($fragment23$1, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18$1, [api_static_fragment($fragment24$1, 66), api_element("div", stc19$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20$1, api_iterator($cmp.selectedPreviews, function (preview) {
     return api_static_fragment($fragment28, api_key(76, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
   })) : null])])])];
   /*LWC compiler v9.2.2*/
@@ -12844,23 +12845,24 @@ const $fragment3 = parseFragment`<button class="slds-button slds-button_brand${0
 const $fragment4 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error${0}" role="alert"${2}>${"t1"}</div>`;
 const $fragment5 = parseFragment`<div class="brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><strong${3}>Agent Console</strong></div>`;
 const $fragment6 = parseFragment`<a${"c0"}${"a0:href"}${"a0:data-tab"}${2}>${"t1"}</a>`;
-const $fragment7 = parseFragment`<div class="side-footer${0}"${2}><span${3}>${"t2"}</span><span${3}>${"t4"}</span><button class="slds-button slds-button_neutral${0}"${2}>Log out</button></div>`;
-const $fragment8 = parseFragment`<h2${3}>Model</h2>`;
-const $fragment9 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
-const $fragment10 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
-const $fragment11 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
-const $fragment12 = parseFragment`<h2${3}>MCP Servers</h2>`;
-const $fragment13 = parseFragment`<span${3}><strong${3}>${"t2"}</strong><small${3}>${"t4"}</small></span>`;
-const $fragment14 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save MCP selection</button>`;
-const $fragment15 = parseFragment`<h2${3}>Organizations</h2>`;
-const $fragment16 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
-const $fragment17 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
-const $fragment18 = parseFragment`<h2${3}>Users</h2>`;
-const $fragment19 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
-const $fragment20 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
-const $fragment21 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment22 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
-const $fragment23 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
+const $fragment7 = parseFragment`<div class="side-footer${0}"${2}><span class="footer-user${0}"${2}>${"t2"}</span><span class="footer-model${0}"${2}>${"t4"}</span><button class="slds-button slds-button_neutral${0}"${2}>Log out</button></div>`;
+const $fragment8 = parseFragment`<header class="workspace-header${0}"${2}><div${3}><h1${3}>Admin</h1><p${3}>Configure model access, MCP servers, organizations, and users.</p></div></header>`;
+const $fragment9 = parseFragment`<h2${3}>Model</h2>`;
+const $fragment10 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
+const $fragment11 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
+const $fragment12 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
+const $fragment13 = parseFragment`<h2${3}>MCP Servers</h2>`;
+const $fragment14 = parseFragment`<span${3}><strong${3}>${"t2"}</strong><small${3}>${"t4"}</small></span>`;
+const $fragment15 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save MCP selection</button>`;
+const $fragment16 = parseFragment`<h2${3}>Organizations</h2>`;
+const $fragment17 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
+const $fragment18 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
+const $fragment19 = parseFragment`<h2${3}>Users</h2>`;
+const $fragment20 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
+const $fragment21 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
+const $fragment22 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment23 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
+const $fragment24 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
 const stc0 = {
   classMap: {
     "app-frame": true
@@ -12956,16 +12958,16 @@ const stc21 = {
   classMap: {
     "admin-grid": true
   },
-  key: 39
+  key: 41
 };
 const stc22 = {
   classMap: {
     "admin-panel": true
   },
-  key: 40
+  key: 42
 };
 const stc23 = {
-  key: 45
+  key: 47
 };
 const stc24 = {
   "slds-select": true
@@ -12974,14 +12976,14 @@ const stc25 = {
   "data-field": "settingsModel"
 };
 const stc26 = {
-  key: 49
+  key: 51
 };
 const stc27 = {
   classMap: {
     "admin-panel": true,
     "mcp-panel": true
   },
-  key: 53
+  key: 55
 };
 const stc28 = {
   "mcp-row": true
@@ -12990,19 +12992,19 @@ const stc29 = {
   classMap: {
     "mcp-toggle": true
   },
-  key: 57
+  key: 59
 };
 const stc30 = {
   classMap: {
     "admin-panel": true
   },
-  key: 64
+  key: 66
 };
 const stc31 = {
   classMap: {
     "inline-form": true
   },
-  key: 67
+  key: 69
 };
 const stc32 = {
   "data-field": "newOrganizationName",
@@ -13012,13 +13014,13 @@ const stc33 = {
   classMap: {
     "admin-panel": true
   },
-  key: 73
+  key: 75
 };
 const stc34 = {
   classMap: {
     "user-form": true
   },
-  key: 76
+  key: 78
 };
 const stc35 = {
   "data-field": "newUserName",
@@ -13123,7 +13125,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
         "data-tab": tab.id
       }
     }, null), api_static_part(1, null, api_dynamic_text(tab.label))]);
-  })), api_static_fragment($fragment7, 32, [api_static_part(2, null, api_dynamic_text($cmp.userLabel)), api_static_part(4, null, api_dynamic_text($cmp.modelLabel)), api_static_part(5, {
+  })), api_static_fragment($fragment7, 32, [api_static_part(2, null, api_dynamic_text($cmp.userLabel)), api_static_part(4, null, api_dynamic_text($cmp.compactModelLabel)), api_static_part(5, {
     on: _m12 || ($ctx._m12 = {
       "click": api_bind($cmp.handleLogout)
     })
@@ -13203,7 +13205,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "diagnostics": $cmp.diagnostics
     },
     key: 38
-  }) : null, $cmp.isAdmin ? api_element("section", stc21, [api_element("article", stc22, [api_static_fragment($fragment8, 42), api_static_fragment($fragment9, 44, [api_static_part(2, {
+  }) : null, $cmp.isAdmin ? api_static_fragment($fragment8, 40) : null, $cmp.isAdmin ? api_element("section", stc21, [api_element("article", stc22, [api_static_fragment($fragment9, 44), api_static_fragment($fragment10, 46, [api_static_part(2, {
     on: _m17 || ($ctx._m17 = {
       "change": api_bind($cmp.handleFieldChange)
     })
@@ -13218,12 +13220,12 @@ function tmpl($api, $cmp, $slotset, $ctx) {
   }, null)]), api_element("label", stc23, [api_text("Model"), api_element("select", {
     classMap: stc24,
     attrs: stc25,
-    key: 46,
+    key: 48,
     on: _m18 || ($ctx._m18 = {
       "change": api_bind($cmp.handleFieldChange)
     })
   }, api_iterator($cmp.settingsModelOptions, function (option) {
-    return api_static_fragment($fragment10, api_key(48, option.value), [api_static_part(0, {
+    return api_static_fragment($fragment11, api_key(50, option.value), [api_static_part(0, {
       attrs: {
         "value": option.value,
         "selected": option.selected ? "" : null
@@ -13239,21 +13241,21 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     props: {
       "value": $cmp.settingsApiKey
     },
-    key: 50,
+    key: 52,
     on: _m19 || ($ctx._m19 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  })]), api_static_fragment($fragment11, 52, [api_static_part(0, {
+  })]), api_static_fragment($fragment12, 54, [api_static_part(0, {
     on: _m21 || ($ctx._m21 = {
       "click": api_bind($cmp.handleSaveLlmSettings)
     }),
     attrs: {
       "disabled": $cmp.busy.saveSettings ? "" : null
     }
-  }, null)])]), api_element("article", stc27, api_flatten([api_static_fragment($fragment12, 55), api_iterator($cmp.mcpServers, function (server) {
+  }, null)])]), api_element("article", stc27, api_flatten([api_static_fragment($fragment13, 57), api_iterator($cmp.mcpServers, function (server) {
     return api_element("div", {
       classMap: stc28,
-      key: api_key(56, server.id)
+      key: api_key(58, server.id)
     }, [api_element("label", stc29, [api_element("input", {
       attrs: {
         "type": "checkbox",
@@ -13262,11 +13264,11 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       props: {
         "checked": server.enabled
       },
-      key: 58,
+      key: 60,
       on: _m22 || ($ctx._m22 = {
         "change": api_bind($cmp.handleMcpEnabledChange)
       })
-    }), api_static_fragment($fragment13, 60, [api_static_part(2, null, api_dynamic_text(server.label)), api_static_part(4, null, api_dynamic_text(server.description))])]), api_element("input", {
+    }), api_static_fragment($fragment14, 62, [api_static_part(2, null, api_dynamic_text(server.label)), api_static_part(4, null, api_dynamic_text(server.description))])]), api_element("input", {
       classMap: stc5,
       attrs: {
         "data-server-id": server.id,
@@ -13275,29 +13277,29 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       props: {
         "value": server.command
       },
-      key: 61,
+      key: 63,
       on: _m23 || ($ctx._m23 = {
         "input": api_bind($cmp.handleMcpCommandChange)
       })
     })]);
-  }), api_static_fragment($fragment14, 63, [api_static_part(0, {
+  }), api_static_fragment($fragment15, 65, [api_static_part(0, {
     on: _m25 || ($ctx._m25 = {
       "click": api_bind($cmp.handleSaveMcpSettings)
     }),
     attrs: {
       "disabled": $cmp.busy.saveMcpSettings ? "" : null
     }
-  }, null)])])), api_element("article", stc30, api_flatten([api_static_fragment($fragment15, 66), api_element("div", stc31, [api_element("input", {
+  }, null)])])), api_element("article", stc30, api_flatten([api_static_fragment($fragment16, 68), api_element("div", stc31, [api_element("input", {
     classMap: stc5,
     attrs: stc32,
     props: {
       "value": $cmp.newOrganizationName
     },
-    key: 68,
+    key: 70,
     on: _m26 || ($ctx._m26 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment16, 70, [api_static_part(0, {
+  }), api_static_fragment($fragment17, 72, [api_static_part(0, {
     on: _m28 || ($ctx._m28 = {
       "click": api_bind($cmp.handleCreateOrganization)
     }),
@@ -13305,7 +13307,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "disabled": $cmp.busy.createOrganization ? "" : null
     }
   }, null)])]), api_iterator($cmp.organizationRows, function (org) {
-    return api_static_fragment($fragment17, api_key(72, org.id), [api_static_part(0, {
+    return api_static_fragment($fragment18, api_key(74, org.id), [api_static_part(0, {
       on: _m30 || ($ctx._m30 = {
         "click": api_bind($cmp.handleSelectOrganization)
       }),
@@ -13314,13 +13316,13 @@ function tmpl($api, $cmp, $slotset, $ctx) {
         "data-organization-id": org.id
       }
     }, null), api_static_part(1, null, api_dynamic_text(org.name))]);
-  })])), api_element("article", stc33, api_flatten([api_static_fragment($fragment18, 75), api_element("div", stc34, [api_element("input", {
+  })])), api_element("article", stc33, api_flatten([api_static_fragment($fragment19, 77), api_element("div", stc34, [api_element("input", {
     classMap: stc5,
     attrs: stc35,
     props: {
       "value": $cmp.newUserName
     },
-    key: 77,
+    key: 79,
     on: _m31 || ($ctx._m31 = {
       "input": api_bind($cmp.handleFieldChange)
     })
@@ -13330,7 +13332,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     props: {
       "value": $cmp.newUserEmail
     },
-    key: 78,
+    key: 80,
     on: _m32 || ($ctx._m32 = {
       "input": api_bind($cmp.handleFieldChange)
     })
@@ -13340,11 +13342,11 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     props: {
       "value": $cmp.newUserPassword
     },
-    key: 79,
+    key: 81,
     on: _m33 || ($ctx._m33 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment19, 81, [api_static_part(0, {
+  }), api_static_fragment($fragment20, 83, [api_static_part(0, {
     on: _m35 || ($ctx._m35 = {
       "change": api_bind($cmp.handleFieldChange)
     })
@@ -13360,7 +13362,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     attrs: {
       "selected": $cmp.newUserRoleIsViewer ? "" : null
     }
-  }, null)]), api_static_fragment($fragment20, 83, [api_static_part(0, {
+  }, null)]), api_static_fragment($fragment21, 85, [api_static_part(0, {
     on: _m37 || ($ctx._m37 = {
       "click": api_bind($cmp.handleCreateUser)
     }),
@@ -13368,8 +13370,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "disabled": $cmp.busy.createUser ? "" : null
     }
   }, null)])]), api_iterator($cmp.userRows, function (item) {
-    return api_static_fragment($fragment21, api_key(85, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
-  })]))]) : null, $cmp.error ? api_static_fragment($fragment22, 87, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment23, 89, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
+    return api_static_fragment($fragment22, api_key(87, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
+  })]))]) : null, $cmp.error ? api_static_fragment($fragment23, 89, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment24, 91, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl = registerTemplate(tmpl);
@@ -13456,6 +13458,7 @@ const MODEL_OPTIONS = {
     label: "Anthropic Claude Haiku 4.5"
   }]
 };
+const MODEL_LABELS = new Map([["claude-sonnet-4-6", "Claude Sonnet 4.6"], ["claude-opus-4-7", "Claude Opus 4.7"], ["claude-haiku-4-5", "Claude Haiku 4.5"], ["anthropic/claude-sonnet-4.6", "Claude Sonnet 4.6"], ["anthropic/claude-opus-4.7", "Claude Opus 4.7"], ["anthropic/claude-haiku-4.5", "Claude Haiku 4.5"], ["anthropic/claude-3.5-sonnet", "Claude 3.5 Sonnet"]]);
 class Data360Console extends LightningElement {
   constructor(...args) {
     super(...args);
@@ -13563,7 +13566,12 @@ class Data360Console extends LightningElement {
   get modelLabel() {
     if (!this.llmSettings) return "Model not configured";
     const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
-    return `${this.llmSettings.provider} / ${this.llmSettings.model} (${configured})`;
+    return `${providerLabel(this.llmSettings.provider)} / ${modelLabel(this.llmSettings.model)} (${configured})`;
+  }
+  get compactModelLabel() {
+    if (!this.llmSettings) return "Model not configured";
+    const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
+    return `${modelLabel(this.llmSettings.model)} (${configured})`;
   }
   get settingsProviderIsAnthropic() {
     return this.settingsProvider === "anthropic";
@@ -13577,7 +13585,7 @@ class Data360Console extends LightningElement {
     const hasSelected = options.some(option => option.value === selectedModel);
     const visibleOptions = hasSelected || !selectedModel ? options : [{
       value: selectedModel,
-      label: `Saved custom: ${selectedModel}`
+      label: `Current: ${modelLabel(selectedModel)}`
     }, ...options];
     return visibleOptions.map(option => ({
       ...option,
@@ -14159,6 +14167,12 @@ async function exportJson(defaultFileName, payload) {
 }
 function defaultModelForProvider(provider) {
   return (MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic)[0]?.value || "";
+}
+function providerLabel(provider) {
+  return provider === "openrouter" ? "OpenRouter" : "Anthropic";
+}
+function modelLabel(model) {
+  return MODEL_LABELS.get(model) || model || "Model not configured";
 }
 
 const mount = document.getElementById("app");
