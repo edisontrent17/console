@@ -105,6 +105,53 @@ Open:
 http://localhost:8082
 ```
 
+## Desktop App
+
+The installable local product is an Electron shell around the same Spring/LWC
+app. Web/server behavior stays unchanged; Electron starts the backend with the
+`desktop` profile on `127.0.0.1:<dynamic-port>` and protects `/api/**` with a
+per-launch `X-Data360-Desktop-Token`.
+
+Development run:
+
+```bash
+npm run desktop:dev
+```
+
+Package an unpacked local app image:
+
+```bash
+npm run desktop:pack
+```
+
+Create platform installers:
+
+```bash
+npm run desktop:dist
+```
+
+By default the package uses system Java. To bundle a Java 21 runtime, point
+`D360_DESKTOP_JAVA_HOME` at a JRE/JDK before packaging:
+
+```bash
+export D360_DESKTOP_JAVA_HOME="$JAVA_HOME"
+npm run desktop:dist
+```
+
+Desktop settings are stored under the OS app data directory. Non-secret model
+settings are persisted in `desktop-settings.json`; API keys are encrypted with
+Electron `safeStorage` when available and are injected into the local backend
+only at process launch/restart. The renderer receives only masked key metadata.
+
+Desktop-only capabilities:
+
+- choose Anthropic or OpenRouter and model name from the app
+- save user-supplied API keys without changing web/server environment variables
+- export the current PlanSpec archive as JSON
+- export a full execution archive as JSON, including run state, approvals, audit
+  events, operation binding snapshots, resolved inputs, raw redacted tool-call
+  envelopes, outputs, timings, and errors
+
 ## External Goal Cockpit
 
 The browser app calls:
@@ -171,10 +218,12 @@ GET  /api/scenarios
 POST /api/plans
 GET  /api/plans
 GET  /api/plans/{planId}
+GET  /api/plans/{planId}/export
 POST /api/plans/{planId}/runs
 GET  /api/runs/{runId}
 GET  /api/runs/{runId}/approvals
 GET  /api/runs/{runId}/audit
+GET  /api/runs/{runId}/export
 POST /api/runs/{runId}/steps/{stepId}/approve
 GET  /api/monitors
 GET  /api/monitors/recommendations

@@ -123,6 +123,18 @@ public class LocalPlanExecutor implements PlanExecutor {
                 var binding = runSnapshot.bindingForResource(execution.step().action().resource());
                 var definition = OperationBindingDefinitions.from(binding);
                 var resolved = resolveInput(runSnapshot, execution.step());
+                store.withRunLock(runId, run -> {
+                    var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
+                    stepRun.setBinding(binding);
+                    stepRun.setResolvedInput(resolved);
+                    store.saveRun(run);
+                    event(run, execution.step().id(), "step_tool_call_prepared", Map.of(
+                            "action", execution.step().action().value(),
+                            "binding", binding.auditSummary(),
+                            "resolvedInputKeys", resolved.keySet().stream().sorted().toList()
+                    ));
+                    return run;
+                });
                 var result = data360Client.call(definition, binding, execution.step(), resolved, new RunContext(runId, execution.plan().id(), execution.plan().context()));
                 store.withRunLock(runId, run -> {
                     var stepRun = PlanRunSupport.stepRun(run, execution.step().id());

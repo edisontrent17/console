@@ -1,5 +1,6 @@
 package com.acme.data360agent.temporal;
 
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
@@ -67,10 +68,12 @@ class Data360PlanWorkflowImplTest {
         assertThat(workflow.status()).containsEntry("status", "SUCCEEDED");
         assertThat(planRunActivities.events).containsExactly(
                 "started:preview",
+                "prepared:preview",
                 "succeeded:preview",
                 "waiting:create_segment",
                 "approved:create_segment",
                 "started:create_segment",
+                "prepared:create_segment",
                 "succeeded:create_segment",
                 "skipped:monitor_goal",
                 "completed:run_1"
@@ -158,6 +161,13 @@ class Data360PlanWorkflowImplTest {
         @Override
         public void stepStarted(String runId, String planId, String stepId, String action) {
             events.add("started:" + stepId);
+        }
+
+        @Override
+        public void stepToolCallPrepared(String runId, String planId, String stepId, String action, OperationBindingSnapshot binding, Map<String, Object> resolvedInput) {
+            assertThat(binding.resource()).isNotBlank();
+            assertThat(resolvedInput).isNotEmpty();
+            events.add("prepared:" + stepId);
         }
 
         @Override

@@ -133,6 +133,8 @@ public class JdbcPlanStore implements PlanStore {
     private record StepSnapshot(
             String stepId,
             StepStatus status,
+            OperationBindingSnapshot binding,
+            Map<String, Object> resolvedInput,
             Map<String, Object> output,
             Map<String, Object> raw,
             String error,
@@ -140,11 +142,13 @@ public class JdbcPlanStore implements PlanStore {
             Instant finishedAt
     ) {
         static StepSnapshot from(StepRun step) {
-            return new StepSnapshot(step.getStepId(), step.getStatus(), step.getOutput(), step.getRaw(), step.getError(), step.getStartedAt(), step.getFinishedAt());
+            return new StepSnapshot(step.getStepId(), step.getStatus(), step.getBinding(), step.getResolvedInput(), step.getOutput(), step.getRaw(), step.getError(), step.getStartedAt(), step.getFinishedAt());
         }
 
         void applyTo(StepRun step) {
             step.setStatus(status);
+            step.setBinding(binding);
+            step.setResolvedInput(resolvedInput);
             step.setOutput(output);
             step.setRaw(raw);
             step.setError(error);

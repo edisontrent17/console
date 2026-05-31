@@ -53,6 +53,19 @@ Open:
 http://localhost:8082
 ```
 
+Desktop packaging commands:
+
+```bash
+npm run desktop:dev
+npm run desktop:pack
+npm run desktop:dist
+```
+
+Electron must remain a local shell around the Spring/LWC app. Do not move
+planner, PlanSpec validation, execution, MCP, Temporal, or audit logic into
+Electron. Keep desktop behavior behind the Electron launcher plus the
+`desktop` Spring profile so normal web/server startup is unchanged.
+
 ## Architecture Map
 
 The important boundary is:
@@ -275,6 +288,12 @@ Do not add new write endpoints without assigning a narrow authority in
 `data360.execute`, `data360.approve`, `data360.monitor`, `data360.demo`, and
 `data360.admin`. Any operation that approves, starts, runs, diagnoses, mutates, or
 exposes audit/raw details should not share the generic read scope.
+
+Desktop mode still protects `/api/**` with a per-launch
+`X-Data360-Desktop-Token`, even when OAuth is disabled for local use. Do not
+remove that token gate or pass real API keys through command-line arguments,
+URLs, localStorage, IndexedDB, plan JSON, or execution exports. Export payloads
+must be redacted through `SensitiveData`.
 
 Database schema changes belong in Flyway migrations under
 `src/main/resources/db/migration/`. Do not reintroduce `schema.sql`. Keep

@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Component
 @ConditionalOnProperty(name = "app.data360.client", havingValue = "mcp")
@@ -46,17 +47,24 @@ public class McpData360Client implements Data360Client {
         var facadeTool = facadeTool(binding, step);
         var arguments = compileArguments(binding, step, resolvedInput);
         var raw = new McpStdioClient(command, objectMapper).callTool(facadeTool, arguments);
-        return new Data360CallResult(normalizeOutput(raw), Map.of(
-                "mode", "mcp",
-                "resource", binding.resource(),
-                "mcpServerId", nullToEmpty(binding.mcpServerId()),
-                "facadeTool", facadeTool,
-                "underlyingTool", nullToEmpty(binding.underlyingTool()),
-                "schemaHash", binding.schemaHash(),
-                "bindingVersion", binding.bindingVersion(),
-                "argumentKeys", arguments.keySet().stream().sorted().toList(),
-                "rawKeys", raw.rawResult().keySet().stream().sorted().toList()
+        var audit = new LinkedHashMap<String, Object>();
+        audit.put("mode", "mcp");
+        audit.put("calledAt", java.time.Instant.now().toString());
+        audit.put("resource", binding.resource());
+        audit.put("mcpServerId", nullToEmpty(binding.mcpServerId()));
+        audit.put("facadeTool", facadeTool);
+        audit.put("underlyingTool", nullToEmpty(binding.underlyingTool()));
+        audit.put("schemaHash", binding.schemaHash());
+        audit.put("bindingVersion", binding.bindingVersion());
+        audit.put("arguments", Map.of(
+                "toolName", arguments.getOrDefault("toolName", facadeTool),
+                "params", resolvedInput
         ));
+        audit.put("argumentKeys", arguments.keySet().stream().sorted().toList());
+        audit.put("rawKeys", raw.rawResult().keySet().stream().sorted().toList());
+        audit.put("rawResult", raw.rawResult());
+        audit.put("text", raw.text() == null ? "" : raw.text());
+        return new Data360CallResult(normalizeOutput(raw), audit);
     }
 
     private Map<String, Object> compileArguments(OperationBindingSnapshot binding, PlanStep step, Map<String, Object> input) {

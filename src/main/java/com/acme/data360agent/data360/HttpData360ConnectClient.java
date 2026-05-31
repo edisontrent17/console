@@ -66,9 +66,13 @@ public class HttpData360ConnectClient implements Data360Client {
                 "mode", "connect",
                 "method", request.method().name(),
                 "path", request.path(),
+                "query", request.queryParams() == null ? Map.of() : request.queryParams(),
+                "body", request.body() == null ? Map.of() : request.body(),
+                "idempotencyKey", request.idempotencyKey() == null ? "" : request.idempotencyKey(),
                 "calledAt", Instant.now().toString(),
                 "effect", operation.effect().name(),
-                "rawKeys", raw.keySet().stream().sorted().toList()
+                "rawKeys", raw.keySet().stream().sorted().toList(),
+                "rawResponse", raw
         );
         return new Data360CallResult(output, audit);
     }

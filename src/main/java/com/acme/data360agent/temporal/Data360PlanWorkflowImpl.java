@@ -148,6 +148,7 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         try {
             var binding = bindingFor(step);
             var resolved = PlanInputResolver.resolve(step, this::outputForStep);
+            state.stepToolCallPrepared(runId, plan.id(), step.id(), step.action().value(), binding, resolved);
             var result = data360(binding).executeStep(new ActivityCommand(runId, plan.id(), plan.context(), binding, step, resolved));
             outputsByStep.put(step.id(), result.output());
             stepStatuses.put(step.id(), StepStatus.SUCCEEDED);

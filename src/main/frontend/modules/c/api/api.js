@@ -1,7 +1,6 @@
 export async function request(path, options = {}) {
-    const init = { method: options.method || "GET" };
+    const init = { method: options.method || "GET", headers: await apiHeaders(options.body) };
     if (options.body) {
-        init.headers = { "Content-Type": "application/json" };
         init.body = JSON.stringify(options.body);
     }
 
@@ -12,6 +11,17 @@ export async function request(path, options = {}) {
         throw new Error(json?.error || json?.message || response.statusText);
     }
     return json;
+}
+
+async function apiHeaders(hasBody) {
+    const headers = {};
+    if (hasBody) {
+        headers["Content-Type"] = "application/json";
+    }
+    if (window.data360Desktop?.apiHeaders) {
+        Object.assign(headers, await window.data360Desktop.apiHeaders());
+    }
+    return headers;
 }
 
 function parseJson(text) {

@@ -3,6 +3,8 @@ package com.acme.data360agent.temporal;
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
 
+import com.acme.data360agent.operation.OperationBindingSnapshot;
+
 import java.util.Map;
 
 @ActivityInterface
@@ -15,6 +17,9 @@ public interface PlanRunActivities {
 
     @ActivityMethod
     void stepStarted(String runId, String planId, String stepId, String action);
+
+    @ActivityMethod
+    void stepToolCallPrepared(String runId, String planId, String stepId, String action, OperationBindingSnapshot binding, Map<String, Object> resolvedInput);
 
     @ActivityMethod
     void stepSucceeded(String runId, String planId, String stepId, String action, Map<String, Object> output, Map<String, Object> raw);

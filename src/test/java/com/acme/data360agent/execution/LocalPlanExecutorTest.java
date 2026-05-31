@@ -158,7 +158,10 @@ class LocalPlanExecutorTest {
         waitFor(() -> run.getStatus() == RunStatus.SUCCEEDED, Duration.ofSeconds(3));
 
         assertThat(run.getOperationBindings()).containsExactly(binding);
-        assertThat(run.getSteps().getFirst().getRaw()).containsEntry("mcpOperation", "d360_query_sql_pinned");
+        var step = run.getSteps().getFirst();
+        assertThat(step.getBinding()).isEqualTo(binding);
+        assertThat(step.getResolvedInput()).containsEntry("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 100");
+        assertThat(step.getRaw()).containsEntry("mcpOperation", "d360_query_sql_pinned");
     }
 
     private void waitFor(Check check, Duration timeout) throws Exception {

@@ -57,14 +57,14 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/api/me").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/scenarios", "/api/library", "/api/library/*").hasAnyAuthority(READ)
-                        .requestMatchers(HttpMethod.GET, "/api/plans", "/api/plans/*", "/api/runs/*", "/api/runs/*/approvals").hasAnyAuthority(READ)
+                        .requestMatchers(HttpMethod.GET, "/api/plans", "/api/plans/*", "/api/plans/*/export", "/api/runs/*", "/api/runs/*/approvals").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.GET, "/api/monitors", "/api/monitors/*", "/api/monitors/*/runs", "/api/monitors/recommendations").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.GET, "/api/demo/dormant-revenue-recovery").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.POST, "/api/plans", "/api/library/*/plans").hasAnyAuthority(PLAN)
                         .requestMatchers(HttpMethod.POST, "/api/plans/*/runs").hasAnyAuthority(EXECUTE)
                         .requestMatchers(HttpMethod.POST, "/api/runs/*/steps/*/approve", "/api/monitors/recommendations/*/approve", "/api/monitors/recommendations/*/reject").hasAnyAuthority(APPROVE)
                         .requestMatchers(HttpMethod.POST, "/api/monitors/*/run-now").hasAnyAuthority(MONITOR)
-                        .requestMatchers(HttpMethod.GET, "/api/runs/*/audit").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/runs/*/audit", "/api/runs/*/export").hasAnyAuthority(ADMIN, ROLE_ADMIN)
                         .requestMatchers("/api/data360/diagnostics", "/api/data360/diagnostics/**").hasAnyAuthority(ADMIN, ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/demo/dormant-revenue-recovery/**").hasAnyAuthority(DEMO)
                         .requestMatchers("/api/**").denyAll()
@@ -78,7 +78,7 @@ public class SecurityConfig {
         var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(properties.resolvedAllowedOrigins());
         configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "X-Data360-Desktop-Token"));
         configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
         var source = new UrlBasedCorsConfigurationSource();

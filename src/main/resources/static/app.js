@@ -11464,7 +11464,7 @@ ElementDescriptors.shadowRoot.get;
 
 function stylesheet$4(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return ".app-frame" + shadowSelector + " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f3f3f3;}.brand" + shadowSelector + " {gap: 0.5rem;font-weight: 700;}.brand-mark" + shadowSelector + " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.console-body" + shadowSelector + " {min-width: 0;padding: 1rem;}.command-header" + shadowSelector + " {min-width: 0;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.header-icon" + shadowSelector + " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #032d60;color: #fff;font-size: 0.6875rem;font-weight: 800;}.header-meta" + shadowSelector + ",.slds-page-header__controls" + shadowSelector + " {display: flex;flex-wrap: wrap;gap: 0.375rem;align-items: center;}.command-title" + shadowSelector + " {display: block;max-width: 70rem;overflow: visible !important;text-overflow: clip !important;white-space: normal !important;overflow-wrap: anywhere;}.status-badge.succeeded" + shadowSelector + ",.status-badge.ready" + shadowSelector + ",.status-badge.healthy" + shadowSelector + " {background: #eef8f1;color: #2e844a;}.status-badge.running" + shadowSelector + ",.status-badge.waiting-approval" + shadowSelector + ",.status-badge.review" + shadowSelector + " {background: #fff7e0;color: #8a5a00;}.status-badge.failed" + shadowSelector + ",.status-badge.error" + shadowSelector + " {background: #fff1f2;color: #ba0517;}.metric-strip" + shadowSelector + " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 0.75rem;margin-top: 0.75rem;}.metric-card" + shadowSelector + " {min-width: 0;}.metric-label" + shadowSelector + " {color: #5c5c5c;font-size: 0.6875rem;font-weight: 700;text-transform: uppercase;}.metric-card" + shadowSelector + " strong" + shadowSelector + " {display: block;margin-top: 0.25rem;color: #181818;font-size: 1.5rem;line-height: 1.2;}.workbench" + shadowSelector + " {margin-top: 1rem;}.workspace-panel" + shadowSelector + " {padding-top: 1rem;}@media (max-width: 960px) {.metric-strip" + shadowSelector + " {grid-template-columns: repeat(2, minmax(0, 1fr));}}@media (max-width: 640px) {.slds-context-bar" + shadowSelector + " {display: none;}.console-body" + shadowSelector + " {padding: 0.75rem;overflow-x: hidden;}.command-header" + shadowSelector + " .slds-page-header__col-title" + shadowSelector + ", .command-header" + shadowSelector + " .slds-page-header__row" + shadowSelector + ", .command-header" + shadowSelector + " .slds-media" + shadowSelector + ", .command-header" + shadowSelector + " .slds-media__body" + shadowSelector + " {width: 100%;max-width: 100%;min-width: 0 !important;}.command-header" + shadowSelector + " .slds-page-header__row" + shadowSelector + " {display: grid;grid-template-columns: minmax(0, 1fr);gap: 0.75rem;}.command-header" + shadowSelector + " .slds-media" + shadowSelector + " {display: grid;grid-template-columns: 2rem minmax(0, 1fr);align-items: flex-start;}.slds-page-header__controls" + shadowSelector + " {justify-content: flex-start;}.command-title" + shadowSelector + " {width: calc(100vw - 6.5rem);max-width: calc(100vw - 6.5rem);font-size: 1rem;line-height: 1.35;white-space: normal !important;}.header-meta" + shadowSelector + " {max-width: calc(100vw - 6.5rem);}.metric-strip" + shadowSelector + " {grid-template-columns: 1fr;}}@media (max-width: 480px) {.command-title" + shadowSelector + " {width: 16rem !important;max-width: 16rem !important;}.header-meta" + shadowSelector + " {max-width: 16rem;}}";
+  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f3f3f3;}.brand", shadowSelector, " {gap: 0.5rem;font-weight: 700;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.console-body", shadowSelector, " {min-width: 0;padding: 1rem;}.command-header", shadowSelector, " {min-width: 0;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.header-icon", shadowSelector, " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #032d60;color: #fff;font-size: 0.6875rem;font-weight: 800;}.header-meta", shadowSelector, ",.slds-page-header__controls", shadowSelector, " {display: flex;flex-wrap: wrap;gap: 0.375rem;align-items: center;}.command-title", shadowSelector, " {display: block;max-width: 70rem;overflow: visible !important;text-overflow: clip !important;white-space: normal !important;overflow-wrap: anywhere;}.status-badge.succeeded", shadowSelector, ",.status-badge.ready", shadowSelector, ",.status-badge.healthy", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status-badge.running", shadowSelector, ",.status-badge.waiting-approval", shadowSelector, ",.status-badge.review", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status-badge.failed", shadowSelector, ",.status-badge.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.metric-strip", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 0.75rem;margin-top: 0.75rem;}.metric-card", shadowSelector, " {min-width: 0;}.metric-label", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;font-weight: 700;text-transform: uppercase;}.metric-card", shadowSelector, " strong", shadowSelector, " {display: block;margin-top: 0.25rem;color: #181818;font-size: 1.5rem;line-height: 1.2;}.workbench", shadowSelector, " {margin-top: 1rem;}.workspace-panel", shadowSelector, " {padding-top: 1rem;}.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.desktop-settings", shadowSelector, " .slds-modal__container", shadowSelector, " {max-width: 36rem;}.desktop-settings", shadowSelector, " .slds-modal__close", shadowSelector, " {color: #fff;}@media (max-width: 960px) {.metric-strip", shadowSelector, " {grid-template-columns: repeat(2, minmax(0, 1fr));}}@media (max-width: 640px) {.slds-context-bar", shadowSelector, " {display: none;}.console-body", shadowSelector, " {padding: 0.75rem;overflow-x: hidden;}.command-header", shadowSelector, " .slds-page-header__col-title", shadowSelector, ", .command-header", shadowSelector, " .slds-page-header__row", shadowSelector, ", .command-header", shadowSelector, " .slds-media", shadowSelector, ", .command-header", shadowSelector, " .slds-media__body", shadowSelector, " {width: 100%;max-width: 100%;min-width: 0 !important;}.command-header", shadowSelector, " .slds-page-header__row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr);gap: 0.75rem;}.command-header", shadowSelector, " .slds-media", shadowSelector, " {display: grid;grid-template-columns: 2rem minmax(0, 1fr);align-items: flex-start;}.slds-page-header__controls", shadowSelector, " {justify-content: flex-start;}.command-title", shadowSelector, " {width: calc(100vw - 6.5rem);max-width: calc(100vw - 6.5rem);font-size: 1rem;line-height: 1.35;white-space: normal !important;}.header-meta", shadowSelector, " {max-width: calc(100vw - 6.5rem);}.metric-strip", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 480px) {.command-title", shadowSelector, " {width: 16rem !important;max-width: 16rem !important;}.header-meta", shadowSelector, " {max-width: 16rem;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$4 = [stylesheet$4];
@@ -11482,21 +11482,21 @@ const $fragment3$4 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t
 const $fragment4$4 = parseFragment`<div class="slds-form-element${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Goal</label><div class="slds-form-element__control${0}"${2}><textarea${"a4:id"} class="slds-textarea${0}"${2}>${"t5"}</textarea></div></div>`;
 const $fragment5$4 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button></div>`;
 const $fragment6$4 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Governed ASL profile before any Data 360 mutation</p></div></header>`;
-const $fragment7$3 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment8$2 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
-const $fragment9$2 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
-const $fragment10$2 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment11$2 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
-const $fragment12$2 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
-const $fragment13$2 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
-const $fragment14$2 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
-const $fragment15$2 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
-const $fragment16$1 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment17$1 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment18$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment19$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment20$1 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
-const $fragment21$1 = parseFragment`<h3${3}>Approval history</h3>`;
+const $fragment7$4 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment8$3 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
+const $fragment9$3 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
+const $fragment10$3 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment11$3 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
+const $fragment12$3 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
+const $fragment13$3 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
+const $fragment14$3 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
+const $fragment15$3 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
+const $fragment16$2 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment17$2 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment18$2 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment19$2 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment20$2 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
+const $fragment21$2 = parseFragment`<h3${3}>Approval history</h3>`;
 const $fragment22 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
 const $fragment23 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
 const $fragment24 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
@@ -11561,20 +11561,20 @@ const stc8$3 = {
   },
   key: 22
 };
-const stc9$2 = {
+const stc9$3 = {
   classMap: {
     "review-stats": true
   },
   key: 27
 };
-const stc10$1 = {
+const stc10$2 = {
   classMap: {
     "slds-m-vertical_small": true,
     "issue-stack": true
   },
   key: 30
 };
-const stc11$1 = {
+const stc11$2 = {
   classMap: {
     "timeline": true
   },
@@ -11583,13 +11583,13 @@ const stc11$1 = {
   },
   key: 35
 };
-const stc12$1 = {
+const stc12$2 = {
   classMap: {
     "table-wrap": true
   },
   key: 38
 };
-const stc13$1 = {
+const stc13$2 = {
   classMap: {
     "slds-table": true,
     "slds-table_cell-buffer": true,
@@ -11598,34 +11598,34 @@ const stc13$1 = {
   },
   key: 39
 };
-const stc14 = {
+const stc14$1 = {
   key: 42
 };
-const stc15 = {
+const stc15$1 = {
   key: 54
 };
-const stc16 = {
+const stc16$1 = {
   classMap: {
     "approval-history": true
   },
   key: 57
 };
-const stc17 = [];
-const stc18 = {
+const stc17$1 = [];
+const stc18$1 = {
   classMap: {
     "slds-card": true,
     "inspector-card": true
   },
   key: 64
 };
-const stc19 = {
+const stc19$1 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true
   },
   key: 67
 };
-const stc20 = {
+const stc20$1 = {
   classMap: {
     "json-grid": true
   },
@@ -11686,22 +11686,22 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
     attrs: {
       "disabled": $cmp.busy.smokeData360 ? "" : null
     }
-  }, null), api_static_part(6, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$3, [api_element("div", stc7$3, [api_static_fragment($fragment6$4, 19), $cmp.hasDraft ? api_static_fragment($fragment7$3, 21, [api_static_part(0, {
+  }, null), api_static_part(6, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$3, [api_element("div", stc7$3, [api_static_fragment($fragment6$4, 19), $cmp.hasDraft ? api_static_fragment($fragment7$4, 21, [api_static_part(0, {
     className: api_normalize_class_name($cmp.validationClass)
-  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null]), api_element("div", stc8$3, [!$cmp.hasDraft ? api_static_fragment($fragment8$2, 24) : null, $cmp.hasDraft ? api_static_fragment($fragment9$2, 26, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$2, api_iterator($cmp.reviewStats, function (stat) {
-    return api_static_fragment($fragment10$2, api_key(29, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
-  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc10$1, api_iterator($cmp.issues, function (issue) {
-    return api_static_fragment($fragment11$2, api_key(32, issue.key), [api_static_part(0, {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null]), api_element("div", stc8$3, [!$cmp.hasDraft ? api_static_fragment($fragment8$3, 24) : null, $cmp.hasDraft ? api_static_fragment($fragment9$3, 26, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$3, api_iterator($cmp.reviewStats, function (stat) {
+    return api_static_fragment($fragment10$3, api_key(29, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
+  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc10$2, api_iterator($cmp.issues, function (issue) {
+    return api_static_fragment($fragment11$3, api_key(32, issue.key), [api_static_part(0, {
       className: api_normalize_class_name(issue.className)
     }, null), api_static_part(1, null, api_dynamic_text(issue.severity) + " • " + api_dynamic_text(issue.stepId) + " • " + api_dynamic_text(issue.message))]);
-  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment12$2, 34) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc11$1, api_iterator($cmp.timelineSteps, function (step) {
-    return api_static_fragment($fragment13$2, api_key(37, step.key), [api_static_part(0, {
+  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment12$3, 34) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc11$2, api_iterator($cmp.timelineSteps, function (step) {
+    return api_static_fragment($fragment13$3, api_key(37, step.key), [api_static_part(0, {
       className: api_normalize_class_name(step.className),
       attrs: {
         "title": step.status
       }
     }, null)]);
-  })) : null : null, $cmp.hasDraft ? api_element("div", stc12$1, [api_element("table", stc13$1, [api_static_fragment($fragment14$2, 41), api_element("tbody", stc14, api_iterator($cmp.planRows, function (row) {
+  })) : null : null, $cmp.hasDraft ? api_element("div", stc12$2, [api_element("table", stc13$2, [api_static_fragment($fragment14$3, 41), api_element("tbody", stc14$1, api_iterator($cmp.planRows, function (row) {
     return api_element("tr", {
       className: api_normalize_class_name(row.rowClass),
       attrs: {
@@ -11713,15 +11713,15 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
         "click": api_bind($cmp.handleSelectStep),
         "keydown": api_bind($cmp.handleStepKeydown)
       })
-    }, [api_static_fragment($fragment15$2, 45, [api_static_part(1, {
+    }, [api_static_fragment($fragment15$3, 45, [api_static_part(1, {
       attrs: {
         "title": row.title
       }
-    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$1, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$1, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$1, 51, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$2, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$2, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$2, 51, [api_static_part(1, {
       className: api_normalize_class_name(row.statusClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$1, 53, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$2, 53, [api_static_part(1, {
       className: api_normalize_class_name(row.approvalClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15, [row.canApprove ? api_static_fragment($fragment20$1, 56, [api_static_part(0, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20$2, 56, [api_static_part(0, {
       on: _m7 || ($ctx._m7 = {
         "click": api_bind($cmp.handleApproveStep)
       }),
@@ -11729,9 +11729,9 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
         "data-step-id": row.id
       }
     }, null)]) : null])]);
-  }))])]) : null, $cmp.hasDraft ? api_element("section", stc16, api_flatten([api_static_fragment($fragment21$1, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
+  }))])]) : null, $cmp.hasDraft ? api_element("section", stc16$1, api_flatten([api_static_fragment($fragment21$2, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
     return api_static_fragment($fragment22, api_key(61, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
-  }) : stc17, !$cmp.hasApprovalRows ? api_static_fragment($fragment23, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18, [api_static_fragment($fragment24, 66), api_element("div", stc19, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20, api_iterator($cmp.selectedPreviews, function (preview) {
+  }) : stc17$1, !$cmp.hasApprovalRows ? api_static_fragment($fragment23, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18$1, [api_static_fragment($fragment24, 66), api_element("div", stc19$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20$1, api_iterator($cmp.selectedPreviews, function (preview) {
     return api_static_fragment($fragment28, api_key(76, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
   })) : null])])])];
   /*LWC compiler v9.2.2*/
@@ -12060,21 +12060,21 @@ const $fragment3$3 = parseFragment`<button${"c0"}${"a0:data-account-id"}${2}><sp
 const $fragment4$3 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>${"t4"}</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t6"}</p></div></header><span${"c7"}${2}>${"t8"}</span></div>`;
 const $fragment5$3 = parseFragment`<div class="score-grid${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>Contract</span></div><div${3}><strong${3}>${"t8"}</strong><span${3}>Priority</span></div><div${3}><strong${3}>${"t13"}</strong><span${3}>Support risk</span></div></div>`;
 const $fragment6$3 = parseFragment`<h3 class="section-label${0}"${2}>Evidence</h3>`;
-const $fragment7$2 = parseFragment`<article class="evidence-item${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${3}>${"t7"}</span></article>`;
-const $fragment8$1 = parseFragment`<h3 class="section-label${0}"${2}>Activation</h3>`;
-const $fragment9$1 = parseFragment`<section class="activation-panel${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p><p${3}>${"t7"}</p></div><span class="slds-badge${0}"${2}>${"t9"}</span></section>`;
-const $fragment10$1 = parseFragment`<li${3}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p></li>`;
-const $fragment11$1 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Work Queue</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Human approval before activation</p></div></header></div>`;
-const $fragment12$1 = parseFragment`<div class="action-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${"c6"}${2}>${"t7"}</span></div>`;
-const $fragment13$1 = parseFragment`<p${3}>${"t1"}</p>`;
-const $fragment14$1 = parseFragment`<details${3}><summary${3}>Draft</summary><p${3}>${"t4"}</p></details>`;
-const $fragment15$1 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-action-id"}${"a0:data-transition"}${2}>${"t1"}</button>`;
-const $fragment16 = parseFragment`<button class="slds-button slds-button_neutral slds-button_x-small${0}"${"a0:data-action-id"} data-transition="reject"${2}>Reject</button>`;
-const $fragment17 = parseFragment`<span class="slds-text-color_success${0}"${2}>Executed</span>`;
-const $fragment18 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Recovery Funnel</h2></div>`;
-const $fragment19 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
-const $fragment20 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Impact</h2></div>`;
-const $fragment21 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
+const $fragment7$3 = parseFragment`<article class="evidence-item${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${3}>${"t7"}</span></article>`;
+const $fragment8$2 = parseFragment`<h3 class="section-label${0}"${2}>Activation</h3>`;
+const $fragment9$2 = parseFragment`<section class="activation-panel${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p><p${3}>${"t7"}</p></div><span class="slds-badge${0}"${2}>${"t9"}</span></section>`;
+const $fragment10$2 = parseFragment`<li${3}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p></li>`;
+const $fragment11$2 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Work Queue</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Human approval before activation</p></div></header></div>`;
+const $fragment12$2 = parseFragment`<div class="action-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${"c6"}${2}>${"t7"}</span></div>`;
+const $fragment13$2 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment14$2 = parseFragment`<details${3}><summary${3}>Draft</summary><p${3}>${"t4"}</p></details>`;
+const $fragment15$2 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-action-id"}${"a0:data-transition"}${2}>${"t1"}</button>`;
+const $fragment16$1 = parseFragment`<button class="slds-button slds-button_neutral slds-button_x-small${0}"${"a0:data-action-id"} data-transition="reject"${2}>Reject</button>`;
+const $fragment17$1 = parseFragment`<span class="slds-text-color_success${0}"${2}>Executed</span>`;
+const $fragment18$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Recovery Funnel</h2></div>`;
+const $fragment19$1 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
+const $fragment20$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Impact</h2></div>`;
+const $fragment21$1 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
 const stc0$3 = {
   classMap: {
     "execution-layout": true
@@ -12137,7 +12137,7 @@ const stc8$2 = {
   },
   key: 30
 };
-const stc9$1 = {
+const stc9$2 = {
   classMap: {
     "slds-button-group": true,
     "slds-m-top_small": true
@@ -12147,14 +12147,14 @@ const stc9$1 = {
   },
   key: 38
 };
-const stc10 = {
+const stc10$1 = {
   classMap: {
     "slds-card": true,
     "analytics-card": true
   },
   key: 45
 };
-const stc11 = {
+const stc11$1 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true,
@@ -12162,14 +12162,14 @@ const stc11 = {
   },
   key: 48
 };
-const stc12 = {
+const stc12$1 = {
   classMap: {
     "slds-card": true,
     "analytics-card": true
   },
   key: 51
 };
-const stc13 = {
+const stc13$1 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true,
@@ -12199,16 +12199,16 @@ function tmpl$3($api, $cmp, $slotset, $ctx) {
   }))]), api_element("section", stc3$3, [api_static_fragment($fragment4$3, 11, [api_static_part(4, null, api_dynamic_text($cmp.selectedAccount.name)), api_static_part(6, null, api_dynamic_text($cmp.selectedAccount.recommendedMotion)), api_static_part(7, {
     className: api_normalize_class_name($cmp.selectedAccount.badgeClass)
   }, null), api_static_part(8, null, api_dynamic_text($cmp.selectedAccount.priority))]), api_element("div", stc4$3, [api_static_fragment($fragment5$3, 14, [api_static_part(3, null, api_dynamic_text($cmp.selectedAccount.contractLabel)), api_static_part(8, null, api_dynamic_text($cmp.selectedAccount.scoreLabel)), api_static_part(13, null, api_dynamic_text($cmp.selectedAccount.riskLabel))]), api_static_fragment($fragment6$3, 16), api_element("div", stc5$2, api_iterator($cmp.selectedEvidence, function (item) {
-    return api_static_fragment($fragment7$2, api_key(19, item.signal), [api_static_part(3, null, api_dynamic_text(item.signal)), api_static_part(5, null, api_dynamic_text(item.detail)), api_static_part(7, null, api_dynamic_text(item.source))]);
-  })), $cmp.activation ? api_static_fragment($fragment8$1, 21) : null, $cmp.activation ? api_static_fragment($fragment9$1, 23, [api_static_part(3, null, api_dynamic_text($cmp.activation.provider)), api_static_part(5, null, api_dynamic_text($cmp.activation.safetyRule)), api_static_part(7, null, api_dynamic_text($cmp.activation.audience)), api_static_part(9, null, api_dynamic_text($cmp.activationSentLabel) + " sent")]) : null, $cmp.activation ? api_element("ol", stc6$2, api_iterator($cmp.activation.sequence, function (step) {
-    return api_static_fragment($fragment10$1, api_key(26, step.title), [api_static_part(2, null, api_dynamic_text(step.timing) + " • " + api_dynamic_text(step.title)), api_static_part(4, null, api_dynamic_text(step.content))]);
-  })) : null])]), api_element("aside", stc7$2, [api_static_fragment($fragment11$1, 29), api_element("div", stc8$2, api_iterator($cmp.actions, function (action) {
+    return api_static_fragment($fragment7$3, api_key(19, item.signal), [api_static_part(3, null, api_dynamic_text(item.signal)), api_static_part(5, null, api_dynamic_text(item.detail)), api_static_part(7, null, api_dynamic_text(item.source))]);
+  })), $cmp.activation ? api_static_fragment($fragment8$2, 21) : null, $cmp.activation ? api_static_fragment($fragment9$2, 23, [api_static_part(3, null, api_dynamic_text($cmp.activation.provider)), api_static_part(5, null, api_dynamic_text($cmp.activation.safetyRule)), api_static_part(7, null, api_dynamic_text($cmp.activation.audience)), api_static_part(9, null, api_dynamic_text($cmp.activationSentLabel) + " sent")]) : null, $cmp.activation ? api_element("ol", stc6$2, api_iterator($cmp.activation.sequence, function (step) {
+    return api_static_fragment($fragment10$2, api_key(26, step.title), [api_static_part(2, null, api_dynamic_text(step.timing) + " • " + api_dynamic_text(step.title)), api_static_part(4, null, api_dynamic_text(step.content))]);
+  })) : null])]), api_element("aside", stc7$2, [api_static_fragment($fragment11$2, 29), api_element("div", stc8$2, api_iterator($cmp.actions, function (action) {
     return api_element("article", {
       className: api_normalize_class_name(action.className),
       key: api_key(31, action.id)
-    }, [api_static_fragment($fragment12$1, 33, [api_static_part(3, null, api_dynamic_text(action.title)), api_static_part(5, null, api_dynamic_text(action.targetSystem) + " • " + api_dynamic_text(action.type)), api_static_part(6, {
+    }, [api_static_fragment($fragment12$2, 33, [api_static_part(3, null, api_dynamic_text(action.title)), api_static_part(5, null, api_dynamic_text(action.targetSystem) + " • " + api_dynamic_text(action.type)), api_static_part(6, {
       className: api_normalize_class_name(action.statusClass)
-    }, null), api_static_part(7, null, api_dynamic_text(action.status))]), api_static_fragment($fragment13$1, 35, [api_static_part(1, null, api_dynamic_text(action.rationale))]), api_static_fragment($fragment14$1, 37, [api_static_part(4, null, api_dynamic_text(action.draftContent))]), api_element("div", stc9$1, [!action.isExecuted ? api_static_fragment($fragment15$1, 40, [api_static_part(0, {
+    }, null), api_static_part(7, null, api_dynamic_text(action.status))]), api_static_fragment($fragment13$2, 35, [api_static_part(1, null, api_dynamic_text(action.rationale))]), api_static_fragment($fragment14$2, 37, [api_static_part(4, null, api_dynamic_text(action.draftContent))]), api_element("div", stc9$2, [!action.isExecuted ? api_static_fragment($fragment15$2, 40, [api_static_part(0, {
       on: _m4 || ($ctx._m4 = {
         "click": api_bind($cmp.handleAction)
       }),
@@ -12216,20 +12216,20 @@ function tmpl$3($api, $cmp, $slotset, $ctx) {
         "data-action-id": action.id,
         "data-transition": action.primaryTransition
       }
-    }, null), api_static_part(1, null, api_dynamic_text(action.primaryLabel))]) : null, !action.isExecuted ? api_static_fragment($fragment16, 42, [api_static_part(0, {
+    }, null), api_static_part(1, null, api_dynamic_text(action.primaryLabel))]) : null, !action.isExecuted ? api_static_fragment($fragment16$1, 42, [api_static_part(0, {
       on: _m6 || ($ctx._m6 = {
         "click": api_bind($cmp.handleAction)
       }),
       attrs: {
         "data-action-id": action.id
       }
-    }, null)]) : null, action.isExecuted ? api_static_fragment($fragment17, 44) : null])]);
-  }))]), api_element("section", stc10, [api_static_fragment($fragment18, 47), api_element("div", stc11, api_iterator($cmp.funnel, function (item) {
-    return api_static_fragment($fragment19, api_key(50, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
+    }, null)]) : null, action.isExecuted ? api_static_fragment($fragment17$1, 44) : null])]);
+  }))]), api_element("section", stc10$1, [api_static_fragment($fragment18$1, 47), api_element("div", stc11$1, api_iterator($cmp.funnel, function (item) {
+    return api_static_fragment($fragment19$1, api_key(50, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
       style: item.style
     }, null), api_static_part(9, null, api_dynamic_text(item.narrative))]);
-  }))]), api_element("section", stc12, [api_static_fragment($fragment20, 53), api_element("div", stc13, api_iterator($cmp.impact, function (item) {
-    return api_static_fragment($fragment21, api_key(56, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
+  }))]), api_element("section", stc12$1, [api_static_fragment($fragment20$1, 53), api_element("div", stc13$1, api_iterator($cmp.impact, function (item) {
+    return api_static_fragment($fragment21$1, api_key(56, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
       style: item.style
     }, null), api_static_part(9, null, api_dynamic_text(item.narrative))]);
   }))])]) : null];
@@ -12362,15 +12362,15 @@ const $fragment3$2 = parseFragment`<div class="empty-state${0}"${2}>No monitors 
 const $fragment4$2 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Monitor Result</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Latest threshold evaluation</p></div>`;
 const $fragment5$2 = parseFragment`<div class="last-run${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${"c6"}${2}>${"t7"}</span></div>`;
 const $fragment6$2 = parseFragment`<div class="empty-state${0}"${2}>Run a monitor to view latest evaluation.</div>`;
-const $fragment7$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Recommendations</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Agent suggestions created from monitor drift</p></div>`;
-const $fragment8 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p><p${3}>${"t6"}</p></div>`;
-const $fragment9 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment10 = parseFragment`<div class="recommendation-actions${0}"${2}><button class="slds-button slds-button_brand slds-button_x-small${0}"${"a1:data-recommendation-id"} data-transition="approve"${2}>Approve</button><button class="slds-button slds-button_neutral slds-button_x-small${0}"${"a3:data-recommendation-id"} data-transition="reject"${2}>Reject</button></div>`;
-const $fragment11 = parseFragment`<div class="empty-state${0}"${2}>${"t1"}</div>`;
-const $fragment12 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Activation Guardrails</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>What the monitor keeps enforcing</p></div>`;
-const $fragment13 = parseFragment`<strong${3}>${"t1"}</strong>`;
-const $fragment14 = parseFragment`<p${3}>${"t1"}</p>`;
-const $fragment15 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment7$2 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Recommendations</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Agent suggestions created from monitor drift</p></div>`;
+const $fragment8$1 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p><p${3}>${"t6"}</p></div>`;
+const $fragment9$1 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment10$1 = parseFragment`<div class="recommendation-actions${0}"${2}><button class="slds-button slds-button_brand slds-button_x-small${0}"${"a1:data-recommendation-id"} data-transition="approve"${2}>Approve</button><button class="slds-button slds-button_neutral slds-button_x-small${0}"${"a3:data-recommendation-id"} data-transition="reject"${2}>Reject</button></div>`;
+const $fragment11$1 = parseFragment`<div class="empty-state${0}"${2}>${"t1"}</div>`;
+const $fragment12$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Activation Guardrails</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>What the monitor keeps enforcing</p></div>`;
+const $fragment13$1 = parseFragment`<strong${3}>${"t1"}</strong>`;
+const $fragment14$1 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment15$1 = parseFragment`<p${3}>${"t1"}</p>`;
 const stc0$2 = {
   classMap: {
     "monitor-layout": true
@@ -12426,7 +12426,7 @@ const stc8$1 = {
   },
   key: 30
 };
-const stc9 = {
+const stc9$1 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true,
@@ -12452,13 +12452,13 @@ function tmpl$2($api, $cmp, $slotset, $ctx) {
     }, null)]);
   }) : stc3$2, !$cmp.hasMonitors ? api_static_fragment($fragment3$2, 8) : null]))]), api_element("section", stc4$2, [api_static_fragment($fragment4$2, 11), api_element("div", stc5$1, [$cmp.hasLastRun ? api_static_fragment($fragment5$2, 14, [api_static_part(3, null, api_dynamic_text($cmp.lastMonitorRun.recommendation)), api_static_part(5, null, api_dynamic_text($cmp.lastRunObserved)), api_static_part(6, {
     className: api_normalize_class_name($cmp.lastRunClass)
-  }, null), api_static_part(7, null, api_dynamic_text($cmp.lastMonitorRun.status))]) : null, !$cmp.hasLastRun ? api_static_fragment($fragment6$2, 16) : null])]), api_element("section", stc6$1, [api_static_fragment($fragment7$1, 19), api_element("div", stc7$1, api_flatten([$cmp.hasRecommendations ? api_iterator($cmp.recommendationRows, function (item) {
+  }, null), api_static_part(7, null, api_dynamic_text($cmp.lastMonitorRun.status))]) : null, !$cmp.hasLastRun ? api_static_fragment($fragment6$2, 16) : null])]), api_element("section", stc6$1, [api_static_fragment($fragment7$2, 19), api_element("div", stc7$1, api_flatten([$cmp.hasRecommendations ? api_iterator($cmp.recommendationRows, function (item) {
     return api_element("article", {
       className: api_normalize_class_name(item.className),
       key: api_key(21, item.key)
-    }, [api_static_fragment($fragment8, 23, [api_static_part(2, null, api_dynamic_text(item.title)), api_static_part(4, null, api_dynamic_text(item.detail)), api_static_part(6, null, api_dynamic_text(item.observed))]), api_static_fragment($fragment9, 25, [api_static_part(0, {
+    }, [api_static_fragment($fragment8$1, 23, [api_static_part(2, null, api_dynamic_text(item.title)), api_static_part(4, null, api_dynamic_text(item.detail)), api_static_part(6, null, api_dynamic_text(item.observed))]), api_static_fragment($fragment9$1, 25, [api_static_part(0, {
       className: api_normalize_class_name(item.badgeClass)
-    }, null), api_static_part(1, null, api_dynamic_text(item.badge))]), item.canApprove ? api_static_fragment($fragment10, 27, [api_static_part(1, {
+    }, null), api_static_part(1, null, api_dynamic_text(item.badge))]), item.canApprove ? api_static_fragment($fragment10$1, 27, [api_static_part(1, {
       on: _m1 || ($ctx._m1 = {
         "click": api_bind($cmp.handleRecommendation)
       }),
@@ -12473,7 +12473,7 @@ function tmpl$2($api, $cmp, $slotset, $ctx) {
         "data-recommendation-id": item.id
       }
     }, null)]) : null]);
-  }) : stc3$2, !$cmp.hasRecommendations ? api_static_fragment($fragment11, 29, [api_static_part(1, null, api_dynamic_text($cmp.recommendationFallback))]) : null]))]), api_element("section", stc8$1, [api_static_fragment($fragment12, 32), api_element("div", stc9, [$cmp.activation ? api_static_fragment($fragment13, 35, [api_static_part(1, null, api_dynamic_text($cmp.activation.provider))]) : null, $cmp.activation ? api_static_fragment($fragment14, 37, [api_static_part(1, null, api_dynamic_text($cmp.activation.safetyRule))]) : null, $cmp.activation ? api_static_fragment($fragment15, 39, [api_static_part(1, null, api_dynamic_text($cmp.activation.outcomeJoin))]) : null])])])];
+  }) : stc3$2, !$cmp.hasRecommendations ? api_static_fragment($fragment11$1, 29, [api_static_part(1, null, api_dynamic_text($cmp.recommendationFallback))]) : null]))]), api_element("section", stc8$1, [api_static_fragment($fragment12$1, 32), api_element("div", stc9$1, [$cmp.activation ? api_static_fragment($fragment13$1, 35, [api_static_part(1, null, api_dynamic_text($cmp.activation.provider))]) : null, $cmp.activation ? api_static_fragment($fragment14$1, 37, [api_static_part(1, null, api_dynamic_text($cmp.activation.safetyRule))]) : null, $cmp.activation ? api_static_fragment($fragment15$1, 39, [api_static_part(1, null, api_dynamic_text($cmp.activation.outcomeJoin))]) : null])])])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl$2 = registerTemplate(tmpl$2);
@@ -12591,7 +12591,7 @@ const $fragment3$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 cl
 const $fragment4$1 = parseFragment`<article class="audit-row${0}"${2}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p></article>`;
 const $fragment5$1 = parseFragment`<section class="slds-card json-card${0}"${2}><div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec JSON</h2></div><div class="slds-card__body slds-card__body_inner${0}"${2}><pre${3}>${"t6"}</pre></div></section>`;
 const $fragment6$1 = parseFragment`<section class="slds-card json-card${0}"${2}><div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Run State JSON</h2></div><div class="slds-card__body slds-card__body_inner${0}"${2}><pre${3}>${"t6"}</pre></div></section>`;
-const $fragment7 = parseFragment`<section class="slds-card json-card${0}"${2}><div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Data 360 Client</h2></div><div class="slds-card__body slds-card__body_inner${0}"${2}><pre${3}>${"t6"}</pre></div></section>`;
+const $fragment7$1 = parseFragment`<section class="slds-card json-card${0}"${2}><div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Data 360 Client</h2></div><div class="slds-card__body slds-card__body_inner${0}"${2}><pre${3}>${"t6"}</pre></div></section>`;
 const stc0$1 = {
   classMap: {
     "audit-layout": true
@@ -12632,7 +12632,7 @@ function tmpl$1($api, $cmp, $slotset, $ctx) {
     return api_static_fragment($fragment2$1, api_key(6, source.name), [api_static_part(2, null, api_dynamic_text(source.name)), api_static_part(4, null, api_dynamic_text(source.detail))]);
   }))]), api_element("section", stc3$1, [api_static_fragment($fragment3$1, 9), api_element("div", stc4$1, api_iterator($cmp.planStages, function (stage) {
     return api_static_fragment($fragment4$1, api_key(12, stage.title), [api_static_part(2, null, api_dynamic_text(stage.title)), api_static_part(4, null, api_dynamic_text(stage.detail))]);
-  }))]), api_static_fragment($fragment5$1, 14, [api_static_part(6, null, api_dynamic_text($cmp.planJson))]), api_static_fragment($fragment6$1, 16, [api_static_part(6, null, api_dynamic_text($cmp.runJson))]), api_static_fragment($fragment7, 18, [api_static_part(6, null, api_dynamic_text($cmp.diagnosticsJson))])])];
+  }))]), api_static_fragment($fragment5$1, 14, [api_static_part(6, null, api_dynamic_text($cmp.planJson))]), api_static_fragment($fragment6$1, 16, [api_static_part(6, null, api_dynamic_text($cmp.runJson))]), api_static_fragment($fragment7$1, 18, [api_static_part(6, null, api_dynamic_text($cmp.diagnosticsJson))])])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl$1 = registerTemplate(tmpl$1);
@@ -12693,10 +12693,25 @@ const __lwc_component_class_internal$1 = registerComponent(AuditWorkspace, {
 
 const $fragment1 = parseFragment`<div class="slds-context-bar__primary${0}"${2}><div class="slds-context-bar__item slds-no-hover${0}"${2}><div class="slds-context-bar__label-action brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><span class="slds-truncate${0}" title="Data 360 Goal Workbench"${2}>Data 360 Goal Workbench</span></div></div></div>`;
 const $fragment2 = parseFragment`<li class="slds-context-bar__item${0}"${2}><a class="slds-context-bar__label-action${0}"${"a1:href"}${"a1:data-tab"}${2}><span class="slds-truncate${0}"${2}>${"t3"}</span></a></li>`;
-const $fragment3 = parseFragment`<section class="slds-page-header slds-page-header_record-home command-header${0}"${2}><div class="slds-page-header__row${0}"${2}><div class="slds-page-header__col-title${0}"${2}><div class="slds-media${0}"${2}><div class="slds-media__figure${0}"${2}><span class="slds-icon_container slds-icon-standard-flow${0}"${2}><span class="header-icon${0}"${2}>PS</span></span></div><div class="slds-media__body${0}"${2}><p class="slds-page-header__name-meta${0}"${2}>Goal</p><h1 class="slds-page-header__title command-title${0}"${"a11:title"}${2}>${"t12"}</h1><div class="slds-m-top_x-small header-meta${0}"${2}><span class="slds-badge${0}"${2}>Sandbox</span><span class="slds-badge${0}"${2}>Data 360</span><span class="slds-badge${0}"${2}>Connect API</span><span${"c20"}${2}>${"t21"}</span></div></div></div></div><div class="slds-page-header__col-actions${0}"${2}><div class="slds-page-header__controls${0}"${2}><span${"c24"}${2}>${"t25"}</span><button class="slds-button slds-button_neutral${0}"${2}>Reset demo</button><span${"c28"}${2}>${"t29"}</span></div></div></div></section>`;
-const $fragment4 = parseFragment`<article class="slds-card metric-card${0}"${2}><div class="slds-card__body slds-card__body_inner${0}"${2}><p class="metric-label${0}"${2}>${"t3"}</p><strong${3}>${"t5"}</strong></div></article>`;
-const $fragment5 = parseFragment`<li${"c0"} role="presentation"${2}><a class="slds-tabs_default__link${0}"${"a1:href"} role="tab"${"a1:aria-selected"}${"a1:data-tab"}${2}>${"t2"}</a></li>`;
-const $fragment6 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error${0}" role="alert"${2}><span${3}>${"t2"}</span></div>`;
+const $fragment3 = parseFragment`<div class="slds-page-header__col-title${0}"${2}><div class="slds-media${0}"${2}><div class="slds-media__figure${0}"${2}><span class="slds-icon_container slds-icon-standard-flow${0}"${2}><span class="header-icon${0}"${2}>PS</span></span></div><div class="slds-media__body${0}"${2}><p class="slds-page-header__name-meta${0}"${2}>Goal</p><h1 class="slds-page-header__title command-title${0}"${"a9:title"}${2}>${"t10"}</h1><div class="slds-m-top_x-small header-meta${0}"${2}><span class="slds-badge${0}"${2}>Sandbox</span><span class="slds-badge${0}"${2}>Data 360</span><span class="slds-badge${0}"${2}>Connect API</span><span${"c18"}${2}>${"t19"}</span></div></div></div></div>`;
+const $fragment4 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment5 = parseFragment`<button class="slds-button slds-button_neutral${0}"${2}>Model settings</button>`;
+const $fragment6 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Export PlanSpec</button>`;
+const $fragment7 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Export run log</button>`;
+const $fragment8 = parseFragment`<button class="slds-button slds-button_neutral${0}"${2}>Reset demo</button>`;
+const $fragment9 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment10 = parseFragment`<article class="slds-card metric-card${0}"${2}><div class="slds-card__body slds-card__body_inner${0}"${2}><p class="metric-label${0}"${2}>${"t3"}</p><strong${3}>${"t5"}</strong></div></article>`;
+const $fragment11 = parseFragment`<li${"c0"} role="presentation"${2}><a class="slds-tabs_default__link${0}"${"a1:href"} role="tab"${"a1:aria-selected"}${"a1:data-tab"}${2}>${"t2"}</a></li>`;
+const $fragment12 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error${0}" role="alert"${2}><span${3}>${"t2"}</span></div>`;
+const $fragment13 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}><span${3}>${"t2"}</span></div>`;
+const $fragment14 = parseFragment`<header class="slds-modal__header${0}"${2}><button class="slds-button slds-button_icon slds-modal__close${0}" title="Close"${2}><span aria-hidden="true"${3}>x</span><span class="slds-assistive-text${0}"${2}>Close</span></button><h2${"a6:id"} class="slds-modal__title slds-hyphenate${0}"${2}>Model Settings</h2></header>`;
+const $fragment15 = parseFragment`<div class="slds-form-element slds-m-bottom_medium${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Provider</label><div class="slds-form-element__control${0}"${2}><select${"a4:id"} class="slds-select${0}"${2}><option value="anthropic"${"a5:selected"}${3}>Anthropic</option><option value="openrouter"${"a7:selected"}${3}>OpenRouter</option></select></div></div>`;
+const $fragment16 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>Model</label>`;
+const $fragment17 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>API key</label>`;
+const $fragment18 = parseFragment`<div class="slds-form-element__help${0}"${2}>${"t1"}</div>`;
+const $fragment19 = parseFragment`<div class="slds-m-top_medium slds-text-body_small${0}"${2}>${"t1"}</div>`;
+const $fragment20 = parseFragment`<footer class="slds-modal__footer${0}"${2}><button class="slds-button slds-button_neutral${0}"${2}>Cancel</button><button class="slds-button slds-button_brand${0}"${"a3:disabled"}${2}>Save and restart local backend</button></footer>`;
+const $fragment21 = parseFragment`<div class="slds-backdrop slds-backdrop_open${0}"${2}></div>`;
 const stc0 = {
   classMap: {
     "app-frame": true
@@ -12732,78 +12747,168 @@ const stc4 = {
 };
 const stc5 = {
   classMap: {
+    "slds-page-header": true,
+    "slds-page-header_record-home": true,
+    "command-header": true
+  },
+  key: 9
+};
+const stc6 = {
+  classMap: {
+    "slds-page-header__row": true
+  },
+  key: 10
+};
+const stc7 = {
+  classMap: {
+    "slds-page-header__col-actions": true
+  },
+  key: 13
+};
+const stc8 = {
+  classMap: {
+    "slds-page-header__controls": true
+  },
+  key: 14
+};
+const stc9 = {
+  classMap: {
     "metric-strip": true
   },
   attrs: {
     "aria-label": "Goal metrics"
   },
-  key: 11
+  key: 27
 };
-const stc6 = {
+const stc10 = {
   classMap: {
     "slds-tabs_default": true,
     "workbench": true
   },
-  key: 14
+  key: 30
 };
-const stc7 = {
+const stc11 = {
   classMap: {
     "slds-tabs_default__nav": true
   },
   attrs: {
     "role": "tablist"
   },
-  key: 15
+  key: 31
 };
-const stc8 = {
+const stc12 = {
   classMap: {
     "workspace-panel": true
   },
-  key: 18
+  key: 34
+};
+const stc13 = {
+  "slds-modal": true,
+  "slds-fade-in-open": true,
+  "desktop-settings": true
+};
+const stc14 = {
+  classMap: {
+    "slds-modal__container": true
+  },
+  key: 44
+};
+const stc15 = {
+  classMap: {
+    "slds-modal__content": true,
+    "slds-p-around_medium": true
+  },
+  key: 47
+};
+const stc16 = {
+  classMap: {
+    "slds-form-element": true,
+    "slds-m-bottom_medium": true
+  },
+  key: 50
+};
+const stc17 = {
+  classMap: {
+    "slds-form-element__control": true
+  },
+  key: 53
+};
+const stc18 = {
+  "slds-input": true
+};
+const stc19 = {
+  classMap: {
+    "slds-form-element": true
+  },
+  key: 55
+};
+const stc20 = {
+  classMap: {
+    "slds-form-element__control": true
+  },
+  key: 58
 };
 function tmpl($api, $cmp, $slotset, $ctx) {
-  const {st: api_static_fragment, k: api_key, b: api_bind, d: api_dynamic_text, sp: api_static_part, i: api_iterator, h: api_element, ncls: api_normalize_class_name, c: api_custom_element} = $api;
-  const {_m0, _m1, _m2, _m3, _m4, _m5} = $ctx;
+  const {st: api_static_fragment, k: api_key, b: api_bind, fid: api_scoped_frag_id, d: api_dynamic_text, sp: api_static_part, i: api_iterator, h: api_element, ncls: api_normalize_class_name, c: api_custom_element, gid: api_scoped_id} = $api;
+  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18} = $ctx;
   return [api_element("div", stc0, [api_element("header", stc1, [api_static_fragment($fragment1, 3), api_element("nav", stc2, [api_element("ul", stc3, api_iterator($cmp.tabs, function (tab) {
     return api_static_fragment($fragment2, api_key(7, tab.id), [api_static_part(1, {
       on: _m0 || ($ctx._m0 = {
         "click": api_bind($cmp.handleTab)
       }),
       attrs: {
-        "href": tab.href,
+        "href": api_scoped_frag_id(tab.href),
         "data-tab": tab.id
       }
     }, null), api_static_part(3, null, api_dynamic_text(tab.label))]);
-  }))])]), api_element("main", stc4, [api_static_fragment($fragment3, 10, [api_static_part(11, {
+  }))])]), api_element("main", stc4, [api_element("section", stc5, [api_element("div", stc6, [api_static_fragment($fragment3, 12, [api_static_part(9, {
     attrs: {
       "title": $cmp.goalTitle
     }
-  }, null), api_static_part(12, null, api_dynamic_text($cmp.goalTitle)), api_static_part(20, {
+  }, null), api_static_part(10, null, api_dynamic_text($cmp.goalTitle)), api_static_part(18, {
     className: api_normalize_class_name($cmp.diagnosticsClass)
-  }, null), api_static_part(21, null, api_dynamic_text($cmp.diagnosticsLabel)), api_static_part(24, {
+  }, null), api_static_part(19, null, api_dynamic_text($cmp.diagnosticsLabel))]), api_element("div", stc7, [api_element("div", stc8, [api_static_fragment($fragment4, 16, [api_static_part(0, {
     className: api_normalize_class_name($cmp.userClass)
-  }, null), api_static_part(25, null, api_dynamic_text($cmp.userLabel)), api_static_part(26, {
-    on: _m1 || ($ctx._m1 = {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.userLabel))]), $cmp.isDesktop ? api_static_fragment($fragment5, 18, [api_static_part(0, {
+    on: _m2 || ($ctx._m2 = {
+      "click": api_bind($cmp.handleOpenDesktopSettings)
+    })
+  }, null)]) : null, api_static_fragment($fragment6, 20, [api_static_part(0, {
+    on: _m4 || ($ctx._m4 = {
+      "click": api_bind($cmp.handleExportPlanSpec)
+    }),
+    attrs: {
+      "disabled": $cmp.planExportDisabled ? "" : null
+    }
+  }, null)]), api_static_fragment($fragment7, 22, [api_static_part(0, {
+    on: _m6 || ($ctx._m6 = {
+      "click": api_bind($cmp.handleExportRunLog)
+    }),
+    attrs: {
+      "disabled": $cmp.runLogExportDisabled ? "" : null
+    }
+  }, null)]), api_static_fragment($fragment8, 24, [api_static_part(0, {
+    on: _m8 || ($ctx._m8 = {
       "click": api_bind($cmp.handleResetDemo)
     })
-  }, null), api_static_part(28, {
+  }, null)]), api_static_fragment($fragment9, 26, [api_static_part(0, {
     className: api_normalize_class_name($cmp.headerStatusClass)
-  }, null), api_static_part(29, null, api_dynamic_text($cmp.headerStatusLabel))]), api_element("section", stc5, api_iterator($cmp.metricCards, function (item) {
-    return api_static_fragment($fragment4, api_key(13, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value))]);
-  })), api_element("section", stc6, [api_element("ul", stc7, api_iterator($cmp.tabs, function (tab) {
-    return api_static_fragment($fragment5, api_key(17, tab.id), [api_static_part(0, {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.headerStatusLabel))])])])])]), api_element("section", stc9, api_iterator($cmp.metricCards, function (item) {
+    return api_static_fragment($fragment10, api_key(29, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value))]);
+  })), api_element("section", stc10, [api_element("ul", stc11, api_iterator($cmp.tabs, function (tab) {
+    return api_static_fragment($fragment11, api_key(33, tab.id), [api_static_part(0, {
       className: api_normalize_class_name(tab.itemClass)
     }, null), api_static_part(1, {
-      on: _m2 || ($ctx._m2 = {
+      on: _m9 || ($ctx._m9 = {
         "click": api_bind($cmp.handleTab)
       }),
       attrs: {
-        "href": tab.href,
+        "href": api_scoped_frag_id(tab.href),
         "aria-selected": tab.selected,
         "data-tab": tab.id
       }
     }, null), api_static_part(2, null, api_dynamic_text(tab.label))]);
-  })), api_element("div", stc8, [$cmp.isPlan ? api_custom_element("c-plan-workspace", __lwc_component_class_internal$4, {
+  })), api_element("div", stc12, [$cmp.isPlan ? api_custom_element("c-plan-workspace", __lwc_component_class_internal$4, {
     props: {
       "scenarios": $cmp.scenarios,
       "selectedScenarioId": $cmp.selectedScenarioId,
@@ -12817,8 +12922,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "selectedStepId": $cmp.selectedStepId,
       "busy": $cmp.busy
     },
-    key: 19,
-    on: _m3 || ($ctx._m3 = {
+    key: 35,
+    on: _m10 || ($ctx._m10 = {
       "scenariochange": api_bind($cmp.handleScenarioChange),
       "goalchange": api_bind($cmp.handleGoalChange),
       "draftplan": api_bind($cmp.handleDraftPlan),
@@ -12833,8 +12938,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "selectedAccountId": $cmp.selectedAccountId,
       "busy": $cmp.busy
     },
-    key: 20,
-    on: _m4 || ($ctx._m4 = {
+    key: 36,
+    on: _m11 || ($ctx._m11 = {
       "resetdemo": api_bind($cmp.handleResetDemo),
       "selectaccount": api_bind($cmp.handleSelectAccount),
       "actiontransition": api_bind($cmp.handleActionTransition)
@@ -12847,8 +12952,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "recommendations": $cmp.recommendations,
       "recommendationUnavailable": $cmp.recommendationUnavailable
     },
-    key: 21,
-    on: _m5 || ($ctx._m5 = {
+    key: 37,
+    on: _m12 || ($ctx._m12 = {
       "runmonitor": api_bind($cmp.handleRunMonitor),
       "recommendationtransition": api_bind($cmp.handleRecommendationTransition)
     })
@@ -12859,8 +12964,88 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "currentRun": $cmp.currentRun,
       "diagnostics": $cmp.diagnostics
     },
-    key: 22
-  }) : null])]), $cmp.error ? api_static_fragment($fragment6, 24, [api_static_part(2, null, api_dynamic_text($cmp.error))]) : null])])];
+    key: 38
+  }) : null])]), $cmp.error ? api_static_fragment($fragment12, 40, [api_static_part(2, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment13, 42, [api_static_part(2, null, api_dynamic_text($cmp.exportMessage))]) : null]), $cmp.desktopSettingsOpen ? api_element("section", {
+    classMap: stc13,
+    attrs: {
+      "role": "dialog",
+      "aria-modal": "true",
+      "aria-labelledby": api_scoped_id("desktop-settings-title")
+    },
+    key: 43
+  }, [api_element("div", stc14, [api_static_fragment($fragment14, 46, [api_static_part(1, {
+    on: _m13 || ($ctx._m13 = {
+      "click": api_bind($cmp.handleCloseDesktopSettings)
+    })
+  }, null), api_static_part(6, {
+    attrs: {
+      "id": api_scoped_id("desktop-settings-title")
+    }
+  }, null)]), api_element("div", stc15, [api_static_fragment($fragment15, 49, [api_static_part(1, {
+    attrs: {
+      "for": api_scoped_id("desktop-provider")
+    }
+  }, null), api_static_part(4, {
+    on: _m14 || ($ctx._m14 = {
+      "change": api_bind($cmp.handleDesktopProviderChange)
+    }),
+    attrs: {
+      "id": api_scoped_id("desktop-provider")
+    }
+  }, null), api_static_part(5, {
+    attrs: {
+      "selected": $cmp.desktopProviderIsAnthropic ? "" : null
+    }
+  }, null), api_static_part(7, {
+    attrs: {
+      "selected": $cmp.desktopProviderIsOpenRouter ? "" : null
+    }
+  }, null)]), api_element("div", stc16, [api_static_fragment($fragment16, 52, [api_static_part(0, {
+    attrs: {
+      "for": api_scoped_id("desktop-model")
+    }
+  }, null)]), api_element("div", stc17, [api_element("input", {
+    classMap: stc18,
+    attrs: {
+      "id": api_scoped_id("desktop-model")
+    },
+    props: {
+      "value": $cmp.desktopModel
+    },
+    key: 54,
+    on: _m15 || ($ctx._m15 = {
+      "input": api_bind($cmp.handleDesktopModelChange)
+    })
+  })])]), api_element("div", stc19, [api_static_fragment($fragment17, 57, [api_static_part(0, {
+    attrs: {
+      "for": api_scoped_id("desktop-key")
+    }
+  }, null)]), api_element("div", stc20, [api_element("input", {
+    classMap: stc18,
+    attrs: {
+      "id": api_scoped_id("desktop-key"),
+      "type": "password",
+      "placeholder": $cmp.desktopKeyStatus
+    },
+    props: {
+      "value": $cmp.desktopApiKey
+    },
+    key: 59,
+    on: _m16 || ($ctx._m16 = {
+      "input": api_bind($cmp.handleDesktopApiKeyChange)
+    })
+  })]), api_static_fragment($fragment18, 61, [api_static_part(1, null, api_dynamic_text($cmp.desktopStorageStatus))])]), $cmp.desktopMessage ? api_static_fragment($fragment19, 63, [api_static_part(1, null, api_dynamic_text($cmp.desktopMessage))]) : null]), api_static_fragment($fragment20, 65, [api_static_part(1, {
+    on: _m17 || ($ctx._m17 = {
+      "click": api_bind($cmp.handleCloseDesktopSettings)
+    })
+  }, null), api_static_part(3, {
+    on: _m18 || ($ctx._m18 = {
+      "click": api_bind($cmp.handleSaveDesktopSettings)
+    }),
+    attrs: {
+      "disabled": $cmp.busy.desktopSettings ? "" : null
+    }
+  }, null)])])]) : null, $cmp.desktopSettingsOpen ? api_static_fragment($fragment21, 67) : null])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl = registerTemplate(tmpl);
@@ -12874,12 +13059,10 @@ freezeTemplate(tmpl);
 
 async function request(path, options = {}) {
   const init = {
-    method: options.method || "GET"
+    method: options.method || "GET",
+    headers: await apiHeaders(options.body)
   };
   if (options.body) {
-    init.headers = {
-      "Content-Type": "application/json"
-    };
     init.body = JSON.stringify(options.body);
   }
   const response = await fetch(path, init);
@@ -12889,6 +13072,16 @@ async function request(path, options = {}) {
     throw new Error(json?.error || json?.message || response.statusText);
   }
   return json;
+}
+async function apiHeaders(hasBody) {
+  const headers = {};
+  if (hasBody) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (window.data360Desktop?.apiHeaders) {
+    Object.assign(headers, await window.data360Desktop.apiHeaders());
+  }
+  return headers;
 }
 function parseJson(text) {
   try {
@@ -12936,6 +13129,14 @@ class Data360Console extends LightningElement {
     this.recommendationUnavailable = null;
     this.approvalHistory = [];
     this.approvalHistoryUnavailable = null;
+    this.isDesktop = false;
+    this.desktopSettings = null;
+    this.desktopSettingsOpen = false;
+    this.desktopProvider = "anthropic";
+    this.desktopModel = "claude-sonnet-4-5";
+    this.desktopApiKey = "";
+    this.desktopMessage = "";
+    this.exportMessage = "";
     this.busy = {};
     this.error = null;
     this.handleHashChange = () => {
@@ -12951,6 +13152,7 @@ class Data360Console extends LightningElement {
       this.activeTab = hash;
     }
     window.addEventListener("hashchange", this.handleHashChange);
+    this.loadDesktopSettings();
     this.loadAll();
   }
   disconnectedCallback() {
@@ -13023,6 +13225,35 @@ class Data360Console extends LightningElement {
   get headerStatusLabel() {
     return this.summary.status || this.plannerStatus;
   }
+  get canExportPlanSpec() {
+    return Boolean(this.currentDraft?.plan?.id);
+  }
+  get canExportRunLog() {
+    return Boolean(this.currentRun?.id);
+  }
+  get planExportDisabled() {
+    return !this.canExportPlanSpec || this.busy.exportPlanSpec;
+  }
+  get runLogExportDisabled() {
+    return !this.canExportRunLog || this.busy.exportRunLog;
+  }
+  get desktopProviderIsAnthropic() {
+    return this.desktopProvider === "anthropic";
+  }
+  get desktopProviderIsOpenRouter() {
+    return this.desktopProvider === "openrouter";
+  }
+  get desktopKeyStatus() {
+    const provider = this.desktopSettings?.[this.desktopProvider] || {};
+    if (!provider.apiKeyConfigured) {
+      return "No API key stored";
+    }
+    return provider.apiKeyLast4 ? `Stored key ending ${provider.apiKeyLast4}` : "API key stored";
+  }
+  get desktopStorageStatus() {
+    if (!this.desktopSettings) return "";
+    return this.desktopSettings.keyStorageAvailable ? "Stored with OS-backed encryption" : "Secure key storage unavailable; keys will not be persisted";
+  }
   async loadAll() {
     await Promise.all([this.loadUser(), this.loadDemo(), this.loadScenarios(), this.loadDiagnostics(), this.loadMonitors(), this.loadRecommendations()]);
   }
@@ -13086,6 +13317,19 @@ class Data360Console extends LightningElement {
     } catch (error) {
       this.recommendations = [];
       this.recommendationUnavailable = error.message;
+    }
+  }
+  async loadDesktopSettings() {
+    if (!window.data360Desktop?.getSettings) {
+      return;
+    }
+    this.isDesktop = true;
+    try {
+      this.desktopSettings = await window.data360Desktop.getSettings();
+      this.desktopProvider = this.desktopSettings.provider || "anthropic";
+      this.desktopModel = this.desktopSettings[this.desktopProvider]?.model || this.desktopModel;
+    } catch (error) {
+      this.desktopMessage = error.message;
     }
   }
   handleTab(event) {
@@ -13264,6 +13508,77 @@ class Data360Console extends LightningElement {
       this.recommendationUnavailable = error.message;
     }
   }
+  handleOpenDesktopSettings() {
+    this.desktopSettingsOpen = true;
+    this.desktopApiKey = "";
+    this.desktopMessage = "";
+  }
+  handleCloseDesktopSettings() {
+    this.desktopSettingsOpen = false;
+    this.desktopApiKey = "";
+  }
+  handleDesktopProviderChange(event) {
+    this.desktopProvider = event.target.value;
+    this.desktopModel = this.desktopSettings?.[this.desktopProvider]?.model || "";
+    this.desktopApiKey = "";
+  }
+  handleDesktopModelChange(event) {
+    this.desktopModel = event.target.value;
+  }
+  handleDesktopApiKeyChange(event) {
+    this.desktopApiKey = event.target.value;
+  }
+  async handleSaveDesktopSettings() {
+    if (!window.data360Desktop?.saveSettings) return;
+    this.setBusy("desktopSettings", true);
+    this.desktopMessage = "Saving settings and restarting local backend...";
+    try {
+      const providerSettings = {
+        model: this.desktopModel
+      };
+      if (this.desktopApiKey.trim()) {
+        providerSettings.apiKey = this.desktopApiKey.trim();
+      }
+      this.desktopSettings = await window.data360Desktop.saveSettings({
+        provider: this.desktopProvider,
+        [this.desktopProvider]: providerSettings
+      });
+      this.desktopApiKey = "";
+      this.desktopSettingsOpen = false;
+      this.desktopMessage = "Model settings saved.";
+      await this.loadAll();
+    } catch (error) {
+      this.desktopMessage = error.message;
+    } finally {
+      this.setBusy("desktopSettings", false);
+    }
+  }
+  async handleExportPlanSpec() {
+    if (!this.currentDraft?.plan?.id) return;
+    this.setBusy("exportPlanSpec", true);
+    try {
+      const archive = await request(`/api/plans/${this.currentDraft.plan.id}/export`);
+      await exportJson(`planspec-${this.currentDraft.plan.id}.json`, archive);
+      this.exportMessage = "PlanSpec exported.";
+    } catch (error) {
+      this.exportMessage = error.message;
+    } finally {
+      this.setBusy("exportPlanSpec", false);
+    }
+  }
+  async handleExportRunLog() {
+    if (!this.currentRun?.id) return;
+    this.setBusy("exportRunLog", true);
+    try {
+      const archive = await request(`/api/runs/${this.currentRun.id}/export`);
+      await exportJson(`execution-log-${this.currentRun.id}.json`, archive);
+      this.exportMessage = "Execution log exported.";
+    } catch (error) {
+      this.exportMessage = error.message;
+    } finally {
+      this.setBusy("exportRunLog", false);
+    }
+  }
   setBusy(key, value) {
     this.busy = {
       ...this.busy,
@@ -13273,7 +13588,7 @@ class Data360Console extends LightningElement {
   /*LWC compiler v9.2.2*/
 }
 registerDecorators(Data360Console, {
-  fields: ["activeTab", "user", "authUnavailable", "demo", "selectedAccountId", "scenarios", "selectedScenarioId", "goal", "currentDraft", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "busy", "error", "handleHashChange"]
+  fields: ["activeTab", "user", "authUnavailable", "demo", "selectedAccountId", "scenarios", "selectedScenarioId", "goal", "currentDraft", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "isDesktop", "desktopSettings", "desktopSettingsOpen", "desktopProvider", "desktopModel", "desktopApiKey", "desktopMessage", "exportMessage", "busy", "error", "handleHashChange"]
 });
 const __lwc_component_class_internal = registerComponent(Data360Console, {
   tmpl: _tmpl,
@@ -13284,6 +13599,26 @@ function delay(ms) {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
+}
+async function exportJson(defaultFileName, payload) {
+  if (window.data360Desktop?.exportJson) {
+    return window.data360Desktop.exportJson({
+      defaultFileName,
+      payload
+    });
+  }
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = defaultFileName;
+  link.click();
+  URL.revokeObjectURL(url);
+  return {
+    canceled: false
+  };
 }
 
 const mount = document.getElementById("app");

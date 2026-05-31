@@ -7,6 +7,7 @@ import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.StepStatus;
 import com.acme.data360agent.monitor.MonitorService;
+import com.acme.data360agent.operation.OperationBindingSnapshot;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -59,6 +60,23 @@ public class PlanRunActivitiesImpl implements PlanRunActivities {
             run.setStatus(RunStatus.RUNNING);
             store.saveRun(run);
             audit.event(runId, planId, stepId, "step_started", Map.of("action", action));
+            return run;
+        });
+    }
+
+    @Override
+    public void stepToolCallPrepared(String runId, String planId, String stepId, String action, OperationBindingSnapshot binding, Map<String, Object> resolvedInput) {
+        store.withRunLock(runId, run -> {
+            var step = PlanRunSupport.stepRun(run, stepId);
+            step.setBinding(binding);
+            step.setResolvedInput(resolvedInput);
+            store.saveRun(run);
+            audit.event(runId, planId, stepId, "step_tool_call_prepared", Map.of(
+                    "action", action,
+                    "binding", binding.auditSummary(),
+                    "resolvedInputKeys", resolvedInput == null ? java.util.List.of() : resolvedInput.keySet().stream().sorted().toList(),
+                    "executor", "temporal"
+            ));
             return run;
         });
     }

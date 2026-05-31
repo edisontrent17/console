@@ -29,6 +29,14 @@ export default class Data360Console extends LightningElement {
     recommendationUnavailable = null;
     approvalHistory = [];
     approvalHistoryUnavailable = null;
+    isDesktop = false;
+    desktopSettings = null;
+    desktopSettingsOpen = false;
+    desktopProvider = "anthropic";
+    desktopModel = "claude-sonnet-4-5";
+    desktopApiKey = "";
+    desktopMessage = "";
+    exportMessage = "";
     busy = {};
     error = null;
 
@@ -38,6 +46,7 @@ export default class Data360Console extends LightningElement {
             this.activeTab = hash;
         }
         window.addEventListener("hashchange", this.handleHashChange);
+        this.loadDesktopSettings();
         this.loadAll();
     }
 
@@ -126,6 +135,45 @@ export default class Data360Console extends LightningElement {
         return this.summary.status || this.plannerStatus;
     }
 
+    get canExportPlanSpec() {
+        return Boolean(this.currentDraft?.plan?.id);
+    }
+
+    get canExportRunLog() {
+        return Boolean(this.currentRun?.id);
+    }
+
+    get planExportDisabled() {
+        return !this.canExportPlanSpec || this.busy.exportPlanSpec;
+    }
+
+    get runLogExportDisabled() {
+        return !this.canExportRunLog || this.busy.exportRunLog;
+    }
+
+    get desktopProviderIsAnthropic() {
+        return this.desktopProvider === "anthropic";
+    }
+
+    get desktopProviderIsOpenRouter() {
+        return this.desktopProvider === "openrouter";
+    }
+
+    get desktopKeyStatus() {
+        const provider = this.desktopSettings?.[this.desktopProvider] || {};
+        if (!provider.apiKeyConfigured) {
+            return "No API key stored";
+        }
+        return provider.apiKeyLast4 ? `Stored key ending ${provider.apiKeyLast4}` : "API key stored";
+    }
+
+    get desktopStorageStatus() {
+        if (!this.desktopSettings) return "";
+        return this.desktopSettings.keyStorageAvailable
+            ? "Stored with OS-backed encryption"
+            : "Secure key storage unavailable; keys will not be persisted";
+    }
+
     async loadAll() {
         await Promise.all([
             this.loadUser(),
@@ -192,6 +240,20 @@ export default class Data360Console extends LightningElement {
         } catch (error) {
             this.recommendations = [];
             this.recommendationUnavailable = error.message;
+        }
+    }
+
+    async loadDesktopSettings() {
+        if (!window.data360Desktop?.getSettings) {
+            return;
+        }
+        this.isDesktop = true;
+        try {
+            this.desktopSettings = await window.data360Desktop.getSettings();
+            this.desktopProvider = this.desktopSettings.provider || "anthropic";
+            this.desktopModel = this.desktopSettings[this.desktopProvider]?.model || this.desktopModel;
+        } catch (error) {
+            this.desktopMessage = error.message;
         }
     }
 
@@ -366,6 +428,83 @@ export default class Data360Console extends LightningElement {
         }
     }
 
+    handleOpenDesktopSettings() {
+        this.desktopSettingsOpen = true;
+        this.desktopApiKey = "";
+        this.desktopMessage = "";
+    }
+
+    handleCloseDesktopSettings() {
+        this.desktopSettingsOpen = false;
+        this.desktopApiKey = "";
+    }
+
+    handleDesktopProviderChange(event) {
+        this.desktopProvider = event.target.value;
+        this.desktopModel = this.desktopSettings?.[this.desktopProvider]?.model || "";
+        this.desktopApiKey = "";
+    }
+
+    handleDesktopModelChange(event) {
+        this.desktopModel = event.target.value;
+    }
+
+    handleDesktopApiKeyChange(event) {
+        this.desktopApiKey = event.target.value;
+    }
+
+    async handleSaveDesktopSettings() {
+        if (!window.data360Desktop?.saveSettings) return;
+        this.setBusy("desktopSettings", true);
+        this.desktopMessage = "Saving settings and restarting local backend...";
+        try {
+            const providerSettings = { model: this.desktopModel };
+            if (this.desktopApiKey.trim()) {
+                providerSettings.apiKey = this.desktopApiKey.trim();
+            }
+            this.desktopSettings = await window.data360Desktop.saveSettings({
+                provider: this.desktopProvider,
+                [this.desktopProvider]: providerSettings
+            });
+            this.desktopApiKey = "";
+            this.desktopSettingsOpen = false;
+            this.desktopMessage = "Model settings saved.";
+            await this.loadAll();
+        } catch (error) {
+            this.desktopMessage = error.message;
+        } finally {
+            this.setBusy("desktopSettings", false);
+        }
+    }
+
+    async handleExportPlanSpec() {
+        if (!this.currentDraft?.plan?.id) return;
+        this.setBusy("exportPlanSpec", true);
+        try {
+            const archive = await request(`/api/plans/${this.currentDraft.plan.id}/export`);
+            await exportJson(`planspec-${this.currentDraft.plan.id}.json`, archive);
+            this.exportMessage = "PlanSpec exported.";
+        } catch (error) {
+            this.exportMessage = error.message;
+        } finally {
+            this.setBusy("exportPlanSpec", false);
+        }
+    }
+
+    async handleExportRunLog() {
+        if (!this.currentRun?.id) return;
+        this.setBusy("exportRunLog", true);
+        try {
+            const archive = await request(`/api/runs/${this.currentRun.id}/export`);
+            await exportJson(`execution-log-${this.currentRun.id}.json`, archive);
+            this.exportMessage = "Execution log exported.";
+        } catch (error) {
+            this.exportMessage = error.message;
+        } finally {
+            this.setBusy("exportRunLog", false);
+        }
+    }
+
     setBusy(key, value) {
         this.busy = { ...this.busy, [key]: value };
     }
@@ -375,4 +514,18 @@ function delay(ms) {
     return new Promise((resolve) => {
         setTimeout(resolve, ms);
     });
+}
+
+async function exportJson(defaultFileName, payload) {
+    if (window.data360Desktop?.exportJson) {
+        return window.data360Desktop.exportJson({ defaultFileName, payload });
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = defaultFileName;
+    link.click();
+    URL.revokeObjectURL(url);
+    return { canceled: false };
 }
