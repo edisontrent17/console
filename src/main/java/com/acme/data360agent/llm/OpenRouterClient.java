@@ -39,12 +39,18 @@ public class OpenRouterClient implements LlmClient {
 
     @Override
     public LlmCompletion completeJson(LlmPrompt prompt) {
-        if (!configured()) {
-            throw new IllegalStateException("OPENROUTER_API_KEY is not configured.");
-        }
-
         var openRouter = openRouter();
         var model = openRouter.resolvedModel(prompt.model());
+        return completeJson(prompt, new EffectiveLlmSettings(provider(), model, openRouter.apiKey()));
+    }
+
+    public LlmCompletion completeJson(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        var openRouter = openRouter();
+        var apiKey = settings.apiKey();
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new IllegalStateException("OPENROUTER_API_KEY is not configured.");
+        }
+        var model = settings.model() == null || settings.model().isBlank() ? openRouter.resolvedModel(prompt.model()) : settings.model();
         var request = Map.of(
                 "model", model,
                 "temperature", 0,
@@ -58,7 +64,7 @@ public class OpenRouterClient implements LlmClient {
         var spec = client.post()
                 .uri("/api/v1/chat/completions")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + openRouter.apiKey());
+                .header("Authorization", "Bearer " + apiKey);
 
         if (openRouter.siteUrl() != null && !openRouter.siteUrl().isBlank()) {
             spec = spec.header("HTTP-Referer", openRouter.siteUrl());

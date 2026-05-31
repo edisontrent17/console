@@ -1,0 +1,47 @@
+<template>
+    <section class="chat-shell" aria-label="Data 360 chat">
+        <header class="chat-topbar">
+            <div>
+                <h1>Data 360 Agent</h1>
+                <p>{subtitle}</p>
+            </div>
+            <div class="status-stack" aria-label="Status">
+                <span class={plannerStatusClass}>{plannerStatus}</span>
+                <span class="chip">{modelLabel}</span>
+                <span class="chip">{userLabel}</span>
+            </div>
+        </header>
+
+        <div class="chat-scroll">
+            <template for:each={messageRows} for:item="message">
+                <article key={message.key} class={message.className}>
+                    <div class="avatar">{message.avatar}</div>
+                    <div class="bubble">
+                        <p>{message.text}</p>
+                        <template if:true={message.meta}>
+                            <span>{message.meta}</span>
+                        </template>
+                    </div>
+                </article>
+            </template>
+        </div>
+
+        <template if:true={hasDraft}>
+            <aside class="review-strip" aria-label="Plan review">
+                <div>
+                    <strong>{planTitle}</strong>
+                    <span>{planSummary}</span>
+                </div>
+                <div class="review-actions">
+                    <button class="slds-button slds-button_neutral" onclick={handleExportPlanSpec} disabled={exportPlanDisabled}>Export PlanSpec</button>
+                    <button class="slds-button slds-button_brand" onclick={handleStartPlan} disabled={startDisabled}>{startLabel}</button>
+                </div>
+            </aside>
+        </template>
+
+        <footer class="composer">
+            <textarea class="composer-input" placeholder="Ask Data 360 to set up a goal..." oninput={handleInput} onkeydown={handleKeydown}>{draftMessage}</textarea>
+            <button class="slds-button slds-button_brand send-button" onclick={handleSend} disabled={sendDisabled}>{sendLabel}</button>
+        </footer>
+    </section>
+</template>

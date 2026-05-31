@@ -2,11 +2,10 @@
 
 Java/Spring Boot prototype for a Data 360 plan-review-execute agent.
 
-The current primary demo surface is an external **Data 360 Goal Workbench** built
-with LWC OSS and SLDS. It is a Salesforce-style console for
-the Dormant Revenue Recovery story. It runs outside Salesforce, shows a
-business goal, trusted Data360/Salesforce context, account-level evidence,
-approval-gated actions, and impact metrics.
+The current primary demo surface is an external **Data 360 Agent Console** built
+with LWC OSS and SLDS. The web app opens on a chat-first planning surface:
+users describe a Data 360 goal, review the generated PlanSpec before execution,
+and keep reusable scenario/templates in a separate section.
 
 The app keeps three boundaries separate:
 
@@ -22,9 +21,10 @@ easy to run before wiring real org credentials.
 
 ## PlanSpec Lab
 
-The browser includes a PlanSpec Lab above the Dormant Revenue Recovery demo.
-It lets you choose a publicly grounded customer scenario, enter a goal, generate
-a PlanSpec, start setup, approve gated setup steps, and run goal monitors.
+The browser includes a chat-first PlanSpec flow. It lets you enter a goal,
+generate a PlanSpec, start setup, approve gated setup steps, and run goal
+monitors. The detailed review surface remains available as a separate section
+for inspecting ASL states, inputs, bindings, outputs, and approvals.
 
 The current PlanSpec phases are:
 
@@ -64,7 +64,7 @@ customer stories. They are not claims about private customer implementations.
 
 ## Solution Library
 
-The left rail includes reusable Data 360 implementation templates for complex cross-cloud patterns:
+The Templates section includes reusable Data 360 implementation templates for complex cross-cloud patterns:
 
 - Retail loyalty winback
 - Financial household expansion
@@ -92,6 +92,11 @@ Open:
 ```text
 http://localhost:8080
 ```
+
+On first run in the `dev` profile, create the first organization and owner from
+the browser. After login, use **Admin** to save the Anthropic/OpenRouter provider,
+model, and API token for the web app. API tokens are stored encrypted and never
+returned to the browser.
 
 If port 8080 is busy:
 

@@ -7,6 +7,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "app.security")
 public record SecurityProperties(
         Boolean enabled,
+        String mode,
         String authorityClaim,
         String requiredAudience,
         List<String> allowedOrigins
@@ -17,6 +18,13 @@ public record SecurityProperties(
 
     public String resolvedAuthorityClaim() {
         return authorityClaim == null || authorityClaim.isBlank() ? "scope" : authorityClaim;
+    }
+
+    public String resolvedMode() {
+        if (!resolvedEnabled()) {
+            return "disabled";
+        }
+        return mode == null || mode.isBlank() ? "jwt" : mode;
     }
 
     public List<String> resolvedAllowedOrigins() {

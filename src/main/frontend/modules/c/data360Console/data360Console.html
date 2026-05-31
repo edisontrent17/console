@@ -1,201 +1,189 @@
 <template>
     <div class="app-frame">
-        <header class="slds-context-bar">
-            <div class="slds-context-bar__primary">
-                <div class="slds-context-bar__item slds-no-hover">
-                    <div class="slds-context-bar__label-action brand">
+        <template if:true={showAuthScreen}>
+            <main class="auth-screen">
+                <section class="auth-panel">
+                    <div class="auth-brand">
                         <span class="brand-mark">D360</span>
-                        <span class="slds-truncate" title="Data 360 Goal Workbench">Data 360 Goal Workbench</span>
+                        <div>
+                            <h1>Data 360 Agent Console</h1>
+                            <p>{authSubtitle}</p>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <nav class="slds-context-bar__secondary" aria-label="Workspace">
-                <ul class="slds-grid">
-                    <template for:each={tabs} for:item="tab">
-                        <li key={tab.id} class="slds-context-bar__item">
-                            <a class="slds-context-bar__label-action" href={tab.href} data-tab={tab.id} onclick={handleTab}>
-                                <span class="slds-truncate">{tab.label}</span>
-                            </a>
-                        </li>
+
+                    <template if:true={setupRequired}>
+                        <div class="auth-form">
+                            <label>Organization<input class="slds-input" data-field="setupOrganizationName" value={setupOrganizationName} oninput={handleFieldChange}></label>
+                            <label>Name<input class="slds-input" data-field="setupDisplayName" value={setupDisplayName} oninput={handleFieldChange}></label>
+                            <label>Email<input class="slds-input" type="email" data-field="setupEmail" value={setupEmail} oninput={handleFieldChange}></label>
+                            <label>Password<input class="slds-input" type="password" data-field="setupPassword" value={setupPassword} oninput={handleFieldChange}></label>
+                            <button class="slds-button slds-button_brand" onclick={handleBootstrap} disabled={busy.auth}>Create organization</button>
+                        </div>
                     </template>
-                </ul>
-            </nav>
-        </header>
 
-        <main class="console-body">
-            <section class="slds-page-header slds-page-header_record-home command-header">
-                <div class="slds-page-header__row">
-                    <div class="slds-page-header__col-title">
-                        <div class="slds-media">
-                            <div class="slds-media__figure">
-                                <span class="slds-icon_container slds-icon-standard-flow">
-                                    <span class="header-icon">PS</span>
-                                </span>
-                            </div>
-                            <div class="slds-media__body">
-                                <p class="slds-page-header__name-meta">Goal</p>
-                                <h1 class="slds-page-header__title command-title" title={goalTitle}>{goalTitle}</h1>
-                                <div class="slds-m-top_x-small header-meta">
-                                    <span class="slds-badge">Sandbox</span>
-                                    <span class="slds-badge">Data 360</span>
-                                    <span class="slds-badge">Connect API</span>
-                                    <span class={diagnosticsClass}>{diagnosticsLabel}</span>
-                                </div>
-                            </div>
+                    <template if:false={setupRequired}>
+                        <div class="auth-form">
+                            <label>Email<input class="slds-input" type="email" data-field="loginEmail" value={loginEmail} oninput={handleFieldChange}></label>
+                            <label>Password<input class="slds-input" type="password" data-field="loginPassword" value={loginPassword} oninput={handleFieldChange} onkeydown={handleLoginKeydown}></label>
+                            <button class="slds-button slds-button_brand" onclick={handleLogin} disabled={busy.auth}>Log in</button>
                         </div>
-                    </div>
-                    <div class="slds-page-header__col-actions">
-                        <div class="slds-page-header__controls">
-                            <span class={userClass}>{userLabel}</span>
-                            <template if:true={isDesktop}>
-                                <button class="slds-button slds-button_neutral" onclick={handleOpenDesktopSettings}>Model settings</button>
-                            </template>
-                            <button class="slds-button slds-button_neutral" onclick={handleExportPlanSpec} disabled={planExportDisabled}>Export PlanSpec</button>
-                            <button class="slds-button slds-button_neutral" onclick={handleExportRunLog} disabled={runLogExportDisabled}>Export run log</button>
-                            <button class="slds-button slds-button_neutral" onclick={handleResetDemo}>Reset demo</button>
-                            <span class={headerStatusClass}>{headerStatusLabel}</span>
-                        </div>
-                    </div>
+                    </template>
+
+                    <template if:true={error}>
+                        <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">{error}</div>
+                    </template>
+                </section>
+            </main>
+        </template>
+
+        <template if:false={showAuthScreen}>
+            <aside class="side-nav">
+                <div class="brand">
+                    <span class="brand-mark">D360</span>
+                    <strong>Agent Console</strong>
                 </div>
-            </section>
+                <nav aria-label="Workspace">
+                    <template for:each={tabs} for:item="tab">
+                        <a key={tab.id} class={tab.className} href={tab.href} data-tab={tab.id} onclick={handleTab}>{tab.label}</a>
+                    </template>
+                </nav>
+                <div class="side-footer">
+                    <span>{userLabel}</span>
+                    <span>{modelLabel}</span>
+                    <button class="slds-button slds-button_neutral" onclick={handleLogout}>Log out</button>
+                </div>
+            </aside>
 
-            <section class="metric-strip" aria-label="Goal metrics">
-                <template for:each={metricCards} for:item="item">
-                    <article key={item.label} class="slds-card metric-card">
-                        <div class="slds-card__body slds-card__body_inner">
-                            <p class="metric-label">{item.label}</p>
-                            <strong>{item.value}</strong>
-                        </div>
-                    </article>
+            <main class="workspace">
+                <template if:true={isChat}>
+                    <c-chat-workspace
+                        messages={messages}
+                        planner-status={plannerStatus}
+                        model-label={modelLabel}
+                        user-label={userLabel}
+                        current-draft={currentDraft}
+                        current-run={currentRun}
+                        busy={busy}
+                        onsendmessage={handleChatMessage}
+                        onstartplan={handleStartPlan}
+                        onexportplanspec={handleExportPlanSpec}
+                    ></c-chat-workspace>
                 </template>
-            </section>
 
-            <section class="slds-tabs_default workbench">
-                <ul class="slds-tabs_default__nav" role="tablist">
-                    <template for:each={tabs} for:item="tab">
-                        <li key={tab.id} class={tab.itemClass} role="presentation">
-                            <a class="slds-tabs_default__link" href={tab.href} role="tab" aria-selected={tab.selected} data-tab={tab.id} onclick={handleTab}>
-                                {tab.label}
-                            </a>
-                        </li>
-                    </template>
-                </ul>
+                <template if:true={isTemplates}>
+                    <c-template-workspace
+                        scenarios={scenarios}
+                        templates={templates}
+                        selected-scenario-id={selectedScenarioId}
+                        current-draft={currentDraft}
+                        current-run={currentRun}
+                        busy={busy}
+                        onscenariochange={handleScenarioChange}
+                        onusetemplate={handleUseTemplate}
+                        oninstantiatetemplate={handleInstantiateTemplate}
+                    ></c-template-workspace>
+                </template>
 
-                <div class="workspace-panel">
-                    <template if:true={isPlan}>
-                        <c-plan-workspace
-                            scenarios={scenarios}
-                            selected-scenario-id={selectedScenarioId}
-                            goal={goal}
-                            diagnostics={diagnostics}
-                            planner-status={plannerStatus}
-                            current-draft={currentDraft}
-                            current-run={currentRun}
-                            approval-history={approvalHistory}
-                            approval-history-unavailable={approvalHistoryUnavailable}
-                            selected-step-id={selectedStepId}
-                            busy={busy}
-                            onscenariochange={handleScenarioChange}
-                            ongoalchange={handleGoalChange}
-                            ondraftplan={handleDraftPlan}
-                            onstartplan={handleStartPlan}
-                            onsmokedata360={handleSmokeData360}
-                            onselectstep={handleSelectStep}
-                            onapprovestep={handleApproveStep}
-                        ></c-plan-workspace>
-                    </template>
+                <template if:true={isReview}>
+                    <c-plan-workspace
+                        scenarios={scenarios}
+                        selected-scenario-id={selectedScenarioId}
+                        goal={goal}
+                        diagnostics={diagnostics}
+                        planner-status={plannerStatus}
+                        current-draft={currentDraft}
+                        current-run={currentRun}
+                        approval-history={approvalHistory}
+                        approval-history-unavailable={approvalHistoryUnavailable}
+                        selected-step-id={selectedStepId}
+                        busy={busy}
+                        onscenariochange={handleScenarioChange}
+                        ongoalchange={handleGoalChange}
+                        ondraftplan={handleDraftPlan}
+                        onstartplan={handleStartPlan}
+                        onsmokedata360={handleSmokeData360}
+                        onselectstep={handleSelectStep}
+                        onapprovestep={handleApproveStep}
+                    ></c-plan-workspace>
+                </template>
 
-                    <template if:true={isExecution}>
-                        <c-execution-workspace
-                            demo={demo}
-                            selected-account-id={selectedAccountId}
-                            busy={busy}
-                            onresetdemo={handleResetDemo}
-                            onselectaccount={handleSelectAccount}
-                            onactiontransition={handleActionTransition}
-                        ></c-execution-workspace>
-                    </template>
+                <template if:true={isMonitors}>
+                    <c-monitor-workspace
+                        demo={demo}
+                        monitors={monitors}
+                        last-monitor-run={lastMonitorRun}
+                        recommendations={recommendations}
+                        recommendation-unavailable={recommendationUnavailable}
+                        onrunmonitor={handleRunMonitor}
+                        onrecommendationtransition={handleRecommendationTransition}
+                    ></c-monitor-workspace>
+                </template>
 
-                    <template if:true={isMonitors}>
-                        <c-monitor-workspace
-                            demo={demo}
-                            monitors={monitors}
-                            last-monitor-run={lastMonitorRun}
-                            recommendations={recommendations}
-                            recommendation-unavailable={recommendationUnavailable}
-                            onrunmonitor={handleRunMonitor}
-                            onrecommendationtransition={handleRecommendationTransition}
-                        ></c-monitor-workspace>
-                    </template>
+                <template if:true={isAudit}>
+                    <c-audit-workspace
+                        demo={demo}
+                        current-draft={currentDraft}
+                        current-run={currentRun}
+                        diagnostics={diagnostics}
+                    ></c-audit-workspace>
+                </template>
 
-                    <template if:true={isAudit}>
-                        <c-audit-workspace
-                            demo={demo}
-                            current-draft={currentDraft}
-                            current-run={currentRun}
-                            diagnostics={diagnostics}
-                        ></c-audit-workspace>
-                    </template>
-                </div>
-            </section>
-
-            <template if:true={error}>
-                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
-                    <span>{error}</span>
-                </div>
-            </template>
-
-            <template if:true={exportMessage}>
-                <div class="slds-notify slds-notify_alert export-toast" role="status">
-                    <span>{exportMessage}</span>
-                </div>
-            </template>
-        </main>
-
-        <template if:true={desktopSettingsOpen}>
-            <section class="slds-modal slds-fade-in-open desktop-settings" role="dialog" aria-modal="true" aria-labelledby="desktop-settings-title">
-                <div class="slds-modal__container">
-                    <header class="slds-modal__header">
-                        <button class="slds-button slds-button_icon slds-modal__close" title="Close" onclick={handleCloseDesktopSettings}>
-                            <span aria-hidden="true">x</span>
-                            <span class="slds-assistive-text">Close</span>
-                        </button>
-                        <h2 id="desktop-settings-title" class="slds-modal__title slds-hyphenate">Model Settings</h2>
-                    </header>
-                    <div class="slds-modal__content slds-p-around_medium">
-                        <div class="slds-form-element slds-m-bottom_medium">
-                            <label class="slds-form-element__label" for="desktop-provider">Provider</label>
-                            <div class="slds-form-element__control">
-                                <select id="desktop-provider" class="slds-select" onchange={handleDesktopProviderChange}>
-                                    <option value="anthropic" selected={desktopProviderIsAnthropic}>Anthropic</option>
-                                    <option value="openrouter" selected={desktopProviderIsOpenRouter}>OpenRouter</option>
+                <template if:true={isAdmin}>
+                    <section class="admin-grid">
+                        <article class="admin-panel">
+                            <h2>Model</h2>
+                            <label>Provider
+                                <select class="slds-select" data-field="settingsProvider" onchange={handleFieldChange}>
+                                    <option value="anthropic" selected={settingsProviderIsAnthropic}>Anthropic</option>
+                                    <option value="openrouter" selected={settingsProviderIsOpenRouter}>OpenRouter</option>
                                 </select>
+                            </label>
+                            <label>Model<input class="slds-input" data-field="settingsModel" value={settingsModel} oninput={handleFieldChange}></label>
+                            <label>API token<input class="slds-input" type="password" data-field="settingsApiKey" value={settingsApiKey} placeholder={settingsKeyStatus} oninput={handleFieldChange}></label>
+                            <button class="slds-button slds-button_brand" onclick={handleSaveLlmSettings} disabled={busy.saveSettings}>Save model settings</button>
+                        </article>
+
+                        <article class="admin-panel">
+                            <h2>Organizations</h2>
+                            <div class="inline-form">
+                                <input class="slds-input" data-field="newOrganizationName" value={newOrganizationName} placeholder="Organization name" oninput={handleFieldChange}>
+                                <button class="slds-button slds-button_neutral" onclick={handleCreateOrganization} disabled={busy.createOrganization}>Create</button>
                             </div>
-                        </div>
-                        <div class="slds-form-element slds-m-bottom_medium">
-                            <label class="slds-form-element__label" for="desktop-model">Model</label>
-                            <div class="slds-form-element__control">
-                                <input id="desktop-model" class="slds-input" value={desktopModel} oninput={handleDesktopModelChange}>
+                            <template for:each={organizationRows} for:item="org">
+                                <button key={org.id} class={org.className} data-organization-id={org.id} onclick={handleSelectOrganization}>{org.name}</button>
+                            </template>
+                        </article>
+
+                        <article class="admin-panel">
+                            <h2>Users</h2>
+                            <div class="user-form">
+                                <input class="slds-input" data-field="newUserName" value={newUserName} placeholder="Name" oninput={handleFieldChange}>
+                                <input class="slds-input" type="email" data-field="newUserEmail" value={newUserEmail} placeholder="Email" oninput={handleFieldChange}>
+                                <input class="slds-input" type="password" data-field="newUserPassword" value={newUserPassword} placeholder="Temporary password" oninput={handleFieldChange}>
+                                <select class="slds-select" data-field="newUserRole" onchange={handleFieldChange}>
+                                    <option value="MEMBER" selected={newUserRoleIsMember}>Member</option>
+                                    <option value="ADMIN" selected={newUserRoleIsAdmin}>Admin</option>
+                                    <option value="VIEWER" selected={newUserRoleIsViewer}>Viewer</option>
+                                </select>
+                                <button class="slds-button slds-button_neutral" onclick={handleCreateUser} disabled={busy.createUser}>Create user</button>
                             </div>
-                        </div>
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label" for="desktop-key">API key</label>
-                            <div class="slds-form-element__control">
-                                <input id="desktop-key" class="slds-input" type="password" value={desktopApiKey} placeholder={desktopKeyStatus} oninput={handleDesktopApiKeyChange}>
-                            </div>
-                            <div class="slds-form-element__help">{desktopStorageStatus}</div>
-                        </div>
-                        <template if:true={desktopMessage}>
-                            <div class="slds-m-top_medium slds-text-body_small">{desktopMessage}</div>
-                        </template>
-                    </div>
-                    <footer class="slds-modal__footer">
-                        <button class="slds-button slds-button_neutral" onclick={handleCloseDesktopSettings}>Cancel</button>
-                        <button class="slds-button slds-button_brand" onclick={handleSaveDesktopSettings} disabled={busy.desktopSettings}>Save and restart local backend</button>
-                    </footer>
-                </div>
-            </section>
-            <div class="slds-backdrop slds-backdrop_open"></div>
+                            <template for:each={userRows} for:item="item">
+                                <div key={item.id} class="user-row">
+                                    <strong>{item.displayName}</strong>
+                                    <span>{item.email} • {item.role}</span>
+                                </div>
+                            </template>
+                        </article>
+                    </section>
+                </template>
+
+                <template if:true={error}>
+                    <div class="slds-notify slds-notify_alert slds-alert_error floating-alert" role="alert">{error}</div>
+                </template>
+                <template if:true={exportMessage}>
+                    <div class="slds-notify slds-notify_alert export-toast" role="status">{exportMessage}</div>
+                </template>
+            </main>
         </template>
     </div>
 </template>

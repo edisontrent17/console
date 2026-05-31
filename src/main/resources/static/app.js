@@ -11462,58 +11462,266 @@ ElementDescriptors.attachShadow.value;
 ElementDescriptors.shadowRoot.get;
 /** version: 9.2.2 */
 
+function stylesheet$5(token, useActualHostSelector, useNativeDirPseudoclass) {
+  var shadowSelector = token ? ("[" + token + "]") : "";
+  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f7f7f5;color: #181818;}.auth-screen", shadowSelector, " {display: grid;min-height: 100vh;place-items: center;padding: 1rem;}.auth-panel", shadowSelector, " {width: min(100%, 28rem);padding: 1.25rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 12px 36px rgba(24, 24, 24, 0.08);}.auth-brand", shadowSelector, ",.brand", shadowSelector, " {display: flex;align-items: center;gap: 0.75rem;}.auth-brand", shadowSelector, " {margin-bottom: 1.5rem;}.auth-brand", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.25rem;}.auth-brand", shadowSelector, " p", shadowSelector, ",.side-footer", shadowSelector, " span", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, ",.user-row", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 0.375rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.auth-form", shadowSelector, ",.user-form", shadowSelector, " {display: grid;gap: 0.75rem;}.auth-form", shadowSelector, " label", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, " {display: grid;gap: 0.25rem;font-weight: 700;}.side-nav", shadowSelector, " {position: fixed;inset: 0 auto 0 0;display: grid;grid-template-rows: auto minmax(0, 1fr) auto;width: 15rem;padding: 1rem;border-right: 1px solid #dddbda;background: #fff;}.brand", shadowSelector, " {min-height: 3rem;font-weight: 800;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: grid;align-content: start;gap: 0.25rem;padding-top: 1rem;}.nav-item", shadowSelector, ",.org-row", shadowSelector, " {display: block;min-width: 0;padding: 0.625rem 0.75rem;border: 1px solid transparent;border-radius: 0.5rem;color: #3e3e3c;text-decoration: none;font-weight: 700;}.nav-item:hover", shadowSelector, ",.nav-item.active", shadowSelector, ",.org-row:hover", shadowSelector, ",.org-row.selected", shadowSelector, " {border-color: #d8e6fe;background: #eef4ff;color: #032d60;}.side-footer", shadowSelector, " {display: grid;gap: 0.5rem;}.workspace", shadowSelector, " {min-height: 100vh;margin-left: 15rem;padding: 1rem;}.admin-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(3, minmax(0, 1fr));gap: 0.75rem;}.admin-panel", shadowSelector, " {display: grid;align-content: start;gap: 0.875rem;padding: 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.admin-panel", shadowSelector, " h2", shadowSelector, " {margin: 0;font-size: 1rem;font-weight: 800;}.inline-form", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;}.org-row", shadowSelector, " {width: 100%;background: transparent;text-align: left;}.user-row", shadowSelector, " {display: grid;gap: 0.125rem;padding: 0.625rem 0;border-top: 1px solid #f3f2f2;}.floating-alert", shadowSelector, ",.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;max-width: min(32rem, calc(100vw - 2rem));border-radius: 0.375rem;}.export-toast", shadowSelector, " {background: #eef8f1;color: #2e844a;}@media (max-width: 980px) {.side-nav", shadowSelector, " {position: static;width: auto;border-right: 0;border-bottom: 1px solid #dddbda;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: flex;overflow-x: auto;}.workspace", shadowSelector, " {margin-left: 0;}.admin-grid", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 640px) {.workspace", shadowSelector, " {padding: 0.5rem;}.inline-form", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  /*LWC compiler v9.2.2*/
+}
+var _implicitStylesheets$5 = [stylesheet$5];
+
 function stylesheet$4(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f3f3f3;}.brand", shadowSelector, " {gap: 0.5rem;font-weight: 700;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.console-body", shadowSelector, " {min-width: 0;padding: 1rem;}.command-header", shadowSelector, " {min-width: 0;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.header-icon", shadowSelector, " {display: inline-grid;width: 2rem;height: 2rem;place-items: center;border-radius: 0.25rem;background: #032d60;color: #fff;font-size: 0.6875rem;font-weight: 800;}.header-meta", shadowSelector, ",.slds-page-header__controls", shadowSelector, " {display: flex;flex-wrap: wrap;gap: 0.375rem;align-items: center;}.command-title", shadowSelector, " {display: block;max-width: 70rem;overflow: visible !important;text-overflow: clip !important;white-space: normal !important;overflow-wrap: anywhere;}.status-badge.succeeded", shadowSelector, ",.status-badge.ready", shadowSelector, ",.status-badge.healthy", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status-badge.running", shadowSelector, ",.status-badge.waiting-approval", shadowSelector, ",.status-badge.review", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status-badge.failed", shadowSelector, ",.status-badge.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.metric-strip", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 0.75rem;margin-top: 0.75rem;}.metric-card", shadowSelector, " {min-width: 0;}.metric-label", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;font-weight: 700;text-transform: uppercase;}.metric-card", shadowSelector, " strong", shadowSelector, " {display: block;margin-top: 0.25rem;color: #181818;font-size: 1.5rem;line-height: 1.2;}.workbench", shadowSelector, " {margin-top: 1rem;}.workspace-panel", shadowSelector, " {padding-top: 1rem;}.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.desktop-settings", shadowSelector, " .slds-modal__container", shadowSelector, " {max-width: 36rem;}.desktop-settings", shadowSelector, " .slds-modal__close", shadowSelector, " {color: #fff;}@media (max-width: 960px) {.metric-strip", shadowSelector, " {grid-template-columns: repeat(2, minmax(0, 1fr));}}@media (max-width: 640px) {.slds-context-bar", shadowSelector, " {display: none;}.console-body", shadowSelector, " {padding: 0.75rem;overflow-x: hidden;}.command-header", shadowSelector, " .slds-page-header__col-title", shadowSelector, ", .command-header", shadowSelector, " .slds-page-header__row", shadowSelector, ", .command-header", shadowSelector, " .slds-media", shadowSelector, ", .command-header", shadowSelector, " .slds-media__body", shadowSelector, " {width: 100%;max-width: 100%;min-width: 0 !important;}.command-header", shadowSelector, " .slds-page-header__row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr);gap: 0.75rem;}.command-header", shadowSelector, " .slds-media", shadowSelector, " {display: grid;grid-template-columns: 2rem minmax(0, 1fr);align-items: flex-start;}.slds-page-header__controls", shadowSelector, " {justify-content: flex-start;}.command-title", shadowSelector, " {width: calc(100vw - 6.5rem);max-width: calc(100vw - 6.5rem);font-size: 1rem;line-height: 1.35;white-space: normal !important;}.header-meta", shadowSelector, " {max-width: calc(100vw - 6.5rem);}.metric-strip", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 480px) {.command-title", shadowSelector, " {width: 16rem !important;max-width: 16rem !important;}.header-meta", shadowSelector, " {max-width: 16rem;}}"].join('');
+  return [".chat-shell", shadowSelector, " {display: grid;grid-template-rows: auto minmax(0, 1fr) auto auto;min-height: calc(100vh - 2rem);max-width: 980px;margin: 0 auto;}.chat-topbar", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;padding: 1.25rem 0;}.chat-topbar", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 700;}.chat-topbar", shadowSelector, " p", shadowSelector, ",.bubble", shadowSelector, " span", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.status-stack", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.chip", shadowSelector, " {display: inline-flex;align-items: center;min-height: 1.625rem;padding: 0 0.625rem;border: 1px solid #dddbda;border-radius: 999px;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;}.chip.status.ready", shadowSelector, ",.chip.status.succeeded", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #2e844a;}.chip.status.planning", shadowSelector, ",.chip.status.running", shadowSelector, ",.chip.status.review", shadowSelector, ",.chip.status.waiting-approval", shadowSelector, " {border-color: #ffba90;background: #fff7e0;color: #8a5a00;}.chip.status.error", shadowSelector, ",.chip.status.failed", shadowSelector, " {border-color: #ffb3b7;background: #fff1f2;color: #ba0517;}.chat-scroll", shadowSelector, " {display: grid;align-content: end;gap: 1rem;min-height: 0;padding: 1rem 0 1.5rem;overflow-y: auto;}.message", shadowSelector, " {display: grid;grid-template-columns: 2.25rem minmax(0, 1fr);gap: 0.75rem;align-items: flex-start;}.message.user", shadowSelector, " {grid-template-columns: minmax(0, 1fr) 2.25rem;}.message.user", shadowSelector, " .avatar", shadowSelector, " {grid-column: 2;grid-row: 1;}.message.user", shadowSelector, " .bubble", shadowSelector, " {grid-column: 1;justify-self: end;background: #032d60;color: #fff;}.message.user", shadowSelector, " .bubble", shadowSelector, " span", shadowSelector, " {color: #d8e6fe;}.avatar", shadowSelector, " {display: grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 999px;background: #eaf5fe;color: #032d60;font-size: 0.6875rem;font-weight: 800;}.bubble", shadowSelector, " {max-width: 45rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.bubble", shadowSelector, " p", shadowSelector, " {margin: 0;color: inherit;white-space: pre-wrap;}.bubble", shadowSelector, " span", shadowSelector, " {display: block;margin-top: 0.5rem;}.review-strip", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 1rem;margin-bottom: 0.75rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.review-strip", shadowSelector, " strong", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {display: block;}.review-actions", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.5rem;}.composer", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.75rem;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 8px 24px rgba(24, 24, 24, 0.08);}.composer-input", shadowSelector, " {min-height: 3.25rem;max-height: 12rem;resize: vertical;border: 0;outline: 0;color: #181818;font: inherit;}.send-button", shadowSelector, " {align-self: end;}@media (max-width: 720px) {.chat-shell", shadowSelector, " {min-height: calc(100vh - 1rem);}.chat-topbar", shadowSelector, ", .review-strip", shadowSelector, " {display: grid;}.status-stack", shadowSelector, ", .review-actions", shadowSelector, " {justify-content: flex-start;}.composer", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$4 = [stylesheet$4];
 
+const $fragment1$5 = parseFragment`<header class="chat-topbar${0}"${2}><div${3}><h1${3}>Data 360 Agent</h1><p${3}>${"t5"}</p></div><div class="status-stack${0}" aria-label="Status"${2}><span${"c7"}${2}>${"t8"}</span><span class="chip${0}"${2}>${"t10"}</span><span class="chip${0}"${2}>${"t12"}</span></div></header>`;
+const $fragment2$5 = parseFragment`<div class="avatar${0}"${2}>${"t1"}</div>`;
+const $fragment3$5 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment4$5 = parseFragment`<span${3}>${"t1"}</span>`;
+const $fragment5$5 = parseFragment`<aside class="review-strip${0}" aria-label="Plan review"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="review-actions${0}"${2}><button class="slds-button slds-button_neutral${0}"${"a7:disabled"}${2}>Export PlanSpec</button><button class="slds-button slds-button_brand${0}"${"a9:disabled"}${2}>${"t10"}</button></div></aside>`;
+const $fragment6$5 = parseFragment`<footer class="composer${0}"${2}><textarea class="composer-input${0}" placeholder="Ask Data 360 to set up a goal..."${2}>${"t2"}</textarea><button class="slds-button slds-button_brand send-button${0}"${"a3:disabled"}${2}>${"t4"}</button></footer>`;
+const stc0$5 = {
+  classMap: {
+    "chat-shell": true
+  },
+  attrs: {
+    "aria-label": "Data 360 chat"
+  },
+  key: 0
+};
+const stc1$5 = {
+  classMap: {
+    "chat-scroll": true
+  },
+  key: 3
+};
+const stc2$5 = {
+  classMap: {
+    "bubble": true
+  },
+  key: 7
+};
+function tmpl$5($api, $cmp, $slotset, $ctx) {
+  const {d: api_dynamic_text, ncls: api_normalize_class_name, sp: api_static_part, st: api_static_fragment, k: api_key, h: api_element, i: api_iterator, b: api_bind} = $api;
+  const {_m0, _m1, _m2, _m3} = $ctx;
+  return [api_element("section", stc0$5, [api_static_fragment($fragment1$5, 2, [api_static_part(5, null, api_dynamic_text($cmp.subtitle)), api_static_part(7, {
+    className: api_normalize_class_name($cmp.plannerStatusClass)
+  }, null), api_static_part(8, null, api_dynamic_text($cmp.plannerStatus)), api_static_part(10, null, api_dynamic_text($cmp.modelLabel)), api_static_part(12, null, api_dynamic_text($cmp.userLabel))]), api_element("div", stc1$5, api_iterator($cmp.messageRows, function (message) {
+    return api_element("article", {
+      className: api_normalize_class_name(message.className),
+      key: api_key(4, message.key)
+    }, [api_static_fragment($fragment2$5, 6, [api_static_part(1, null, api_dynamic_text(message.avatar))]), api_element("div", stc2$5, [api_static_fragment($fragment3$5, 9, [api_static_part(1, null, api_dynamic_text(message.text))]), message.meta ? api_static_fragment($fragment4$5, 11, [api_static_part(1, null, api_dynamic_text(message.meta))]) : null])]);
+  })), $cmp.hasDraft ? api_static_fragment($fragment5$5, 13, [api_static_part(3, null, api_dynamic_text($cmp.planTitle)), api_static_part(5, null, api_dynamic_text($cmp.planSummary)), api_static_part(7, {
+    on: _m0 || ($ctx._m0 = {
+      "click": api_bind($cmp.handleExportPlanSpec)
+    }),
+    attrs: {
+      "disabled": $cmp.exportPlanDisabled ? "" : null
+    }
+  }, null), api_static_part(9, {
+    on: _m1 || ($ctx._m1 = {
+      "click": api_bind($cmp.handleStartPlan)
+    }),
+    attrs: {
+      "disabled": $cmp.startDisabled ? "" : null
+    }
+  }, null), api_static_part(10, null, api_dynamic_text($cmp.startLabel))]) : null, api_static_fragment($fragment6$5, 15, [api_static_part(1, {
+    on: _m2 || ($ctx._m2 = {
+      "input": api_bind($cmp.handleInput),
+      "keydown": api_bind($cmp.handleKeydown)
+    })
+  }, null), api_static_part(2, null, api_dynamic_text($cmp.draftMessage)), api_static_part(3, {
+    on: _m3 || ($ctx._m3 = {
+      "click": api_bind($cmp.handleSend)
+    }),
+    attrs: {
+      "disabled": $cmp.sendDisabled ? "" : null
+    }
+  }, null), api_static_part(4, null, api_dynamic_text($cmp.sendLabel))])])];
+  /*LWC compiler v9.2.2*/
+}
+var _tmpl$5 = registerTemplate(tmpl$5);
+tmpl$5.stylesheets = [];
+tmpl$5.stylesheetToken = "lwc-57sgcru7qck";
+tmpl$5.legacyStylesheetToken = "c-chatWorkspace_chatWorkspace";
+if (_implicitStylesheets$4) {
+  tmpl$5.stylesheets.push.apply(tmpl$5.stylesheets, _implicitStylesheets$4);
+}
+freezeTemplate(tmpl$5);
+
+function dateTime(value) {
+  if (!value) return "";
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+function number(value) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0
+  }).format(value || 0);
+}
+function slug(value) {
+  return String(value || "").toLowerCase().replaceAll(" ", "-").replaceAll("_", "-");
+}
+function toJson(value) {
+  const empty = !value || typeof value === "object" && !Object.keys(value).length;
+  return empty ? "No data" : JSON.stringify(value, null, 2);
+}
+
+class ChatWorkspace extends LightningElement {
+  constructor(...args) {
+    super(...args);
+    this.messages = [];
+    this.plannerStatus = "Ready";
+    this.modelLabel = "Model not configured";
+    this.userLabel = "Not signed in";
+    this.currentDraft = void 0;
+    this.currentRun = void 0;
+    this.busy = {};
+    this.draftMessage = "";
+  }
+  get subtitle() {
+    return this.currentRun?.status ? `Run ${this.currentRun.status}` : "Plan, review, and execute governed Data 360 setup.";
+  }
+  get plannerStatusClass() {
+    return `chip status ${slug(this.plannerStatus || "ready")}`;
+  }
+  get messageRows() {
+    const rows = this.messages?.length ? this.messages : [{
+      role: "assistant",
+      text: "What should Data 360 set up?",
+      meta: "Describe the customer goal and the systems involved."
+    }];
+    return rows.map((message, index) => ({
+      ...message,
+      key: message.id || `${message.role}-${index}`,
+      avatar: message.role === "user" ? "You" : "D360",
+      className: `message ${message.role === "user" ? "user" : "assistant"}`
+    }));
+  }
+  get hasDraft() {
+    return Boolean(this.currentDraft?.plan);
+  }
+  get planTitle() {
+    return this.currentDraft?.plan?.goal || "PlanSpec drafted";
+  }
+  get planSummary() {
+    const steps = this.currentDraft?.plan?.steps?.length || 0;
+    const validation = this.currentDraft?.validation?.ok ? "validated" : "needs review";
+    return `${steps} ${steps === 1 ? "step" : "steps"} • ${validation}`;
+  }
+  get sendDisabled() {
+    return !this.draftMessage.trim() || this.busy.draftPlan;
+  }
+  get sendLabel() {
+    return this.busy.draftPlan ? "Planning..." : "Send";
+  }
+  get startDisabled() {
+    return !this.currentDraft?.validation?.ok || this.busy.startPlan;
+  }
+  get startLabel() {
+    return this.busy.startPlan ? "Running..." : "Run plan";
+  }
+  get exportPlanDisabled() {
+    return !this.currentDraft?.plan?.id || this.busy.exportPlanSpec;
+  }
+  handleInput(event) {
+    this.draftMessage = event.target.value;
+  }
+  handleKeydown(event) {
+    if (event.key !== "Enter" || event.shiftKey) {
+      return;
+    }
+    event.preventDefault();
+    this.handleSend();
+  }
+  handleSend() {
+    const text = this.draftMessage.trim();
+    if (!text) return;
+    this.draftMessage = "";
+    const input = this.template.querySelector(".composer-input");
+    if (input) {
+      input.value = "";
+    }
+    this.dispatchEvent(new CustomEvent("sendmessage", {
+      detail: {
+        text
+      }
+    }));
+  }
+  handleStartPlan() {
+    this.dispatchEvent(new CustomEvent("startplan"));
+  }
+  handleExportPlanSpec() {
+    this.dispatchEvent(new CustomEvent("exportplanspec"));
+  }
+  /*LWC compiler v9.2.2*/
+}
+registerDecorators(ChatWorkspace, {
+  publicProps: {
+    messages: {
+      config: 0
+    },
+    plannerStatus: {
+      config: 0
+    },
+    modelLabel: {
+      config: 0
+    },
+    userLabel: {
+      config: 0
+    },
+    currentDraft: {
+      config: 0
+    },
+    currentRun: {
+      config: 0
+    },
+    busy: {
+      config: 0
+    }
+  },
+  fields: ["draftMessage"]
+});
+const __lwc_component_class_internal$5 = registerComponent(ChatWorkspace, {
+  tmpl: _tmpl$5,
+  sel: "c-chat-workspace",
+  apiVersion: 66
+});
+
 function stylesheet$3(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".plan-layout", shadowSelector, " {display: grid;grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 0.46fr);gap: 0.75rem;align-items: start;}.slds-card", shadowSelector, " {border-color: #dddbda;}.request-actions", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;}.request-actions", shadowSelector, " .slds-button", shadowSelector, " {width: 100%;justify-content: center;white-space: nowrap;}.request-actions", shadowSelector, " .slds-button:first-child", shadowSelector, " {grid-column: 1 / -1;}.plan-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;padding-bottom: 0.75rem;border-bottom: 1px solid #dddbda;}.plan-head", shadowSelector, " strong", shadowSelector, " {color: #181818;}.plan-head", shadowSelector, " p", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.review-stats", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 1px;margin: 0.75rem 0;border: 1px solid #dddbda;border-radius: 0.25rem;overflow: hidden;background: #dddbda;}.review-stats", shadowSelector, " div", shadowSelector, " {min-width: 0;padding: 0.625rem;background: #fff;}.review-stats", shadowSelector, " strong", shadowSelector, ",.review-stats", shadowSelector, " span", shadowSelector, " {display: block;}.review-stats", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;text-transform: uppercase;}.validation-ok", shadowSelector, " {justify-content: flex-start;min-height: auto;padding: 0.5rem 0.75rem;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.timeline", shadowSelector, " {display: grid;grid-template-columns: repeat(auto-fit, minmax(18px, 1fr));gap: 0.25rem;margin: 0.75rem 0;}.timeline-dot", shadowSelector, " {height: 0.375rem;border-radius: 999px;background: #c9c9c9;}.timeline-dot.succeeded", shadowSelector, " {background: #2e844a;}.timeline-dot.running", shadowSelector, ",.timeline-dot.waiting-approval", shadowSelector, " {background: #dd9a1e;}.timeline-dot.failed", shadowSelector, ",.timeline-dot.error", shadowSelector, " {background: #ba0517;}.table-wrap", shadowSelector, " {overflow-x: auto;}.plan-table", shadowSelector, " th", shadowSelector, ",.plan-table", shadowSelector, " td", shadowSelector, " {vertical-align: middle;}.plan-row", shadowSelector, " {cursor: pointer;}.plan-row.selected", shadowSelector, ",.plan-row:hover", shadowSelector, " {background: #eef4ff;}.plan-row:focus-visible", shadowSelector, " {outline: 2px solid #1b96ff;outline-offset: -2px;}.plan-row", shadowSelector, " th", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;font-weight: 400;}.status.succeeded", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status.running", shadowSelector, ",.status.waiting-approval", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status.failed", shadowSelector, ",.status.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.approval-history", shadowSelector, " {margin-top: 1rem;padding-top: 0.75rem;border-top: 1px solid #dddbda;}.approval-history", shadowSelector, " h3", shadowSelector, " {margin-bottom: 0.5rem;font-size: 0.8125rem;font-weight: 700;}.history-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;padding: 0.5rem 0;border-bottom: 1px solid #f3f2f2;}.history-row", shadowSelector, " p", shadowSelector, " {grid-column: 1 / -1;color: #706e6b;font-size: 0.75rem;}.inspector-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;align-items: flex-start;}.inspector-list", shadowSelector, " {display: grid;gap: 0.5rem;margin-top: 0.75rem;}.inspector-list", shadowSelector, " div", shadowSelector, " {display: grid;grid-template-columns: 5.25rem minmax(0, 1fr);gap: 0.5rem;}.inspector-list", shadowSelector, " dt", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.json-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;margin-top: 0.75rem;}.json-preview", shadowSelector, " {min-width: 0;padding: 0.5rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fafaf9;}.json-preview", shadowSelector, " strong", shadowSelector, " {font-size: 0.75rem;}.json-preview", shadowSelector, " pre", shadowSelector, " {max-height: 14rem;margin: 0.375rem 0 0;overflow: auto;color: #032d60;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size: 0.6875rem;line-height: 1.4;white-space: pre-wrap;}.empty-state", shadowSelector, " {display: grid;min-height: 12rem;place-items: center;border: 1px dashed #dddbda;border-radius: 0.25rem;color: #706e6b;background: #fafaf9;}@media (max-width: 1450px) {.plan-layout", shadowSelector, " {grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);}.inspector-card", shadowSelector, " {grid-column: 1 / -1;}}@media (max-width: 980px) {.plan-layout", shadowSelector, ", .review-stats", shadowSelector, ", .json-grid", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return ".template-workspace" + shadowSelector + " {display: grid;grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);gap: 0.75rem;align-items: start;}.slds-card" + shadowSelector + " {border-color: #dddbda;}.scenario-list" + shadowSelector + " {display: grid;gap: 0.5rem;}.scenario-row" + shadowSelector + " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.375rem 0.75rem;padding: 0.75rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;cursor: pointer;}.scenario-row:hover" + shadowSelector + ",.scenario-row.selected" + shadowSelector + " {border-color: #1b96ff;background: #eef4ff;}.scenario-row:focus-visible" + shadowSelector + " {outline: 2px solid #1b96ff;outline-offset: 2px;}.scenario-row" + shadowSelector + " strong" + shadowSelector + ",.template-head" + shadowSelector + " strong" + shadowSelector + " {display: block;color: #181818;}.scenario-row" + shadowSelector + " span" + shadowSelector + ",.template-head" + shadowSelector + " span" + shadowSelector + ",.template-card" + shadowSelector + " p" + shadowSelector + ",.cloud-list" + shadowSelector + ",.architecture-note" + shadowSelector + " {color: #5c5c5c;font-size: 0.8125rem;}.scenario-row" + shadowSelector + " p" + shadowSelector + ",.scenario-row" + shadowSelector + " small" + shadowSelector + " {grid-column: 1 / -1;}.scenario-row" + shadowSelector + " p" + shadowSelector + " {margin: 0.25rem 0 0;}.scenario-row" + shadowSelector + " small" + shadowSelector + " {color: #706e6b;}.scenario-badge" + shadowSelector + " {visibility: hidden;}.scenario-row.selected" + shadowSelector + " .scenario-badge" + shadowSelector + " {visibility: visible;}.status-pills" + shadowSelector + " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.template-grid" + shadowSelector + " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.75rem;}.template-card" + shadowSelector + " {display: grid;gap: 0.625rem;min-width: 0;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.template-head" + shadowSelector + " {display: flex;justify-content: space-between;gap: 1rem;}.template-card" + shadowSelector + " p" + shadowSelector + " {margin: 0;}.cloud-list" + shadowSelector + " {padding-top: 0.5rem;border-top: 1px solid #f3f2f2;color: #032d60;}.architecture-note" + shadowSelector + " {padding: 0.5rem;border-left: 3px solid #0176d3;background: #f3f8ff;}.template-actions" + shadowSelector + " {display: flex;justify-content: flex-end;gap: 0.5rem;margin-top: 0.25rem;}.empty-state" + shadowSelector + " {display: grid;min-height: 10rem;place-items: center;border: 1px dashed #dddbda;border-radius: 0.25rem;color: #706e6b;background: #fafaf9;}@media (max-width: 980px) {.template-workspace" + shadowSelector + ", .template-grid" + shadowSelector + " {grid-template-columns: 1fr;}.status-pills" + shadowSelector + ", .template-actions" + shadowSelector + " {justify-content: flex-start;}}";
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$3 = [stylesheet$3];
 
-const $fragment1$4 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Request</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Scenario, goal, connection readiness</p></div></header><span class="slds-badge${0}"${2}>${"t8"}</span></div>`;
-const $fragment2$4 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>Scenario</label>`;
-const $fragment3$4 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
-const $fragment4$4 = parseFragment`<div class="slds-form-element${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Goal</label><div class="slds-form-element__control${0}"${2}><textarea${"a4:id"} class="slds-textarea${0}"${2}>${"t5"}</textarea></div></div>`;
-const $fragment5$4 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button></div>`;
-const $fragment6$4 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Governed ASL profile before any Data 360 mutation</p></div></header>`;
-const $fragment7$4 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment8$3 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
-const $fragment9$3 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
-const $fragment10$3 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment11$3 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
-const $fragment12$3 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
-const $fragment13$3 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
-const $fragment14$3 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
-const $fragment15$3 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
-const $fragment16$2 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment17$2 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment18$2 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment19$2 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment20$2 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
-const $fragment21$2 = parseFragment`<h3${3}>Approval history</h3>`;
-const $fragment22 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
-const $fragment23 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
-const $fragment24 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
-const $fragment25 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
-const $fragment26 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
-const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
-const $fragment28 = parseFragment`<article class="json-preview${0}"${2}><strong${3}>${"t2"}</strong><pre${3}>${"t4"}</pre></article>`;
+const $fragment1$4 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Scenarios</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Customer contexts for planning</p></div></header><span class="slds-badge${0}"${2}>${"t8"}</span></div>`;
+const $fragment2$4 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment3$4 = parseFragment`<span${"c0"}${2}>Selected</span>`;
+const $fragment4$4 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment5$4 = parseFragment`<small${3}>${"t1"}</small>`;
+const $fragment6$4 = parseFragment`<div class="empty-state${0}"${2}>No scenarios available.</div>`;
+const $fragment7$4 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Templates</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Reusable governed activation patterns</p></div></header><div class="status-pills${0}" aria-label="Current plan state"${2}><span class="slds-badge${0}"${2}>${"t9"}</span><span class="slds-badge${0}"${2}>${"t11"}</span><span class="slds-badge${0}"${2}>${"t13"}</span></div></div>`;
+const $fragment8$3 = parseFragment`<div class="template-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
+const $fragment9$3 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment10$3 = parseFragment`<div class="cloud-list${0}"${2}>${"t1"}</div>`;
+const $fragment11$3 = parseFragment`<div class="architecture-note${0}"${2}>${"t1"}</div>`;
+const $fragment12$3 = parseFragment`<div class="template-actions${0}"${2}><button class="slds-button slds-button_neutral${0}"${"a1:data-template-id"}${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_brand${0}"${"a3:data-template-id"}${"a3:disabled"}${2}>${"t4"}</button></div>`;
+const $fragment13$3 = parseFragment`<div class="empty-state${0}"${2}>No templates available.</div>`;
 const stc0$4 = {
   classMap: {
-    "plan-layout": true
+    "template-workspace": true
   },
   key: 0
 };
 const stc1$4 = {
   classMap: {
     "slds-card": true,
-    "request-card": true
+    "scenario-section": true
   },
   key: 1
 };
@@ -11526,55 +11734,339 @@ const stc2$4 = {
 };
 const stc3$4 = {
   classMap: {
-    "slds-form-element": true,
-    "slds-m-bottom_small": true
+    "scenario-list": true
+  },
+  attrs: {
+    "role": "listbox",
+    "aria-label": "Scenarios"
   },
   key: 5
 };
 const stc4$4 = {
   classMap: {
+    "slds-card": true,
+    "template-section": true
+  },
+  key: 17
+};
+const stc5$3 = {
+  classMap: {
+    "slds-card__body": true,
+    "slds-card__body_inner": true
+  },
+  key: 20
+};
+const stc6$3 = {
+  classMap: {
+    "template-grid": true
+  },
+  key: 21
+};
+const stc7$3 = {
+  "template-card": true
+};
+function tmpl$4($api, $cmp, $slotset, $ctx) {
+  const {d: api_dynamic_text, sp: api_static_part, st: api_static_fragment, ncls: api_normalize_class_name, k: api_key, b: api_bind, h: api_element, i: api_iterator, f: api_flatten} = $api;
+  const {_m0, _m1, _m2} = $ctx;
+  return [api_element("div", stc0$4, [api_element("section", stc1$4, [api_static_fragment($fragment1$4, 3, [api_static_part(8, null, api_dynamic_text($cmp.selectedScenarioName))]), api_element("div", stc2$4, [$cmp.hasScenarios ? api_element("div", stc3$4, api_iterator($cmp.scenarioRows, function (scenario) {
+    return api_element("article", {
+      className: api_normalize_class_name(scenario.className),
+      attrs: {
+        "role": "option",
+        "aria-selected": scenario.selected,
+        "tabindex": "0",
+        "data-scenario-id": scenario.id
+      },
+      key: api_key(6, scenario.key),
+      on: _m0 || ($ctx._m0 = {
+        "click": api_bind($cmp.handleScenarioClick),
+        "keydown": api_bind($cmp.handleScenarioKeydown)
+      })
+    }, [api_static_fragment($fragment2$4, 8, [api_static_part(2, null, api_dynamic_text(scenario.label)), api_static_part(4, null, api_dynamic_text(scenario.detail))]), api_static_fragment($fragment3$4, 10, [api_static_part(0, {
+      className: api_normalize_class_name(scenario.badgeClass)
+    }, null)]), api_static_fragment($fragment4$4, 12, [api_static_part(1, null, api_dynamic_text(scenario.utterance))]), scenario.hasMetrics ? api_static_fragment($fragment5$4, 14, [api_static_part(1, null, api_dynamic_text(scenario.metricLabel))]) : null]);
+  })) : null, !$cmp.hasScenarios ? api_static_fragment($fragment6$4, 16) : null])]), api_element("section", stc4$4, [api_static_fragment($fragment7$4, 19, [api_static_part(9, null, api_dynamic_text($cmp.draftStatusLabel)), api_static_part(11, null, api_dynamic_text($cmp.runStatusLabel)), api_static_part(13, null, api_dynamic_text($cmp.planStepLabel))]), api_element("div", stc5$3, [$cmp.hasTemplates ? api_element("div", stc6$3, api_iterator($cmp.templateRows, function (item) {
+    return api_element("article", {
+      classMap: stc7$3,
+      key: api_key(22, item.key)
+    }, api_flatten([api_static_fragment($fragment8$3, 24, [api_static_part(3, null, api_dynamic_text(item.title)), api_static_part(5, null, api_dynamic_text(item.subtitle)), api_static_part(7, null, api_dynamic_text(item.stepLabel))]), api_static_fragment($fragment9$3, 26, [api_static_part(1, null, api_dynamic_text(item.summary))]), item.clouds ? api_static_fragment($fragment10$3, 28, [api_static_part(1, null, api_dynamic_text(item.clouds))]) : null, api_iterator(item.notes, function (note) {
+      return api_static_fragment($fragment11$3, api_key(30, note), [api_static_part(1, null, api_dynamic_text(note))]);
+    }), api_static_fragment($fragment12$3, 32, [api_static_part(1, {
+      on: _m1 || ($ctx._m1 = {
+        "click": api_bind($cmp.handleUseTemplate)
+      }),
+      attrs: {
+        "data-template-id": item.id,
+        "disabled": item.disabled ? "" : null
+      }
+    }, null), api_static_part(2, null, api_dynamic_text(item.useLabel)), api_static_part(3, {
+      on: _m2 || ($ctx._m2 = {
+        "click": api_bind($cmp.handleInstantiateTemplate)
+      }),
+      attrs: {
+        "data-template-id": item.id,
+        "disabled": item.disabled ? "" : null
+      }
+    }, null), api_static_part(4, null, api_dynamic_text(item.instantiateLabel))])]));
+  })) : null, !$cmp.hasTemplates ? api_static_fragment($fragment13$3, 34) : null])])])];
+  /*LWC compiler v9.2.2*/
+}
+var _tmpl$4 = registerTemplate(tmpl$4);
+tmpl$4.stylesheets = [];
+tmpl$4.stylesheetToken = "lwc-6mevdn5dhdi";
+tmpl$4.legacyStylesheetToken = "c-templateWorkspace_templateWorkspace";
+if (_implicitStylesheets$3) {
+  tmpl$4.stylesheets.push.apply(tmpl$4.stylesheets, _implicitStylesheets$3);
+}
+freezeTemplate(tmpl$4);
+
+class TemplateWorkspace extends LightningElement {
+  constructor(...args) {
+    super(...args);
+    this.scenarios = [];
+    this.templates = [];
+    this.selectedScenarioId = "";
+    this.currentDraft = void 0;
+    this.currentRun = void 0;
+    this.busy = {};
+  }
+  get scenarioRows() {
+    return (this.scenarios || []).map(scenario => {
+      const selected = scenario.id === this.selectedScenarioId;
+      const utterance = scenario.defaultUtterances?.[0] || scenario.sourceSummary || "No default goal supplied.";
+      const metricLabel = (scenario.goalMetrics || []).slice(0, 3).join(" • ");
+      return {
+        ...scenario,
+        selected,
+        key: scenario.id,
+        label: scenario.name || scenario.id,
+        detail: scenario.industry || "General",
+        utterance,
+        metricLabel,
+        hasMetrics: Boolean(metricLabel),
+        className: `scenario-row ${selected ? "selected" : ""}`,
+        badgeClass: `slds-badge scenario-badge ${selected ? "slds-theme_success" : ""}`
+      };
+    });
+  }
+  get hasScenarios() {
+    return this.scenarioRows.length > 0;
+  }
+  get templateRows() {
+    return (this.templates || []).map(item => {
+      const clouds = (item.clouds || []).slice(0, 4).join(" • ");
+      const notes = (item.architectureNotes || []).slice(0, 2);
+      const steps = item.steps || [];
+      return {
+        ...item,
+        key: item.id,
+        title: item.title || item.name || item.id,
+        subtitle: [item.industry, item.complexity].filter(Boolean).join(" • ") || "Solution template",
+        summary: item.summary || item.outcome || "No summary supplied.",
+        clouds,
+        notes,
+        stepCount: steps.length,
+        stepLabel: `${steps.length} ${steps.length === 1 ? "step" : "steps"}`,
+        disabled: this.templateActionDisabled,
+        useLabel: this.busy.useTemplate ? "Using..." : "Use",
+        instantiateLabel: this.busy.instantiateTemplate ? "Instantiating..." : "Instantiate"
+      };
+    });
+  }
+  get hasTemplates() {
+    return this.templateRows.length > 0;
+  }
+  get templateActionDisabled() {
+    return Boolean(this.busy.useTemplate || this.busy.instantiateTemplate);
+  }
+  get selectedScenario() {
+    return (this.scenarios || []).find(scenario => scenario.id === this.selectedScenarioId);
+  }
+  get selectedScenarioName() {
+    return this.selectedScenario?.name || this.selectedScenarioId || "No scenario selected";
+  }
+  get draftStatusLabel() {
+    if (!this.currentDraft?.plan) return "No draft";
+    return this.currentDraft.validation?.ok ? "Draft validated" : "Draft needs review";
+  }
+  get runStatusLabel() {
+    return this.currentRun?.status || "No run";
+  }
+  get planStepLabel() {
+    const count = this.currentDraft?.plan?.steps?.length || 0;
+    return `${count} ${count === 1 ? "step" : "steps"}`;
+  }
+  handleScenarioClick(event) {
+    const scenarioId = event.currentTarget.dataset.scenarioId;
+    const scenario = (this.scenarios || []).find(item => item.id === scenarioId);
+    this.dispatchEvent(new CustomEvent("scenariochange", {
+      detail: {
+        scenarioId,
+        scenario
+      }
+    }));
+  }
+  handleScenarioKeydown(event) {
+    if (!["Enter", " "].includes(event.key)) return;
+    event.preventDefault();
+    this.handleScenarioClick(event);
+  }
+  handleUseTemplate(event) {
+    const templateId = event.currentTarget.dataset.templateId;
+    const template = (this.templates || []).find(item => item.id === templateId);
+    this.dispatchEvent(new CustomEvent("usetemplate", {
+      detail: {
+        templateId,
+        template
+      }
+    }));
+  }
+  handleInstantiateTemplate(event) {
+    const templateId = event.currentTarget.dataset.templateId;
+    const template = (this.templates || []).find(item => item.id === templateId);
+    this.dispatchEvent(new CustomEvent("instantiatetemplate", {
+      detail: {
+        templateId,
+        template
+      }
+    }));
+  }
+  /*LWC compiler v9.2.2*/
+}
+registerDecorators(TemplateWorkspace, {
+  publicProps: {
+    scenarios: {
+      config: 0
+    },
+    templates: {
+      config: 0
+    },
+    selectedScenarioId: {
+      config: 0
+    },
+    currentDraft: {
+      config: 0
+    },
+    currentRun: {
+      config: 0
+    },
+    busy: {
+      config: 0
+    }
+  }
+});
+const __lwc_component_class_internal$4 = registerComponent(TemplateWorkspace, {
+  tmpl: _tmpl$4,
+  sel: "c-template-workspace",
+  apiVersion: 66
+});
+
+function stylesheet$2(token, useActualHostSelector, useNativeDirPseudoclass) {
+  var shadowSelector = token ? ("[" + token + "]") : "";
+  return [".plan-layout", shadowSelector, " {display: grid;grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 0.46fr);gap: 0.75rem;align-items: start;}.slds-card", shadowSelector, " {border-color: #dddbda;}.request-actions", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;}.request-actions", shadowSelector, " .slds-button", shadowSelector, " {width: 100%;justify-content: center;white-space: nowrap;}.request-actions", shadowSelector, " .slds-button:first-child", shadowSelector, " {grid-column: 1 / -1;}.plan-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;padding-bottom: 0.75rem;border-bottom: 1px solid #dddbda;}.plan-head", shadowSelector, " strong", shadowSelector, " {color: #181818;}.plan-head", shadowSelector, " p", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.review-stats", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 1px;margin: 0.75rem 0;border: 1px solid #dddbda;border-radius: 0.25rem;overflow: hidden;background: #dddbda;}.review-stats", shadowSelector, " div", shadowSelector, " {min-width: 0;padding: 0.625rem;background: #fff;}.review-stats", shadowSelector, " strong", shadowSelector, ",.review-stats", shadowSelector, " span", shadowSelector, " {display: block;}.review-stats", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;text-transform: uppercase;}.validation-ok", shadowSelector, " {justify-content: flex-start;min-height: auto;padding: 0.5rem 0.75rem;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.timeline", shadowSelector, " {display: grid;grid-template-columns: repeat(auto-fit, minmax(18px, 1fr));gap: 0.25rem;margin: 0.75rem 0;}.timeline-dot", shadowSelector, " {height: 0.375rem;border-radius: 999px;background: #c9c9c9;}.timeline-dot.succeeded", shadowSelector, " {background: #2e844a;}.timeline-dot.running", shadowSelector, ",.timeline-dot.waiting-approval", shadowSelector, " {background: #dd9a1e;}.timeline-dot.failed", shadowSelector, ",.timeline-dot.error", shadowSelector, " {background: #ba0517;}.table-wrap", shadowSelector, " {overflow-x: auto;}.plan-table", shadowSelector, " th", shadowSelector, ",.plan-table", shadowSelector, " td", shadowSelector, " {vertical-align: middle;}.plan-row", shadowSelector, " {cursor: pointer;}.plan-row.selected", shadowSelector, ",.plan-row:hover", shadowSelector, " {background: #eef4ff;}.plan-row:focus-visible", shadowSelector, " {outline: 2px solid #1b96ff;outline-offset: -2px;}.plan-row", shadowSelector, " th", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;font-weight: 400;}.status.succeeded", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status.running", shadowSelector, ",.status.waiting-approval", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status.failed", shadowSelector, ",.status.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.approval-history", shadowSelector, " {margin-top: 1rem;padding-top: 0.75rem;border-top: 1px solid #dddbda;}.approval-history", shadowSelector, " h3", shadowSelector, " {margin-bottom: 0.5rem;font-size: 0.8125rem;font-weight: 700;}.history-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;padding: 0.5rem 0;border-bottom: 1px solid #f3f2f2;}.history-row", shadowSelector, " p", shadowSelector, " {grid-column: 1 / -1;color: #706e6b;font-size: 0.75rem;}.inspector-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;align-items: flex-start;}.inspector-list", shadowSelector, " {display: grid;gap: 0.5rem;margin-top: 0.75rem;}.inspector-list", shadowSelector, " div", shadowSelector, " {display: grid;grid-template-columns: 5.25rem minmax(0, 1fr);gap: 0.5rem;}.inspector-list", shadowSelector, " dt", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.json-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;margin-top: 0.75rem;}.json-preview", shadowSelector, " {min-width: 0;padding: 0.5rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fafaf9;}.json-preview", shadowSelector, " strong", shadowSelector, " {font-size: 0.75rem;}.json-preview", shadowSelector, " pre", shadowSelector, " {max-height: 14rem;margin: 0.375rem 0 0;overflow: auto;color: #032d60;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size: 0.6875rem;line-height: 1.4;white-space: pre-wrap;}.empty-state", shadowSelector, " {display: grid;min-height: 12rem;place-items: center;border: 1px dashed #dddbda;border-radius: 0.25rem;color: #706e6b;background: #fafaf9;}@media (max-width: 1450px) {.plan-layout", shadowSelector, " {grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);}.inspector-card", shadowSelector, " {grid-column: 1 / -1;}}@media (max-width: 980px) {.plan-layout", shadowSelector, ", .review-stats", shadowSelector, ", .json-grid", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  /*LWC compiler v9.2.2*/
+}
+var _implicitStylesheets$2 = [stylesheet$2];
+
+const $fragment1$3 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Request</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Scenario, goal, connection readiness</p></div></header><span class="slds-badge${0}"${2}>${"t8"}</span></div>`;
+const $fragment2$3 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>Scenario</label>`;
+const $fragment3$3 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
+const $fragment4$3 = parseFragment`<div class="slds-form-element${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Goal</label><div class="slds-form-element__control${0}"${2}><textarea${"a4:id"} class="slds-textarea${0}"${2}>${"t5"}</textarea></div></div>`;
+const $fragment5$3 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button></div>`;
+const $fragment6$3 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Governed ASL profile before any Data 360 mutation</p></div></header>`;
+const $fragment7$3 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment8$2 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
+const $fragment9$2 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
+const $fragment10$2 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment11$2 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
+const $fragment12$2 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
+const $fragment13$2 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
+const $fragment14$2 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
+const $fragment15$2 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
+const $fragment16$1 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment17$1 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment18$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment19$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment20 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
+const $fragment21 = parseFragment`<h3${3}>Approval history</h3>`;
+const $fragment22 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
+const $fragment23 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
+const $fragment24 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
+const $fragment25 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
+const $fragment26 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
+const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
+const $fragment28 = parseFragment`<article class="json-preview${0}"${2}><strong${3}>${"t2"}</strong><pre${3}>${"t4"}</pre></article>`;
+const stc0$3 = {
+  classMap: {
+    "plan-layout": true
+  },
+  key: 0
+};
+const stc1$3 = {
+  classMap: {
+    "slds-card": true,
+    "request-card": true
+  },
+  key: 1
+};
+const stc2$3 = {
+  classMap: {
+    "slds-card__body": true,
+    "slds-card__body_inner": true
+  },
+  key: 4
+};
+const stc3$3 = {
+  classMap: {
+    "slds-form-element": true,
+    "slds-m-bottom_small": true
+  },
+  key: 5
+};
+const stc4$3 = {
+  classMap: {
     "slds-form-element__control": true
   },
   key: 8
 };
-const stc5$3 = {
+const stc5$2 = {
   "slds-select": true
 };
-const stc6$3 = {
+const stc6$2 = {
   classMap: {
     "slds-card": true,
     "plan-card": true
   },
   key: 16
 };
-const stc7$3 = {
+const stc7$2 = {
   classMap: {
     "slds-card__header": true,
     "slds-grid": true
   },
   key: 17
 };
-const stc8$3 = {
+const stc8$2 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true
   },
   key: 22
 };
-const stc9$3 = {
+const stc9$2 = {
   classMap: {
     "review-stats": true
   },
   key: 27
 };
-const stc10$2 = {
+const stc10$1 = {
   classMap: {
     "slds-m-vertical_small": true,
     "issue-stack": true
   },
   key: 30
 };
-const stc11$2 = {
+const stc11$1 = {
   classMap: {
     "timeline": true
   },
@@ -11583,13 +12075,13 @@ const stc11$2 = {
   },
   key: 35
 };
-const stc12$2 = {
+const stc12$1 = {
   classMap: {
     "table-wrap": true
   },
   key: 38
 };
-const stc13$2 = {
+const stc13$1 = {
   classMap: {
     "slds-table": true,
     "slds-table_cell-buffer": true,
@@ -11631,15 +12123,15 @@ const stc20$1 = {
   },
   key: 74
 };
-function tmpl$4($api, $cmp, $slotset, $ctx) {
+function tmpl$3($api, $cmp, $slotset, $ctx) {
   const {d: api_dynamic_text, sp: api_static_part, st: api_static_fragment, gid: api_scoped_id, b: api_bind, k: api_key, i: api_iterator, h: api_element, ncls: api_normalize_class_name, f: api_flatten} = $api;
   const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7} = $ctx;
-  return [api_element("div", stc0$4, [api_element("section", stc1$4, [api_static_fragment($fragment1$4, 3, [api_static_part(8, null, api_dynamic_text($cmp.plannerStatus))]), api_element("div", stc2$4, [api_element("div", stc3$4, [api_static_fragment($fragment2$4, 7, [api_static_part(0, {
+  return [api_element("div", stc0$3, [api_element("section", stc1$3, [api_static_fragment($fragment1$3, 3, [api_static_part(8, null, api_dynamic_text($cmp.plannerStatus))]), api_element("div", stc2$3, [api_element("div", stc3$3, [api_static_fragment($fragment2$3, 7, [api_static_part(0, {
     attrs: {
       "for": api_scoped_id("scenario")
     }
-  }, null)]), api_element("div", stc4$4, [api_element("select", {
-    classMap: stc5$3,
+  }, null)]), api_element("div", stc4$3, [api_element("select", {
+    classMap: stc5$2,
     attrs: {
       "id": api_scoped_id("scenario")
     },
@@ -11648,13 +12140,13 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
       "change": api_bind($cmp.handleScenarioChange)
     })
   }, api_iterator($cmp.scenarioOptions, function (scenario) {
-    return api_static_fragment($fragment3$4, api_key(11, scenario.id), [api_static_part(0, {
+    return api_static_fragment($fragment3$3, api_key(11, scenario.id), [api_static_part(0, {
       attrs: {
         "value": scenario.id,
         "selected": scenario.selected ? "" : null
       }
     }, null), api_static_part(1, null, api_dynamic_text(scenario.name))]);
-  }))])]), api_static_fragment($fragment4$4, 13, [api_static_part(1, {
+  }))])]), api_static_fragment($fragment4$3, 13, [api_static_part(1, {
     attrs: {
       "for": api_scoped_id("goal")
     }
@@ -11665,7 +12157,7 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
     attrs: {
       "id": api_scoped_id("goal")
     }
-  }, null), api_static_part(5, null, api_dynamic_text($cmp.goal))]), api_static_fragment($fragment5$4, 15, [api_static_part(1, {
+  }, null), api_static_part(5, null, api_dynamic_text($cmp.goal))]), api_static_fragment($fragment5$3, 15, [api_static_part(1, {
     on: _m2 || ($ctx._m2 = {
       "click": api_bind($cmp.handleDraft)
     }),
@@ -11686,22 +12178,22 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
     attrs: {
       "disabled": $cmp.busy.smokeData360 ? "" : null
     }
-  }, null), api_static_part(6, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$3, [api_element("div", stc7$3, [api_static_fragment($fragment6$4, 19), $cmp.hasDraft ? api_static_fragment($fragment7$4, 21, [api_static_part(0, {
+  }, null), api_static_part(6, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$2, [api_element("div", stc7$2, [api_static_fragment($fragment6$3, 19), $cmp.hasDraft ? api_static_fragment($fragment7$3, 21, [api_static_part(0, {
     className: api_normalize_class_name($cmp.validationClass)
-  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null]), api_element("div", stc8$3, [!$cmp.hasDraft ? api_static_fragment($fragment8$3, 24) : null, $cmp.hasDraft ? api_static_fragment($fragment9$3, 26, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$3, api_iterator($cmp.reviewStats, function (stat) {
-    return api_static_fragment($fragment10$3, api_key(29, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
-  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc10$2, api_iterator($cmp.issues, function (issue) {
-    return api_static_fragment($fragment11$3, api_key(32, issue.key), [api_static_part(0, {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null]), api_element("div", stc8$2, [!$cmp.hasDraft ? api_static_fragment($fragment8$2, 24) : null, $cmp.hasDraft ? api_static_fragment($fragment9$2, 26, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$2, api_iterator($cmp.reviewStats, function (stat) {
+    return api_static_fragment($fragment10$2, api_key(29, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
+  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc10$1, api_iterator($cmp.issues, function (issue) {
+    return api_static_fragment($fragment11$2, api_key(32, issue.key), [api_static_part(0, {
       className: api_normalize_class_name(issue.className)
     }, null), api_static_part(1, null, api_dynamic_text(issue.severity) + " • " + api_dynamic_text(issue.stepId) + " • " + api_dynamic_text(issue.message))]);
-  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment12$3, 34) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc11$2, api_iterator($cmp.timelineSteps, function (step) {
-    return api_static_fragment($fragment13$3, api_key(37, step.key), [api_static_part(0, {
+  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment12$2, 34) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc11$1, api_iterator($cmp.timelineSteps, function (step) {
+    return api_static_fragment($fragment13$2, api_key(37, step.key), [api_static_part(0, {
       className: api_normalize_class_name(step.className),
       attrs: {
         "title": step.status
       }
     }, null)]);
-  })) : null : null, $cmp.hasDraft ? api_element("div", stc12$2, [api_element("table", stc13$2, [api_static_fragment($fragment14$3, 41), api_element("tbody", stc14$1, api_iterator($cmp.planRows, function (row) {
+  })) : null : null, $cmp.hasDraft ? api_element("div", stc12$1, [api_element("table", stc13$1, [api_static_fragment($fragment14$2, 41), api_element("tbody", stc14$1, api_iterator($cmp.planRows, function (row) {
     return api_element("tr", {
       className: api_normalize_class_name(row.rowClass),
       attrs: {
@@ -11713,15 +12205,15 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
         "click": api_bind($cmp.handleSelectStep),
         "keydown": api_bind($cmp.handleStepKeydown)
       })
-    }, [api_static_fragment($fragment15$3, 45, [api_static_part(1, {
+    }, [api_static_fragment($fragment15$2, 45, [api_static_part(1, {
       attrs: {
         "title": row.title
       }
-    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$2, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$2, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$2, 51, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$1, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$1, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$1, 51, [api_static_part(1, {
       className: api_normalize_class_name(row.statusClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$2, 53, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$1, 53, [api_static_part(1, {
       className: api_normalize_class_name(row.approvalClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20$2, 56, [api_static_part(0, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20, 56, [api_static_part(0, {
       on: _m7 || ($ctx._m7 = {
         "click": api_bind($cmp.handleApproveStep)
       }),
@@ -11729,64 +12221,21 @@ function tmpl$4($api, $cmp, $slotset, $ctx) {
         "data-step-id": row.id
       }
     }, null)]) : null])]);
-  }))])]) : null, $cmp.hasDraft ? api_element("section", stc16$1, api_flatten([api_static_fragment($fragment21$2, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
+  }))])]) : null, $cmp.hasDraft ? api_element("section", stc16$1, api_flatten([api_static_fragment($fragment21, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
     return api_static_fragment($fragment22, api_key(61, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
   }) : stc17$1, !$cmp.hasApprovalRows ? api_static_fragment($fragment23, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18$1, [api_static_fragment($fragment24, 66), api_element("div", stc19$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20$1, api_iterator($cmp.selectedPreviews, function (preview) {
     return api_static_fragment($fragment28, api_key(76, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
   })) : null])])])];
   /*LWC compiler v9.2.2*/
 }
-var _tmpl$4 = registerTemplate(tmpl$4);
-tmpl$4.stylesheets = [];
-tmpl$4.stylesheetToken = "lwc-7rcr1t6e1pr";
-tmpl$4.legacyStylesheetToken = "c-planWorkspace_planWorkspace";
-if (_implicitStylesheets$3) {
-  tmpl$4.stylesheets.push.apply(tmpl$4.stylesheets, _implicitStylesheets$3);
+var _tmpl$3 = registerTemplate(tmpl$3);
+tmpl$3.stylesheets = [];
+tmpl$3.stylesheetToken = "lwc-7rcr1t6e1pr";
+tmpl$3.legacyStylesheetToken = "c-planWorkspace_planWorkspace";
+if (_implicitStylesheets$2) {
+  tmpl$3.stylesheets.push.apply(tmpl$3.stylesheets, _implicitStylesheets$2);
 }
-freezeTemplate(tmpl$4);
-
-function compactCurrency(value) {
-  if (value >= 1000000) return `$${trimZeros((value / 1000000).toFixed(2))}M`;
-  if (value >= 1000) return `$${trimZeros((value / 1000).toFixed(1))}K`;
-  return currency(value);
-}
-function currency(value) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0
-  }).format(value || 0);
-}
-function dateTime(value) {
-  if (!value) return "";
-  return new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit"
-  }).format(new Date(value));
-}
-function metric(value, unit) {
-  if (unit === "currency") return currency(value);
-  if (unit === "percent") return `${value || 0}%`;
-  return number(value);
-}
-function number(value) {
-  return new Intl.NumberFormat("en-US", {
-    maximumFractionDigits: 0
-  }).format(value || 0);
-}
-function percent(value) {
-  return `${Math.round((value || 0) * 100)}%`;
-}
-function slug(value) {
-  return String(value || "").toLowerCase().replaceAll(" ", "-").replaceAll("_", "-");
-}
-function toJson(value) {
-  const empty = !value || typeof value === "object" && !Object.keys(value).length;
-  return empty ? "No data" : JSON.stringify(value, null, 2);
-}
-function trimZeros(value) {
-  return value.replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
-}
+freezeTemplate(tmpl$3);
 
 class PlanWorkspace extends LightningElement {
   constructor(...args) {
@@ -12041,311 +12490,9 @@ registerDecorators(PlanWorkspace, {
     }
   }
 });
-const __lwc_component_class_internal$4 = registerComponent(PlanWorkspace, {
-  tmpl: _tmpl$4,
-  sel: "c-plan-workspace",
-  apiVersion: 66
-});
-
-function stylesheet$2(token, useActualHostSelector, useNativeDirPseudoclass) {
-  var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".execution-layout", shadowSelector, " {display: grid;grid-template-columns: minmax(250px, 310px) minmax(0, 1fr) minmax(340px, 400px);gap: 0.75rem;align-items: start;}.account-list", shadowSelector, ",.action-list", shadowSelector, ",.evidence-list", shadowSelector, ",.metric-list", shadowSelector, " {display: grid;gap: 0.5rem;}.account-row", shadowSelector, " {display: flex;width: 100%;justify-content: space-between;gap: 0.75rem;align-items: center;padding: 0.625rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;text-align: left;cursor: pointer;}.account-row.selected", shadowSelector, ",.account-row:hover", shadowSelector, " {border-color: #1b96ff;background: #eef4ff;}.account-row", shadowSelector, " span", shadowSelector, ",.action-head", shadowSelector, " div", shadowSelector, ",.evidence-item", shadowSelector, " div", shadowSelector, " {min-width: 0;}.account-row", shadowSelector, " strong", shadowSelector, ",.account-row", shadowSelector, " small", shadowSelector, " {display: block;}.account-row", shadowSelector, " small", shadowSelector, ",.evidence-item", shadowSelector, " p", shadowSelector, ",.action-card", shadowSelector, " p", shadowSelector, ",.metric-row", shadowSelector, " p", shadowSelector, ",.activation-panel", shadowSelector, " p", shadowSelector, ",.email-steps", shadowSelector, " p", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.priority", shadowSelector, " {display: inline-flex;min-height: 1.375rem;align-items: center;border-radius: 999px;padding: 0 0.5rem;background: #f3f2f2;color: #444;font-size: 0.6875rem;font-style: normal;font-weight: 700;white-space: nowrap;}.priority.critical", shadowSelector, ",.priority.high", shadowSelector, " {background: #fff1f2;color: #ba0517;}.priority.medium", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.score-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(3, minmax(0, 1fr));gap: 1px;border: 1px solid #dddbda;border-radius: 0.25rem;overflow: hidden;background: #dddbda;}.score-grid", shadowSelector, " div", shadowSelector, " {min-width: 0;padding: 0.75rem;background: #fff;}.score-grid", shadowSelector, " strong", shadowSelector, ",.score-grid", shadowSelector, " span", shadowSelector, " {display: block;}.score-grid", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.section-label", shadowSelector, " {margin: 1rem 0 0.5rem;font-size: 0.8125rem;font-weight: 700;}.evidence-item", shadowSelector, ",.action-card", shadowSelector, ",.activation-panel", shadowSelector, ",.metric-row", shadowSelector, " {padding: 0.625rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.evidence-item", shadowSelector, ",.activation-panel", shadowSelector, ",.action-head", shadowSelector, ",.metric-row", shadowSelector, " div:first-child", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;align-items: flex-start;}.evidence-item", shadowSelector, " span", shadowSelector, ",.metric-row", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;white-space: nowrap;}.action-card.waiting-approval", shadowSelector, " {border-left: 3px solid #dd9a1e;}.action-card.approved", shadowSelector, ",.action-card.executed", shadowSelector, " {border-left: 3px solid #2e844a;}.action-card.rejected", shadowSelector, " {border-left: 3px solid #ba0517;}.status.waiting-approval", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status.approved", shadowSelector, ",.status.executed", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status.rejected", shadowSelector, " {background: #fff1f2;color: #ba0517;}.email-steps", shadowSelector, " {margin: 0.5rem 0 0;padding-left: 1.25rem;}.bar", shadowSelector, " {height: 0.375rem;margin: 0.5rem 0;border-radius: 999px;background: #f3f2f2;overflow: hidden;}.bar", shadowSelector, " span", shadowSelector, " {display: block;height: 100%;background: #0176d3;}.analytics-card", shadowSelector, " {grid-column: span 1;}.empty-state", shadowSelector, " {min-height: 8rem;display: grid;place-items: center;color: #706e6b;}@media (max-width: 1240px) {.execution-layout", shadowSelector, " {grid-template-columns: minmax(250px, 310px) minmax(0, 1fr);}.action-card-wrap", shadowSelector, " {grid-column: 1 / -1;}}@media (max-width: 880px) {.execution-layout", shadowSelector, ", .score-grid", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
-  /*LWC compiler v9.2.2*/
-}
-var _implicitStylesheets$2 = [stylesheet$2];
-
-const $fragment1$3 = parseFragment`<div class="slds-card${0}"${2}><div class="slds-card__body slds-card__body_inner empty-state${0}"${2}>Loading execution workspace...</div></div>`;
-const $fragment2$3 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Priority Accounts</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Unified profiles ranked for recovery</p></div></header><button class="slds-button slds-button_neutral slds-button_x-small${0}"${2}>Reset</button></div>`;
-const $fragment3$3 = parseFragment`<button${"c0"}${"a0:data-account-id"}${2}><span${3}><strong${3}>${"t3"}</strong><small${3}>${"t5"}</small></span><em${"c6"}${2}>${"t7"}</em></button>`;
-const $fragment4$3 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>${"t4"}</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t6"}</p></div></header><span${"c7"}${2}>${"t8"}</span></div>`;
-const $fragment5$3 = parseFragment`<div class="score-grid${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>Contract</span></div><div${3}><strong${3}>${"t8"}</strong><span${3}>Priority</span></div><div${3}><strong${3}>${"t13"}</strong><span${3}>Support risk</span></div></div>`;
-const $fragment6$3 = parseFragment`<h3 class="section-label${0}"${2}>Evidence</h3>`;
-const $fragment7$3 = parseFragment`<article class="evidence-item${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${3}>${"t7"}</span></article>`;
-const $fragment8$2 = parseFragment`<h3 class="section-label${0}"${2}>Activation</h3>`;
-const $fragment9$2 = parseFragment`<section class="activation-panel${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p><p${3}>${"t7"}</p></div><span class="slds-badge${0}"${2}>${"t9"}</span></section>`;
-const $fragment10$2 = parseFragment`<li${3}><strong${3}>${"t2"}</strong><p${3}>${"t4"}</p></li>`;
-const $fragment11$2 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Work Queue</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Human approval before activation</p></div></header></div>`;
-const $fragment12$2 = parseFragment`<div class="action-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span${"c6"}${2}>${"t7"}</span></div>`;
-const $fragment13$2 = parseFragment`<p${3}>${"t1"}</p>`;
-const $fragment14$2 = parseFragment`<details${3}><summary${3}>Draft</summary><p${3}>${"t4"}</p></details>`;
-const $fragment15$2 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-action-id"}${"a0:data-transition"}${2}>${"t1"}</button>`;
-const $fragment16$1 = parseFragment`<button class="slds-button slds-button_neutral slds-button_x-small${0}"${"a0:data-action-id"} data-transition="reject"${2}>Reject</button>`;
-const $fragment17$1 = parseFragment`<span class="slds-text-color_success${0}"${2}>Executed</span>`;
-const $fragment18$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Recovery Funnel</h2></div>`;
-const $fragment19$1 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
-const $fragment20$1 = parseFragment`<div class="slds-card__header${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Impact</h2></div>`;
-const $fragment21$1 = parseFragment`<article class="metric-row${0}"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="bar${0}"${2}><span${"s7"}${3}></span></div><p${3}>${"t9"}</p></article>`;
-const stc0$3 = {
-  classMap: {
-    "execution-layout": true
-  },
-  key: 2
-};
-const stc1$3 = {
-  classMap: {
-    "slds-card": true,
-    "account-card": true
-  },
-  key: 3
-};
-const stc2$3 = {
-  classMap: {
-    "slds-card__body": true,
-    "slds-card__body_inner": true,
-    "account-list": true
-  },
-  key: 6
-};
-const stc3$3 = {
-  classMap: {
-    "slds-card": true,
-    "focus-card": true
-  },
-  key: 9
-};
-const stc4$3 = {
-  classMap: {
-    "slds-card__body": true,
-    "slds-card__body_inner": true
-  },
-  key: 12
-};
-const stc5$2 = {
-  classMap: {
-    "evidence-list": true
-  },
-  key: 17
-};
-const stc6$2 = {
-  classMap: {
-    "email-steps": true
-  },
-  key: 24
-};
-const stc7$2 = {
-  classMap: {
-    "slds-card": true,
-    "action-card-wrap": true
-  },
-  key: 27
-};
-const stc8$2 = {
-  classMap: {
-    "slds-card__body": true,
-    "slds-card__body_inner": true,
-    "action-list": true
-  },
-  key: 30
-};
-const stc9$2 = {
-  classMap: {
-    "slds-button-group": true,
-    "slds-m-top_small": true
-  },
-  attrs: {
-    "role": "group"
-  },
-  key: 38
-};
-const stc10$1 = {
-  classMap: {
-    "slds-card": true,
-    "analytics-card": true
-  },
-  key: 45
-};
-const stc11$1 = {
-  classMap: {
-    "slds-card__body": true,
-    "slds-card__body_inner": true,
-    "metric-list": true
-  },
-  key: 48
-};
-const stc12$1 = {
-  classMap: {
-    "slds-card": true,
-    "analytics-card": true
-  },
-  key: 51
-};
-const stc13$1 = {
-  classMap: {
-    "slds-card__body": true,
-    "slds-card__body_inner": true,
-    "metric-list": true
-  },
-  key: 54
-};
-function tmpl$3($api, $cmp, $slotset, $ctx) {
-  const {st: api_static_fragment, b: api_bind, sp: api_static_part, ncls: api_normalize_class_name, k: api_key, d: api_dynamic_text, i: api_iterator, h: api_element} = $api;
-  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6} = $ctx;
-  return [!$cmp.hasDemo ? api_static_fragment($fragment1$3, 1) : null, $cmp.hasDemo ? api_element("div", stc0$3, [api_element("aside", stc1$3, [api_static_fragment($fragment2$3, 5, [api_static_part(7, {
-    on: _m0 || ($ctx._m0 = {
-      "click": api_bind($cmp.handleReset)
-    })
-  }, null)]), api_element("div", stc2$3, api_iterator($cmp.accounts, function (account) {
-    return api_static_fragment($fragment3$3, api_key(8, account.id), [api_static_part(0, {
-      on: _m2 || ($ctx._m2 = {
-        "click": api_bind($cmp.handleSelectAccount)
-      }),
-      className: api_normalize_class_name(account.rowClass),
-      attrs: {
-        "data-account-id": account.id
-      }
-    }, null), api_static_part(3, null, api_dynamic_text(account.name)), api_static_part(5, null, api_dynamic_text(account.contractLabel) + " • " + api_dynamic_text(account.activationGapDays) + "d gap"), api_static_part(6, {
-      className: api_normalize_class_name(account.badgeClass)
-    }, null), api_static_part(7, null, api_dynamic_text(account.priority))]);
-  }))]), api_element("section", stc3$3, [api_static_fragment($fragment4$3, 11, [api_static_part(4, null, api_dynamic_text($cmp.selectedAccount.name)), api_static_part(6, null, api_dynamic_text($cmp.selectedAccount.recommendedMotion)), api_static_part(7, {
-    className: api_normalize_class_name($cmp.selectedAccount.badgeClass)
-  }, null), api_static_part(8, null, api_dynamic_text($cmp.selectedAccount.priority))]), api_element("div", stc4$3, [api_static_fragment($fragment5$3, 14, [api_static_part(3, null, api_dynamic_text($cmp.selectedAccount.contractLabel)), api_static_part(8, null, api_dynamic_text($cmp.selectedAccount.scoreLabel)), api_static_part(13, null, api_dynamic_text($cmp.selectedAccount.riskLabel))]), api_static_fragment($fragment6$3, 16), api_element("div", stc5$2, api_iterator($cmp.selectedEvidence, function (item) {
-    return api_static_fragment($fragment7$3, api_key(19, item.signal), [api_static_part(3, null, api_dynamic_text(item.signal)), api_static_part(5, null, api_dynamic_text(item.detail)), api_static_part(7, null, api_dynamic_text(item.source))]);
-  })), $cmp.activation ? api_static_fragment($fragment8$2, 21) : null, $cmp.activation ? api_static_fragment($fragment9$2, 23, [api_static_part(3, null, api_dynamic_text($cmp.activation.provider)), api_static_part(5, null, api_dynamic_text($cmp.activation.safetyRule)), api_static_part(7, null, api_dynamic_text($cmp.activation.audience)), api_static_part(9, null, api_dynamic_text($cmp.activationSentLabel) + " sent")]) : null, $cmp.activation ? api_element("ol", stc6$2, api_iterator($cmp.activation.sequence, function (step) {
-    return api_static_fragment($fragment10$2, api_key(26, step.title), [api_static_part(2, null, api_dynamic_text(step.timing) + " • " + api_dynamic_text(step.title)), api_static_part(4, null, api_dynamic_text(step.content))]);
-  })) : null])]), api_element("aside", stc7$2, [api_static_fragment($fragment11$2, 29), api_element("div", stc8$2, api_iterator($cmp.actions, function (action) {
-    return api_element("article", {
-      className: api_normalize_class_name(action.className),
-      key: api_key(31, action.id)
-    }, [api_static_fragment($fragment12$2, 33, [api_static_part(3, null, api_dynamic_text(action.title)), api_static_part(5, null, api_dynamic_text(action.targetSystem) + " • " + api_dynamic_text(action.type)), api_static_part(6, {
-      className: api_normalize_class_name(action.statusClass)
-    }, null), api_static_part(7, null, api_dynamic_text(action.status))]), api_static_fragment($fragment13$2, 35, [api_static_part(1, null, api_dynamic_text(action.rationale))]), api_static_fragment($fragment14$2, 37, [api_static_part(4, null, api_dynamic_text(action.draftContent))]), api_element("div", stc9$2, [!action.isExecuted ? api_static_fragment($fragment15$2, 40, [api_static_part(0, {
-      on: _m4 || ($ctx._m4 = {
-        "click": api_bind($cmp.handleAction)
-      }),
-      attrs: {
-        "data-action-id": action.id,
-        "data-transition": action.primaryTransition
-      }
-    }, null), api_static_part(1, null, api_dynamic_text(action.primaryLabel))]) : null, !action.isExecuted ? api_static_fragment($fragment16$1, 42, [api_static_part(0, {
-      on: _m6 || ($ctx._m6 = {
-        "click": api_bind($cmp.handleAction)
-      }),
-      attrs: {
-        "data-action-id": action.id
-      }
-    }, null)]) : null, action.isExecuted ? api_static_fragment($fragment17$1, 44) : null])]);
-  }))]), api_element("section", stc10$1, [api_static_fragment($fragment18$1, 47), api_element("div", stc11$1, api_iterator($cmp.funnel, function (item) {
-    return api_static_fragment($fragment19$1, api_key(50, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
-      style: item.style
-    }, null), api_static_part(9, null, api_dynamic_text(item.narrative))]);
-  }))]), api_element("section", stc12$1, [api_static_fragment($fragment20$1, 53), api_element("div", stc13$1, api_iterator($cmp.impact, function (item) {
-    return api_static_fragment($fragment21$1, api_key(56, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value)), api_static_part(7, {
-      style: item.style
-    }, null), api_static_part(9, null, api_dynamic_text(item.narrative))]);
-  }))])]) : null];
-  /*LWC compiler v9.2.2*/
-}
-var _tmpl$3 = registerTemplate(tmpl$3);
-tmpl$3.stylesheets = [];
-tmpl$3.stylesheetToken = "lwc-5eev1e7qcpr";
-tmpl$3.legacyStylesheetToken = "c-executionWorkspace_executionWorkspace";
-if (_implicitStylesheets$2) {
-  tmpl$3.stylesheets.push.apply(tmpl$3.stylesheets, _implicitStylesheets$2);
-}
-freezeTemplate(tmpl$3);
-
-class ExecutionWorkspace extends LightningElement {
-  constructor(...args) {
-    super(...args);
-    this.demo = void 0;
-    this.selectedAccountId = void 0;
-    this.busy = {};
-  }
-  get hasDemo() {
-    return Boolean(this.demo);
-  }
-  get accounts() {
-    return (this.demo?.accounts || []).map(account => ({
-      ...account,
-      contractLabel: currency(account.contractValue),
-      scoreLabel: percent(account.recoveryPriorityScore),
-      riskLabel: percent(account.supportBlockerScore),
-      rowClass: `account-row ${account.id === this.selectedAccountId ? "selected" : ""}`,
-      badgeClass: `priority ${slug(account.priority)}`
-    }));
-  }
-  get selectedAccount() {
-    return this.accounts.find(account => account.id === this.selectedAccountId) || this.accounts[0];
-  }
-  get selectedEvidence() {
-    return this.selectedAccount?.evidence || [];
-  }
-  get actions() {
-    const all = this.demo?.actions || [];
-    const accountActions = all.filter(action => action.accountId === this.selectedAccount?.id);
-    const sharedActions = all.filter(action => !action.accountId);
-    const focused = this.selectedAccount ? [...accountActions, ...sharedActions] : all;
-    return [...focused.filter(action => action.status !== "Executed"), ...focused.filter(action => action.status === "Executed")].slice(0, 3).map(action => ({
-      ...action,
-      className: `action-card ${slug(action.status)}`,
-      statusClass: `slds-badge status ${slug(action.status)}`,
-      isExecuted: action.status === "Executed",
-      isApproved: action.status === "Approved",
-      isRejected: action.status === "Rejected",
-      primaryLabel: action.status === "Approved" ? "Execute" : "Approve",
-      primaryTransition: action.status === "Approved" ? "execute" : "approve",
-      showReject: action.status !== "Executed"
-    }));
-  }
-  get activation() {
-    return this.demo?.emailActivation;
-  }
-  get activationSentLabel() {
-    return metric(this.activation?.sentEmails, "number");
-  }
-  get funnel() {
-    const visible = ["Identified", "Holdout", "Email approved", "Sent", "Delivered", "Clicked", "Activated", "Revenue recovered"];
-    return (this.demo?.recoveryFunnel || []).filter(item => visible.includes(item.label)).map(item => this.metricItem(item));
-  }
-  get impact() {
-    const visible = ["Recoverable revenue", "Eligible audience", "Recovery rate", "Revenue recovered"];
-    return (this.demo?.impact || []).filter(item => visible.includes(item.label)).map(item => this.metricItem(item));
-  }
-  handleReset() {
-    this.dispatchEvent(new CustomEvent("resetdemo"));
-  }
-  handleSelectAccount(event) {
-    this.dispatchEvent(new CustomEvent("selectaccount", {
-      detail: {
-        accountId: event.currentTarget.dataset.accountId
-      }
-    }));
-  }
-  handleAction(event) {
-    this.dispatchEvent(new CustomEvent("actiontransition", {
-      detail: {
-        actionId: event.currentTarget.dataset.actionId,
-        transition: event.currentTarget.dataset.transition
-      }
-    }));
-  }
-  metricItem(item) {
-    const target = item.target || 0;
-    const pct = target ? Math.min(100, Math.round(item.current / target * 100)) : 0;
-    return {
-      ...item,
-      value: metric(item.current, item.unit),
-      style: `width:${pct}%`
-    };
-  }
-  /*LWC compiler v9.2.2*/
-}
-registerDecorators(ExecutionWorkspace, {
-  publicProps: {
-    demo: {
-      config: 0
-    },
-    selectedAccountId: {
-      config: 0
-    },
-    busy: {
-      config: 0
-    }
-  }
-});
-const __lwc_component_class_internal$3 = registerComponent(ExecutionWorkspace, {
+const __lwc_component_class_internal$3 = registerComponent(PlanWorkspace, {
   tmpl: _tmpl$3,
-  sel: "c-execution-workspace",
+  sel: "c-plan-workspace",
   apiVersion: 66
 });
 
@@ -12691,27 +12838,25 @@ const __lwc_component_class_internal$1 = registerComponent(AuditWorkspace, {
   apiVersion: 66
 });
 
-const $fragment1 = parseFragment`<div class="slds-context-bar__primary${0}"${2}><div class="slds-context-bar__item slds-no-hover${0}"${2}><div class="slds-context-bar__label-action brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><span class="slds-truncate${0}" title="Data 360 Goal Workbench"${2}>Data 360 Goal Workbench</span></div></div></div>`;
-const $fragment2 = parseFragment`<li class="slds-context-bar__item${0}"${2}><a class="slds-context-bar__label-action${0}"${"a1:href"}${"a1:data-tab"}${2}><span class="slds-truncate${0}"${2}>${"t3"}</span></a></li>`;
-const $fragment3 = parseFragment`<div class="slds-page-header__col-title${0}"${2}><div class="slds-media${0}"${2}><div class="slds-media__figure${0}"${2}><span class="slds-icon_container slds-icon-standard-flow${0}"${2}><span class="header-icon${0}"${2}>PS</span></span></div><div class="slds-media__body${0}"${2}><p class="slds-page-header__name-meta${0}"${2}>Goal</p><h1 class="slds-page-header__title command-title${0}"${"a9:title"}${2}>${"t10"}</h1><div class="slds-m-top_x-small header-meta${0}"${2}><span class="slds-badge${0}"${2}>Sandbox</span><span class="slds-badge${0}"${2}>Data 360</span><span class="slds-badge${0}"${2}>Connect API</span><span${"c18"}${2}>${"t19"}</span></div></div></div></div>`;
-const $fragment4 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment5 = parseFragment`<button class="slds-button slds-button_neutral${0}"${2}>Model settings</button>`;
-const $fragment6 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Export PlanSpec</button>`;
-const $fragment7 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Export run log</button>`;
-const $fragment8 = parseFragment`<button class="slds-button slds-button_neutral${0}"${2}>Reset demo</button>`;
-const $fragment9 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment10 = parseFragment`<article class="slds-card metric-card${0}"${2}><div class="slds-card__body slds-card__body_inner${0}"${2}><p class="metric-label${0}"${2}>${"t3"}</p><strong${3}>${"t5"}</strong></div></article>`;
-const $fragment11 = parseFragment`<li${"c0"} role="presentation"${2}><a class="slds-tabs_default__link${0}"${"a1:href"} role="tab"${"a1:aria-selected"}${"a1:data-tab"}${2}>${"t2"}</a></li>`;
-const $fragment12 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error${0}" role="alert"${2}><span${3}>${"t2"}</span></div>`;
-const $fragment13 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}><span${3}>${"t2"}</span></div>`;
-const $fragment14 = parseFragment`<header class="slds-modal__header${0}"${2}><button class="slds-button slds-button_icon slds-modal__close${0}" title="Close"${2}><span aria-hidden="true"${3}>x</span><span class="slds-assistive-text${0}"${2}>Close</span></button><h2${"a6:id"} class="slds-modal__title slds-hyphenate${0}"${2}>Model Settings</h2></header>`;
-const $fragment15 = parseFragment`<div class="slds-form-element slds-m-bottom_medium${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Provider</label><div class="slds-form-element__control${0}"${2}><select${"a4:id"} class="slds-select${0}"${2}><option value="anthropic"${"a5:selected"}${3}>Anthropic</option><option value="openrouter"${"a7:selected"}${3}>OpenRouter</option></select></div></div>`;
-const $fragment16 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>Model</label>`;
-const $fragment17 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>API key</label>`;
-const $fragment18 = parseFragment`<div class="slds-form-element__help${0}"${2}>${"t1"}</div>`;
-const $fragment19 = parseFragment`<div class="slds-m-top_medium slds-text-body_small${0}"${2}>${"t1"}</div>`;
-const $fragment20 = parseFragment`<footer class="slds-modal__footer${0}"${2}><button class="slds-button slds-button_neutral${0}"${2}>Cancel</button><button class="slds-button slds-button_brand${0}"${"a3:disabled"}${2}>Save and restart local backend</button></footer>`;
-const $fragment21 = parseFragment`<div class="slds-backdrop slds-backdrop_open${0}"${2}></div>`;
+const $fragment1 = parseFragment`<div class="auth-brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><div${3}><h1${3}>Data 360 Agent Console</h1><p${3}>${"t7"}</p></div></div>`;
+const $fragment2 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Create organization</button>`;
+const $fragment3 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Log in</button>`;
+const $fragment4 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error${0}" role="alert"${2}>${"t1"}</div>`;
+const $fragment5 = parseFragment`<div class="brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><strong${3}>Agent Console</strong></div>`;
+const $fragment6 = parseFragment`<a${"c0"}${"a0:href"}${"a0:data-tab"}${2}>${"t1"}</a>`;
+const $fragment7 = parseFragment`<div class="side-footer${0}"${2}><span${3}>${"t2"}</span><span${3}>${"t4"}</span><button class="slds-button slds-button_neutral${0}"${2}>Log out</button></div>`;
+const $fragment8 = parseFragment`<h2${3}>Model</h2>`;
+const $fragment9 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
+const $fragment10 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
+const $fragment11 = parseFragment`<h2${3}>Organizations</h2>`;
+const $fragment12 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
+const $fragment13 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
+const $fragment14 = parseFragment`<h2${3}>Users</h2>`;
+const $fragment15 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
+const $fragment16 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
+const $fragment17 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment18 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
+const $fragment19 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
 const stc0 = {
   classMap: {
     "app-frame": true
@@ -12720,195 +12865,277 @@ const stc0 = {
 };
 const stc1 = {
   classMap: {
-    "slds-context-bar": true
+    "auth-screen": true
   },
   key: 1
 };
 const stc2 = {
   classMap: {
-    "slds-context-bar__secondary": true
+    "auth-panel": true
   },
-  attrs: {
-    "aria-label": "Workspace"
-  },
-  key: 4
+  key: 2
 };
 const stc3 = {
   classMap: {
-    "slds-grid": true
+    "auth-form": true
   },
   key: 5
 };
 const stc4 = {
-  classMap: {
-    "console-body": true
-  },
-  key: 8
+  key: 6
 };
 const stc5 = {
-  classMap: {
-    "slds-page-header": true,
-    "slds-page-header_record-home": true,
-    "command-header": true
-  },
-  key: 9
-};
-const stc6 = {
-  classMap: {
-    "slds-page-header__row": true
-  },
-  key: 10
-};
-const stc7 = {
-  classMap: {
-    "slds-page-header__col-actions": true
-  },
-  key: 13
-};
-const stc8 = {
-  classMap: {
-    "slds-page-header__controls": true
-  },
-  key: 14
-};
-const stc9 = {
-  classMap: {
-    "metric-strip": true
-  },
-  attrs: {
-    "aria-label": "Goal metrics"
-  },
-  key: 27
-};
-const stc10 = {
-  classMap: {
-    "slds-tabs_default": true,
-    "workbench": true
-  },
-  key: 30
-};
-const stc11 = {
-  classMap: {
-    "slds-tabs_default__nav": true
-  },
-  attrs: {
-    "role": "tablist"
-  },
-  key: 31
-};
-const stc12 = {
-  classMap: {
-    "workspace-panel": true
-  },
-  key: 34
-};
-const stc13 = {
-  "slds-modal": true,
-  "slds-fade-in-open": true,
-  "desktop-settings": true
-};
-const stc14 = {
-  classMap: {
-    "slds-modal__container": true
-  },
-  key: 44
-};
-const stc15 = {
-  classMap: {
-    "slds-modal__content": true,
-    "slds-p-around_medium": true
-  },
-  key: 47
-};
-const stc16 = {
-  classMap: {
-    "slds-form-element": true,
-    "slds-m-bottom_medium": true
-  },
-  key: 50
-};
-const stc17 = {
-  classMap: {
-    "slds-form-element__control": true
-  },
-  key: 53
-};
-const stc18 = {
   "slds-input": true
 };
-const stc19 = {
+const stc6 = {
+  "data-field": "setupOrganizationName"
+};
+const stc7 = {
+  key: 8
+};
+const stc8 = {
+  "data-field": "setupDisplayName"
+};
+const stc9 = {
+  key: 10
+};
+const stc10 = {
+  "type": "email",
+  "data-field": "setupEmail"
+};
+const stc11 = {
+  key: 12
+};
+const stc12 = {
+  "type": "password",
+  "data-field": "setupPassword"
+};
+const stc13 = {
   classMap: {
-    "slds-form-element": true
+    "auth-form": true
   },
-  key: 55
+  key: 16
+};
+const stc14 = {
+  key: 17
+};
+const stc15 = {
+  "type": "email",
+  "data-field": "loginEmail"
+};
+const stc16 = {
+  key: 19
+};
+const stc17 = {
+  "type": "password",
+  "data-field": "loginPassword"
+};
+const stc18 = {
+  classMap: {
+    "side-nav": true
+  },
+  key: 25
+};
+const stc19 = {
+  attrs: {
+    "aria-label": "Workspace"
+  },
+  key: 28
 };
 const stc20 = {
   classMap: {
-    "slds-form-element__control": true
+    "workspace": true
   },
-  key: 58
+  key: 33
+};
+const stc21 = {
+  classMap: {
+    "admin-grid": true
+  },
+  key: 39
+};
+const stc22 = {
+  classMap: {
+    "admin-panel": true
+  },
+  key: 40
+};
+const stc23 = {
+  key: 45
+};
+const stc24 = {
+  "data-field": "settingsModel"
+};
+const stc25 = {
+  key: 47
+};
+const stc26 = {
+  classMap: {
+    "admin-panel": true
+  },
+  key: 51
+};
+const stc27 = {
+  classMap: {
+    "inline-form": true
+  },
+  key: 54
+};
+const stc28 = {
+  "data-field": "newOrganizationName",
+  "placeholder": "Organization name"
+};
+const stc29 = {
+  classMap: {
+    "admin-panel": true
+  },
+  key: 60
+};
+const stc30 = {
+  classMap: {
+    "user-form": true
+  },
+  key: 63
+};
+const stc31 = {
+  "data-field": "newUserName",
+  "placeholder": "Name"
+};
+const stc32 = {
+  "type": "email",
+  "data-field": "newUserEmail",
+  "placeholder": "Email"
+};
+const stc33 = {
+  "type": "password",
+  "data-field": "newUserPassword",
+  "placeholder": "Temporary password"
 };
 function tmpl($api, $cmp, $slotset, $ctx) {
-  const {st: api_static_fragment, k: api_key, b: api_bind, fid: api_scoped_frag_id, d: api_dynamic_text, sp: api_static_part, i: api_iterator, h: api_element, ncls: api_normalize_class_name, c: api_custom_element, gid: api_scoped_id} = $api;
-  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18} = $ctx;
-  return [api_element("div", stc0, [api_element("header", stc1, [api_static_fragment($fragment1, 3), api_element("nav", stc2, [api_element("ul", stc3, api_iterator($cmp.tabs, function (tab) {
-    return api_static_fragment($fragment2, api_key(7, tab.id), [api_static_part(1, {
-      on: _m0 || ($ctx._m0 = {
-        "click": api_bind($cmp.handleTab)
-      }),
-      attrs: {
-        "href": api_scoped_frag_id(tab.href),
-        "data-tab": tab.id
-      }
-    }, null), api_static_part(3, null, api_dynamic_text(tab.label))]);
-  }))])]), api_element("main", stc4, [api_element("section", stc5, [api_element("div", stc6, [api_static_fragment($fragment3, 12, [api_static_part(9, {
-    attrs: {
-      "title": $cmp.goalTitle
-    }
-  }, null), api_static_part(10, null, api_dynamic_text($cmp.goalTitle)), api_static_part(18, {
-    className: api_normalize_class_name($cmp.diagnosticsClass)
-  }, null), api_static_part(19, null, api_dynamic_text($cmp.diagnosticsLabel))]), api_element("div", stc7, [api_element("div", stc8, [api_static_fragment($fragment4, 16, [api_static_part(0, {
-    className: api_normalize_class_name($cmp.userClass)
-  }, null), api_static_part(1, null, api_dynamic_text($cmp.userLabel))]), $cmp.isDesktop ? api_static_fragment($fragment5, 18, [api_static_part(0, {
+  const {d: api_dynamic_text, sp: api_static_part, st: api_static_fragment, t: api_text, b: api_bind, h: api_element, ncls: api_normalize_class_name, k: api_key, i: api_iterator, c: api_custom_element, f: api_flatten} = $api;
+  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18, _m19, _m20, _m21, _m22, _m23, _m24, _m25, _m26, _m27, _m28, _m29, _m30, _m31, _m32, _m33} = $ctx;
+  return [api_element("div", stc0, [$cmp.showAuthScreen ? api_element("main", stc1, [api_element("section", stc2, [api_static_fragment($fragment1, 4, [api_static_part(7, null, api_dynamic_text($cmp.authSubtitle))]), $cmp.setupRequired ? api_element("div", stc3, [api_element("label", stc4, [api_text("Organization"), api_element("input", {
+    classMap: stc5,
+    attrs: stc6,
+    props: {
+      "value": $cmp.setupOrganizationName
+    },
+    key: 7,
+    on: _m0 || ($ctx._m0 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_element("label", stc7, [api_text("Name"), api_element("input", {
+    classMap: stc5,
+    attrs: stc8,
+    props: {
+      "value": $cmp.setupDisplayName
+    },
+    key: 9,
+    on: _m1 || ($ctx._m1 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_element("label", stc9, [api_text("Email"), api_element("input", {
+    classMap: stc5,
+    attrs: stc10,
+    props: {
+      "value": $cmp.setupEmail
+    },
+    key: 11,
     on: _m2 || ($ctx._m2 = {
-      "click": api_bind($cmp.handleOpenDesktopSettings)
+      "input": api_bind($cmp.handleFieldChange)
     })
-  }, null)]) : null, api_static_fragment($fragment6, 20, [api_static_part(0, {
-    on: _m4 || ($ctx._m4 = {
-      "click": api_bind($cmp.handleExportPlanSpec)
+  })]), api_element("label", stc11, [api_text("Password"), api_element("input", {
+    classMap: stc5,
+    attrs: stc12,
+    props: {
+      "value": $cmp.setupPassword
+    },
+    key: 13,
+    on: _m3 || ($ctx._m3 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_static_fragment($fragment2, 15, [api_static_part(0, {
+    on: _m5 || ($ctx._m5 = {
+      "click": api_bind($cmp.handleBootstrap)
     }),
     attrs: {
-      "disabled": $cmp.planExportDisabled ? "" : null
+      "disabled": $cmp.busy.auth ? "" : null
     }
-  }, null)]), api_static_fragment($fragment7, 22, [api_static_part(0, {
+  }, null)])]) : null, !$cmp.setupRequired ? api_element("div", stc13, [api_element("label", stc14, [api_text("Email"), api_element("input", {
+    classMap: stc5,
+    attrs: stc15,
+    props: {
+      "value": $cmp.loginEmail
+    },
+    key: 18,
     on: _m6 || ($ctx._m6 = {
-      "click": api_bind($cmp.handleExportRunLog)
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_element("label", stc16, [api_text("Password"), api_element("input", {
+    classMap: stc5,
+    attrs: stc17,
+    props: {
+      "value": $cmp.loginPassword
+    },
+    key: 20,
+    on: _m7 || ($ctx._m7 = {
+      "input": api_bind($cmp.handleFieldChange),
+      "keydown": api_bind($cmp.handleLoginKeydown)
+    })
+  })]), api_static_fragment($fragment3, 22, [api_static_part(0, {
+    on: _m9 || ($ctx._m9 = {
+      "click": api_bind($cmp.handleLogin)
     }),
     attrs: {
-      "disabled": $cmp.runLogExportDisabled ? "" : null
+      "disabled": $cmp.busy.auth ? "" : null
     }
-  }, null)]), api_static_fragment($fragment8, 24, [api_static_part(0, {
-    on: _m8 || ($ctx._m8 = {
-      "click": api_bind($cmp.handleResetDemo)
-    })
-  }, null)]), api_static_fragment($fragment9, 26, [api_static_part(0, {
-    className: api_normalize_class_name($cmp.headerStatusClass)
-  }, null), api_static_part(1, null, api_dynamic_text($cmp.headerStatusLabel))])])])])]), api_element("section", stc9, api_iterator($cmp.metricCards, function (item) {
-    return api_static_fragment($fragment10, api_key(29, item.label), [api_static_part(3, null, api_dynamic_text(item.label)), api_static_part(5, null, api_dynamic_text(item.value))]);
-  })), api_element("section", stc10, [api_element("ul", stc11, api_iterator($cmp.tabs, function (tab) {
-    return api_static_fragment($fragment11, api_key(33, tab.id), [api_static_part(0, {
-      className: api_normalize_class_name(tab.itemClass)
-    }, null), api_static_part(1, {
-      on: _m9 || ($ctx._m9 = {
+  }, null)])]) : null, $cmp.error ? api_static_fragment($fragment4, 24, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null])]) : null, !$cmp.showAuthScreen ? api_element("aside", stc18, [api_static_fragment($fragment5, 27), api_element("nav", stc19, api_iterator($cmp.tabs, function (tab) {
+    return api_static_fragment($fragment6, api_key(30, tab.id), [api_static_part(0, {
+      on: _m11 || ($ctx._m11 = {
         "click": api_bind($cmp.handleTab)
       }),
+      className: api_normalize_class_name(tab.className),
       attrs: {
-        "href": api_scoped_frag_id(tab.href),
-        "aria-selected": tab.selected,
+        "href": tab.href,
         "data-tab": tab.id
       }
-    }, null), api_static_part(2, null, api_dynamic_text(tab.label))]);
-  })), api_element("div", stc12, [$cmp.isPlan ? api_custom_element("c-plan-workspace", __lwc_component_class_internal$4, {
+    }, null), api_static_part(1, null, api_dynamic_text(tab.label))]);
+  })), api_static_fragment($fragment7, 32, [api_static_part(2, null, api_dynamic_text($cmp.userLabel)), api_static_part(4, null, api_dynamic_text($cmp.modelLabel)), api_static_part(5, {
+    on: _m12 || ($ctx._m12 = {
+      "click": api_bind($cmp.handleLogout)
+    })
+  }, null)])]) : null, !$cmp.showAuthScreen ? api_element("main", stc20, [$cmp.isChat ? api_custom_element("c-chat-workspace", __lwc_component_class_internal$5, {
+    props: {
+      "messages": $cmp.messages,
+      "plannerStatus": $cmp.plannerStatus,
+      "modelLabel": $cmp.modelLabel,
+      "userLabel": $cmp.userLabel,
+      "currentDraft": $cmp.currentDraft,
+      "currentRun": $cmp.currentRun,
+      "busy": $cmp.busy
+    },
+    key: 34,
+    on: _m13 || ($ctx._m13 = {
+      "sendmessage": api_bind($cmp.handleChatMessage),
+      "startplan": api_bind($cmp.handleStartPlan),
+      "exportplanspec": api_bind($cmp.handleExportPlanSpec)
+    })
+  }) : null, $cmp.isTemplates ? api_custom_element("c-template-workspace", __lwc_component_class_internal$4, {
+    props: {
+      "scenarios": $cmp.scenarios,
+      "templates": $cmp.templates,
+      "selectedScenarioId": $cmp.selectedScenarioId,
+      "currentDraft": $cmp.currentDraft,
+      "currentRun": $cmp.currentRun,
+      "busy": $cmp.busy
+    },
+    key: 35,
+    on: _m14 || ($ctx._m14 = {
+      "scenariochange": api_bind($cmp.handleScenarioChange),
+      "usetemplate": api_bind($cmp.handleUseTemplate),
+      "instantiatetemplate": api_bind($cmp.handleInstantiateTemplate)
+    })
+  }) : null, $cmp.isReview ? api_custom_element("c-plan-workspace", __lwc_component_class_internal$3, {
     props: {
       "scenarios": $cmp.scenarios,
       "selectedScenarioId": $cmp.selectedScenarioId,
@@ -12922,8 +13149,8 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "selectedStepId": $cmp.selectedStepId,
       "busy": $cmp.busy
     },
-    key: 35,
-    on: _m10 || ($ctx._m10 = {
+    key: 36,
+    on: _m15 || ($ctx._m15 = {
       "scenariochange": api_bind($cmp.handleScenarioChange),
       "goalchange": api_bind($cmp.handleGoalChange),
       "draftplan": api_bind($cmp.handleDraftPlan),
@@ -12931,18 +13158,6 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "smokedata360": api_bind($cmp.handleSmokeData360),
       "selectstep": api_bind($cmp.handleSelectStep),
       "approvestep": api_bind($cmp.handleApproveStep)
-    })
-  }) : null, $cmp.isExecution ? api_custom_element("c-execution-workspace", __lwc_component_class_internal$3, {
-    props: {
-      "demo": $cmp.demo,
-      "selectedAccountId": $cmp.selectedAccountId,
-      "busy": $cmp.busy
-    },
-    key: 36,
-    on: _m11 || ($ctx._m11 = {
-      "resetdemo": api_bind($cmp.handleResetDemo),
-      "selectaccount": api_bind($cmp.handleSelectAccount),
-      "actiontransition": api_bind($cmp.handleActionTransition)
     })
   }) : null, $cmp.isMonitors ? api_custom_element("c-monitor-workspace", __lwc_component_class_internal$2, {
     props: {
@@ -12953,7 +13168,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "recommendationUnavailable": $cmp.recommendationUnavailable
     },
     key: 37,
-    on: _m12 || ($ctx._m12 = {
+    on: _m16 || ($ctx._m16 = {
       "runmonitor": api_bind($cmp.handleRunMonitor),
       "recommendationtransition": api_bind($cmp.handleRecommendationTransition)
     })
@@ -12965,95 +13180,140 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "diagnostics": $cmp.diagnostics
     },
     key: 38
-  }) : null])]), $cmp.error ? api_static_fragment($fragment12, 40, [api_static_part(2, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment13, 42, [api_static_part(2, null, api_dynamic_text($cmp.exportMessage))]) : null]), $cmp.desktopSettingsOpen ? api_element("section", {
-    classMap: stc13,
-    attrs: {
-      "role": "dialog",
-      "aria-modal": "true",
-      "aria-labelledby": api_scoped_id("desktop-settings-title")
-    },
-    key: 43
-  }, [api_element("div", stc14, [api_static_fragment($fragment14, 46, [api_static_part(1, {
-    on: _m13 || ($ctx._m13 = {
-      "click": api_bind($cmp.handleCloseDesktopSettings)
+  }) : null, $cmp.isAdmin ? api_element("section", stc21, [api_element("article", stc22, [api_static_fragment($fragment8, 42), api_static_fragment($fragment9, 44, [api_static_part(2, {
+    on: _m17 || ($ctx._m17 = {
+      "change": api_bind($cmp.handleFieldChange)
     })
-  }, null), api_static_part(6, {
+  }, null), api_static_part(3, {
     attrs: {
-      "id": api_scoped_id("desktop-settings-title")
-    }
-  }, null)]), api_element("div", stc15, [api_static_fragment($fragment15, 49, [api_static_part(1, {
-    attrs: {
-      "for": api_scoped_id("desktop-provider")
-    }
-  }, null), api_static_part(4, {
-    on: _m14 || ($ctx._m14 = {
-      "change": api_bind($cmp.handleDesktopProviderChange)
-    }),
-    attrs: {
-      "id": api_scoped_id("desktop-provider")
+      "selected": $cmp.settingsProviderIsAnthropic ? "" : null
     }
   }, null), api_static_part(5, {
     attrs: {
-      "selected": $cmp.desktopProviderIsAnthropic ? "" : null
+      "selected": $cmp.settingsProviderIsOpenRouter ? "" : null
     }
-  }, null), api_static_part(7, {
-    attrs: {
-      "selected": $cmp.desktopProviderIsOpenRouter ? "" : null
-    }
-  }, null)]), api_element("div", stc16, [api_static_fragment($fragment16, 52, [api_static_part(0, {
-    attrs: {
-      "for": api_scoped_id("desktop-model")
-    }
-  }, null)]), api_element("div", stc17, [api_element("input", {
-    classMap: stc18,
-    attrs: {
-      "id": api_scoped_id("desktop-model")
-    },
+  }, null)]), api_element("label", stc23, [api_text("Model"), api_element("input", {
+    classMap: stc5,
+    attrs: stc24,
     props: {
-      "value": $cmp.desktopModel
+      "value": $cmp.settingsModel
     },
-    key: 54,
-    on: _m15 || ($ctx._m15 = {
-      "input": api_bind($cmp.handleDesktopModelChange)
-    })
-  })])]), api_element("div", stc19, [api_static_fragment($fragment17, 57, [api_static_part(0, {
-    attrs: {
-      "for": api_scoped_id("desktop-key")
-    }
-  }, null)]), api_element("div", stc20, [api_element("input", {
-    classMap: stc18,
-    attrs: {
-      "id": api_scoped_id("desktop-key"),
-      "type": "password",
-      "placeholder": $cmp.desktopKeyStatus
-    },
-    props: {
-      "value": $cmp.desktopApiKey
-    },
-    key: 59,
-    on: _m16 || ($ctx._m16 = {
-      "input": api_bind($cmp.handleDesktopApiKeyChange)
-    })
-  })]), api_static_fragment($fragment18, 61, [api_static_part(1, null, api_dynamic_text($cmp.desktopStorageStatus))])]), $cmp.desktopMessage ? api_static_fragment($fragment19, 63, [api_static_part(1, null, api_dynamic_text($cmp.desktopMessage))]) : null]), api_static_fragment($fragment20, 65, [api_static_part(1, {
-    on: _m17 || ($ctx._m17 = {
-      "click": api_bind($cmp.handleCloseDesktopSettings)
-    })
-  }, null), api_static_part(3, {
+    key: 46,
     on: _m18 || ($ctx._m18 = {
-      "click": api_bind($cmp.handleSaveDesktopSettings)
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_element("label", stc25, [api_text("API token"), api_element("input", {
+    classMap: stc5,
+    attrs: {
+      "type": "password",
+      "data-field": "settingsApiKey",
+      "placeholder": $cmp.settingsKeyStatus
+    },
+    props: {
+      "value": $cmp.settingsApiKey
+    },
+    key: 48,
+    on: _m19 || ($ctx._m19 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  })]), api_static_fragment($fragment10, 50, [api_static_part(0, {
+    on: _m21 || ($ctx._m21 = {
+      "click": api_bind($cmp.handleSaveLlmSettings)
     }),
     attrs: {
-      "disabled": $cmp.busy.desktopSettings ? "" : null
+      "disabled": $cmp.busy.saveSettings ? "" : null
     }
-  }, null)])])]) : null, $cmp.desktopSettingsOpen ? api_static_fragment($fragment21, 67) : null])];
+  }, null)])]), api_element("article", stc26, api_flatten([api_static_fragment($fragment11, 53), api_element("div", stc27, [api_element("input", {
+    classMap: stc5,
+    attrs: stc28,
+    props: {
+      "value": $cmp.newOrganizationName
+    },
+    key: 55,
+    on: _m22 || ($ctx._m22 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_static_fragment($fragment12, 57, [api_static_part(0, {
+    on: _m24 || ($ctx._m24 = {
+      "click": api_bind($cmp.handleCreateOrganization)
+    }),
+    attrs: {
+      "disabled": $cmp.busy.createOrganization ? "" : null
+    }
+  }, null)])]), api_iterator($cmp.organizationRows, function (org) {
+    return api_static_fragment($fragment13, api_key(59, org.id), [api_static_part(0, {
+      on: _m26 || ($ctx._m26 = {
+        "click": api_bind($cmp.handleSelectOrganization)
+      }),
+      className: api_normalize_class_name(org.className),
+      attrs: {
+        "data-organization-id": org.id
+      }
+    }, null), api_static_part(1, null, api_dynamic_text(org.name))]);
+  })])), api_element("article", stc29, api_flatten([api_static_fragment($fragment14, 62), api_element("div", stc30, [api_element("input", {
+    classMap: stc5,
+    attrs: stc31,
+    props: {
+      "value": $cmp.newUserName
+    },
+    key: 64,
+    on: _m27 || ($ctx._m27 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_element("input", {
+    classMap: stc5,
+    attrs: stc32,
+    props: {
+      "value": $cmp.newUserEmail
+    },
+    key: 65,
+    on: _m28 || ($ctx._m28 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_element("input", {
+    classMap: stc5,
+    attrs: stc33,
+    props: {
+      "value": $cmp.newUserPassword
+    },
+    key: 66,
+    on: _m29 || ($ctx._m29 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_static_fragment($fragment15, 68, [api_static_part(0, {
+    on: _m31 || ($ctx._m31 = {
+      "change": api_bind($cmp.handleFieldChange)
+    })
+  }, null), api_static_part(1, {
+    attrs: {
+      "selected": $cmp.newUserRoleIsMember ? "" : null
+    }
+  }, null), api_static_part(3, {
+    attrs: {
+      "selected": $cmp.newUserRoleIsAdmin ? "" : null
+    }
+  }, null), api_static_part(5, {
+    attrs: {
+      "selected": $cmp.newUserRoleIsViewer ? "" : null
+    }
+  }, null)]), api_static_fragment($fragment16, 70, [api_static_part(0, {
+    on: _m33 || ($ctx._m33 = {
+      "click": api_bind($cmp.handleCreateUser)
+    }),
+    attrs: {
+      "disabled": $cmp.busy.createUser ? "" : null
+    }
+  }, null)])]), api_iterator($cmp.userRows, function (item) {
+    return api_static_fragment($fragment17, api_key(72, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
+  })]))]) : null, $cmp.error ? api_static_fragment($fragment18, 74, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment19, 76, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl = registerTemplate(tmpl);
 tmpl.stylesheets = [];
 tmpl.stylesheetToken = "lwc-7l57unhr5tc";
 tmpl.legacyStylesheetToken = "c-data360Console_data360Console";
-if (_implicitStylesheets$4) {
-  tmpl.stylesheets.push.apply(tmpl.stylesheets, _implicitStylesheets$4);
+if (_implicitStylesheets$5) {
+  tmpl.stylesheets.push.apply(tmpl.stylesheets, _implicitStylesheets$5);
 }
 freezeTemplate(tmpl);
 
@@ -13092,53 +13352,74 @@ function parseJson(text) {
 }
 
 const TABS = [{
-  id: "plan",
-  label: "Plan Review"
+  id: "chat",
+  label: "Chat"
 }, {
-  id: "execution",
-  label: "Execution"
+  id: "templates",
+  label: "Templates"
+}, {
+  id: "review",
+  label: "Review"
 }, {
   id: "monitors",
   label: "Monitors"
 }, {
   id: "audit",
   label: "Audit"
+}, {
+  id: "admin",
+  label: "Admin"
 }];
 class Data360Console extends LightningElement {
   constructor(...args) {
     super(...args);
-    this.activeTab = "plan";
+    this.activeTab = "chat";
+    this.authReady = false;
+    this.setupRequired = false;
     this.user = {
-      username: "Demo mode",
-      authenticated: false
+      username: "anonymous",
+      authenticated: false,
+      authorities: []
     };
-    this.authUnavailable = null;
-    this.demo = null;
-    this.selectedAccountId = null;
+    this.setupOrganizationName = "Acme Travel";
+    this.setupDisplayName = "";
+    this.setupEmail = "";
+    this.setupPassword = "";
+    this.loginEmail = "";
+    this.loginPassword = "";
     this.scenarios = [];
+    this.templates = [];
     this.selectedScenarioId = "";
-    this.goal = "Recover dormant high-value accounts";
+    this.goal = "";
+    this.messages = [];
     this.currentDraft = null;
     this.currentRun = null;
     this.plannerStatus = "Ready";
     this.selectedStepId = null;
     this.diagnostics = null;
+    this.demo = null;
+    this.selectedAccountId = null;
     this.monitors = [];
     this.lastMonitorRun = null;
     this.recommendations = [];
     this.recommendationUnavailable = null;
     this.approvalHistory = [];
     this.approvalHistoryUnavailable = null;
-    this.isDesktop = false;
-    this.desktopSettings = null;
-    this.desktopSettingsOpen = false;
-    this.desktopProvider = "anthropic";
-    this.desktopModel = "claude-sonnet-4-5";
-    this.desktopApiKey = "";
-    this.desktopMessage = "";
-    this.exportMessage = "";
+    this.llmSettings = null;
+    this.settingsProvider = "anthropic";
+    this.settingsModel = "claude-sonnet-4-5";
+    this.settingsApiKey = "";
+    this.organizations = [];
+    this.selectedAdminOrgId = "";
+    this.organizationUsers = [];
+    this.newOrganizationName = "";
+    this.newUserName = "";
+    this.newUserEmail = "";
+    this.newUserPassword = "";
+    this.newUserRole = "MEMBER";
     this.busy = {};
     this.error = null;
+    this.exportMessage = "";
     this.handleHashChange = () => {
       const hash = window.location.hash.replace("#", "");
       if (TABS.some(tab => tab.id === hash)) {
@@ -13152,26 +13433,32 @@ class Data360Console extends LightningElement {
       this.activeTab = hash;
     }
     window.addEventListener("hashchange", this.handleHashChange);
-    this.loadDesktopSettings();
-    this.loadAll();
+    this.loadAuthStatus();
   }
   disconnectedCallback() {
     window.removeEventListener("hashchange", this.handleHashChange);
   }
+  get showAuthScreen() {
+    return this.authReady && !this.user.authenticated;
+  }
+  get authSubtitle() {
+    return this.setupRequired ? "Create the first organization and owner." : "Sign in to continue.";
+  }
   get tabs() {
     return TABS.map(tab => ({
       ...tab,
-      itemClass: `slds-tabs_default__item ${this.activeTab === tab.id ? "slds-is-active" : ""}`,
-      panelClass: this.activeTab === tab.id ? "slds-tabs_default__content slds-show" : "slds-tabs_default__content slds-hide",
-      selected: this.activeTab === tab.id ? "true" : "false",
-      href: `#${tab.id}`
+      href: `#${tab.id}`,
+      className: `nav-item ${this.activeTab === tab.id ? "active" : ""}`
     }));
   }
-  get isPlan() {
-    return this.activeTab === "plan";
+  get isChat() {
+    return this.activeTab === "chat";
   }
-  get isExecution() {
-    return this.activeTab === "execution";
+  get isTemplates() {
+    return this.activeTab === "templates";
+  }
+  get isReview() {
+    return this.activeTab === "review";
   }
   get isMonitors() {
     return this.activeTab === "monitors";
@@ -13179,98 +13466,69 @@ class Data360Console extends LightningElement {
   get isAudit() {
     return this.activeTab === "audit";
   }
-  get summary() {
-    return this.demo?.summary || {};
-  }
-  get goalTitle() {
-    return this.goal || this.summary.command;
+  get isAdmin() {
+    return this.activeTab === "admin";
   }
   get userLabel() {
-    if (this.authUnavailable) return "Auth unavailable";
-    return this.user.authenticated ? this.user.username : "Demo mode";
+    return this.user.authenticated ? this.user.username : "Not signed in";
   }
-  get userClass() {
-    if (this.authUnavailable) return "slds-badge slds-theme_error";
-    return this.user.authenticated ? "slds-badge slds-theme_success" : "slds-badge";
+  get modelLabel() {
+    if (!this.llmSettings) return "Model not configured";
+    const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
+    return `${this.llmSettings.provider} / ${this.llmSettings.model} (${configured})`;
   }
-  get diagnosticsLabel() {
-    if (!this.diagnostics) return "Checking Data 360 client";
-    const configured = this.diagnostics.configured ? "configured" : "not configured";
-    return `Data 360 ${this.diagnostics.mode}: ${this.diagnostics.status} (${configured})`;
+  get settingsProviderIsAnthropic() {
+    return this.settingsProvider === "anthropic";
   }
-  get diagnosticsClass() {
-    return `slds-badge status-badge ${slug(this.diagnostics?.status || "checking")}`;
+  get settingsProviderIsOpenRouter() {
+    return this.settingsProvider === "openrouter";
   }
-  get metricCards() {
-    const summary = this.summary;
-    const waiting = this.demo?.actions?.filter(action => action.status === "Waiting Approval").length || 0;
-    const approvalGates = this.currentDraft?.plan?.steps?.filter(step => step.needsApproval).length || 0;
-    return [{
-      label: "Recoverable revenue",
-      value: compactCurrency(summary.recoverableRevenue || 0)
-    }, {
-      label: "Eligible audience",
-      value: number(summary.accountsIdentified || 0)
-    }, {
-      label: "Actions waiting",
-      value: number(summary.actionsWaitingApproval || waiting)
-    }, {
-      label: "Plan approvals",
-      value: number(approvalGates)
-    }];
+  get settingsKeyStatus() {
+    if (!this.llmSettings?.apiKeyConfigured) return "No token saved";
+    return this.llmSettings.apiKeyLast4 ? `Saved token ending ${this.llmSettings.apiKeyLast4}` : "Token saved";
   }
-  get headerStatusClass() {
-    return `slds-badge status-badge ${slug(this.summary.status || this.plannerStatus)}`;
+  get organizationRows() {
+    return (this.organizations || []).map(org => ({
+      ...org,
+      className: `org-row ${org.id === this.selectedAdminOrgId ? "selected" : ""}`
+    }));
   }
-  get headerStatusLabel() {
-    return this.summary.status || this.plannerStatus;
+  get userRows() {
+    return this.organizationUsers || [];
   }
-  get canExportPlanSpec() {
-    return Boolean(this.currentDraft?.plan?.id);
+  get newUserRoleIsMember() {
+    return this.newUserRole === "MEMBER";
   }
-  get canExportRunLog() {
-    return Boolean(this.currentRun?.id);
+  get newUserRoleIsAdmin() {
+    return this.newUserRole === "ADMIN";
   }
-  get planExportDisabled() {
-    return !this.canExportPlanSpec || this.busy.exportPlanSpec;
+  get newUserRoleIsViewer() {
+    return this.newUserRole === "VIEWER";
   }
-  get runLogExportDisabled() {
-    return !this.canExportRunLog || this.busy.exportRunLog;
-  }
-  get desktopProviderIsAnthropic() {
-    return this.desktopProvider === "anthropic";
-  }
-  get desktopProviderIsOpenRouter() {
-    return this.desktopProvider === "openrouter";
-  }
-  get desktopKeyStatus() {
-    const provider = this.desktopSettings?.[this.desktopProvider] || {};
-    if (!provider.apiKeyConfigured) {
-      return "No API key stored";
+  async loadAuthStatus() {
+    this.error = null;
+    try {
+      const status = await request("/api/auth/status");
+      this.user = status.user || this.user;
+      this.setupRequired = Boolean(status.setupRequired);
+      this.authReady = true;
+      if (this.user.authenticated) {
+        await this.loadAll();
+      }
+    } catch (error) {
+      this.authReady = true;
+      this.error = error.message;
     }
-    return provider.apiKeyLast4 ? `Stored key ending ${provider.apiKeyLast4}` : "API key stored";
-  }
-  get desktopStorageStatus() {
-    if (!this.desktopSettings) return "";
-    return this.desktopSettings.keyStorageAvailable ? "Stored with OS-backed encryption" : "Secure key storage unavailable; keys will not be persisted";
   }
   async loadAll() {
-    await Promise.all([this.loadUser(), this.loadDemo(), this.loadScenarios(), this.loadDiagnostics(), this.loadMonitors(), this.loadRecommendations()]);
-  }
-  async loadUser() {
-    try {
-      this.user = await request("/api/me");
-      this.authUnavailable = null;
-    } catch (error) {
-      this.authUnavailable = error.message;
-    }
+    await Promise.all([this.loadDemo(), this.loadScenarios(), this.loadTemplates(), this.loadDiagnostics(), this.loadMonitors(), this.loadRecommendations(), this.loadLlmSettings(), this.loadOrganizations()]);
   }
   async loadDemo() {
     try {
       this.demo = await request("/api/demo/dormant-revenue-recovery");
       this.selectedAccountId ||= this.demo.accounts?.[0]?.id;
-    } catch (error) {
-      this.error = error.message;
+    } catch {
+      this.demo = null;
     }
   }
   async loadScenarios() {
@@ -13278,11 +13536,16 @@ class Data360Console extends LightningElement {
       this.scenarios = await request("/api/scenarios");
       const first = this.scenarios[0];
       this.selectedScenarioId = this.selectedScenarioId || first?.id || "";
-      this.goal = first?.defaultUtterances?.[0] || first?.name || this.goal;
-      this.resetCurrentDraft();
+      this.goal = this.goal || first?.defaultUtterances?.[0] || "";
     } catch (error) {
       this.error = error.message;
-      this.plannerStatus = "Error";
+    }
+  }
+  async loadTemplates() {
+    try {
+      this.templates = await request("/api/library");
+    } catch {
+      this.templates = [];
     }
   }
   async loadDiagnostics() {
@@ -13300,37 +13563,43 @@ class Data360Console extends LightningElement {
   async loadMonitors() {
     try {
       this.monitors = await request("/api/monitors");
-    } catch (error) {
+    } catch {
       this.monitors = [];
-      this.lastMonitorRun = {
-        status: "ERROR",
-        recommendation: error.message,
-        observedValue: 0,
-        thresholdBreached: true
-      };
     }
   }
   async loadRecommendations() {
-    this.recommendationUnavailable = null;
     try {
       this.recommendations = await request("/api/monitors/recommendations");
+      this.recommendationUnavailable = null;
     } catch (error) {
       this.recommendations = [];
       this.recommendationUnavailable = error.message;
     }
   }
-  async loadDesktopSettings() {
-    if (!window.data360Desktop?.getSettings) {
-      return;
-    }
-    this.isDesktop = true;
+  async loadLlmSettings() {
     try {
-      this.desktopSettings = await window.data360Desktop.getSettings();
-      this.desktopProvider = this.desktopSettings.provider || "anthropic";
-      this.desktopModel = this.desktopSettings[this.desktopProvider]?.model || this.desktopModel;
+      this.llmSettings = await request("/api/llm-settings");
+      this.settingsProvider = this.llmSettings.provider || "anthropic";
+      this.settingsModel = this.llmSettings.model || this.settingsModel;
     } catch (error) {
-      this.desktopMessage = error.message;
+      this.error = error.message;
     }
+  }
+  async loadOrganizations() {
+    try {
+      this.organizations = await request("/api/organizations");
+      this.selectedAdminOrgId = this.selectedAdminOrgId || this.user.organizationId || this.organizations[0]?.id || "";
+      if (this.selectedAdminOrgId) {
+        await this.loadUsers();
+      }
+    } catch {
+      this.organizations = [];
+      this.organizationUsers = [];
+    }
+  }
+  async loadUsers() {
+    if (!this.selectedAdminOrgId) return;
+    this.organizationUsers = await request(`/api/organizations/${this.selectedAdminOrgId}/users`);
   }
   handleTab(event) {
     event.preventDefault();
@@ -13340,38 +13609,137 @@ class Data360Console extends LightningElement {
       history.pushState(null, "", `#${tab}`);
     }
   }
-  async handleResetDemo() {
-    this.setBusy("resetDemo", true);
+  handleFieldChange(event) {
+    this[event.target.dataset.field] = event.target.value;
+  }
+  handleLoginKeydown(event) {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    this.handleLogin();
+  }
+  async handleBootstrap() {
+    this.setBusy("auth", true);
+    this.error = null;
     try {
-      this.demo = await request("/api/demo/dormant-revenue-recovery/reset", {
-        method: "POST"
+      const status = await request("/api/auth/bootstrap", {
+        method: "POST",
+        body: {
+          organizationName: this.setupOrganizationName,
+          displayName: this.setupDisplayName,
+          email: this.setupEmail,
+          password: this.setupPassword
+        }
       });
-      this.selectedAccountId = this.demo.accounts?.[0]?.id;
+      this.afterAuth(status);
+    } catch (error) {
+      this.error = error.message;
     } finally {
-      this.setBusy("resetDemo", false);
+      this.setBusy("auth", false);
     }
   }
-  handleSelectAccount(event) {
-    this.selectedAccountId = event.detail.accountId;
+  async handleLogin() {
+    this.setBusy("auth", true);
+    this.error = null;
+    try {
+      const status = await request("/api/auth/login", {
+        method: "POST",
+        body: {
+          email: this.loginEmail,
+          password: this.loginPassword
+        }
+      });
+      this.afterAuth(status);
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.setBusy("auth", false);
+    }
   }
-  async handleActionTransition(event) {
-    const {
-      actionId,
-      transition
-    } = event.detail;
-    this.demo = await request(`/api/demo/dormant-revenue-recovery/actions/${actionId}/${transition}`, {
+  async afterAuth(status) {
+    this.user = status.user;
+    this.setupRequired = false;
+    this.loginPassword = "";
+    this.setupPassword = "";
+    this.messages = [{
+      role: "assistant",
+      text: "What should Data 360 set up?",
+      meta: "I will draft a governed PlanSpec for approval before execution."
+    }];
+    await this.loadAll();
+  }
+  async handleLogout() {
+    await request("/api/auth/logout", {
       method: "POST"
     });
+    this.user = {
+      username: "anonymous",
+      authenticated: false,
+      authorities: []
+    };
+    this.currentDraft = null;
+    this.currentRun = null;
+    this.messages = [];
+    await this.loadAuthStatus();
+  }
+  async handleChatMessage(event) {
+    const text = event.detail.text;
+    this.messages = [...this.messages, {
+      role: "user",
+      text
+    }];
+    this.goal = text;
+    await this.handleDraftPlan();
+    if (this.currentDraft?.plan) {
+      const count = this.currentDraft.plan.steps?.length || 0;
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: `I drafted a PlanSpec with ${count} ${count === 1 ? "step" : "steps"}. Review it before running.`,
+        meta: this.currentDraft.validation?.ok ? "Validation passed." : "Validation needs attention."
+      }];
+    }
   }
   handleScenarioChange(event) {
     const scenario = this.scenarios.find(item => item.id === event.detail.scenarioId);
     this.selectedScenarioId = scenario?.id || "";
-    this.goal = scenario?.defaultUtterances?.[0] || scenario?.name || "";
+    this.goal = scenario?.defaultUtterances?.[0] || scenario?.name || this.goal;
     this.resetCurrentDraft();
   }
   handleGoalChange(event) {
     this.goal = event.detail.goal;
     this.resetCurrentDraft();
+  }
+  handleUseTemplate(event) {
+    const template = event.detail.template;
+    this.goal = template ? `${template.title}: ${template.outcome || template.summary || ""}` : this.goal;
+    this.activeTab = "chat";
+    this.messages = [...this.messages, {
+      role: "assistant",
+      text: this.goal,
+      meta: "Template loaded as the next chat goal."
+    }];
+  }
+  async handleInstantiateTemplate(event) {
+    const templateId = event.detail.templateId;
+    if (!templateId) return;
+    this.setBusy("instantiateTemplate", true);
+    try {
+      this.currentDraft = await request(`/api/library/${templateId}/plans`, {
+        method: "POST",
+        body: {
+          context: {
+            org: this.user.organizationName || "default-org",
+            dataspace: "default",
+            environment: "sandbox"
+          }
+        }
+      });
+      this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
+      this.activeTab = "review";
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.setBusy("instantiateTemplate", false);
+    }
   }
   resetCurrentDraft() {
     this.currentDraft = null;
@@ -13382,18 +13750,18 @@ class Data360Console extends LightningElement {
     this.plannerStatus = "Ready";
   }
   async handleDraftPlan() {
-    const scenario = this.scenarios.find(item => item.id === this.selectedScenarioId);
-    if (!scenario) return;
+    const scenario = this.scenarios.find(item => item.id === this.selectedScenarioId) || this.scenarios[0];
     this.setBusy("draftPlan", true);
     this.plannerStatus = "Planning";
+    this.error = null;
     try {
       this.currentDraft = await request("/api/plans", {
         method: "POST",
         body: {
-          scenarioId: scenario.id,
+          scenarioId: scenario?.id,
           goal: this.goal,
           context: {
-            org: "demo-org",
+            org: this.user.organizationName || "default-org",
             dataspace: "default",
             environment: "sandbox"
           }
@@ -13404,9 +13772,16 @@ class Data360Console extends LightningElement {
       this.approvalHistory = [];
       this.approvalHistoryUnavailable = null;
       this.plannerStatus = this.currentDraft.validation?.ok ? "Ready" : "Review";
+      return this.currentDraft;
     } catch (error) {
       this.error = error.message;
       this.plannerStatus = "Error";
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: "I could not draft the PlanSpec.",
+        meta: error.message
+      }];
+      return null;
     } finally {
       this.setBusy("draftPlan", false);
     }
@@ -13416,8 +13791,6 @@ class Data360Console extends LightningElement {
     this.setBusy("startPlan", true);
     this.plannerStatus = "Running";
     try {
-      this.approvalHistory = [];
-      this.approvalHistoryUnavailable = null;
       const response = await request(`/api/plans/${this.currentDraft.plan.id}/runs`, {
         method: "POST"
       });
@@ -13428,8 +13801,16 @@ class Data360Console extends LightningElement {
         return;
       }
       this.currentRun = response;
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: `Run ${response.id} started.`,
+        meta: response.status
+      }];
       await this.pollRun(response.id);
       await this.loadMonitors();
+    } catch (error) {
+      this.error = error.message;
+      this.plannerStatus = "Error";
     } finally {
       this.setBusy("startPlan", false);
     }
@@ -13457,11 +13838,11 @@ class Data360Console extends LightningElement {
     this.plannerStatus = this.currentRun.status;
   }
   async loadApprovalHistory(runId) {
-    this.approvalHistory = [];
-    this.approvalHistoryUnavailable = null;
     try {
       this.approvalHistory = await request(`/api/runs/${runId}/approvals`);
+      this.approvalHistoryUnavailable = null;
     } catch (error) {
+      this.approvalHistory = [];
       this.approvalHistoryUnavailable = error.message;
     }
   }
@@ -13508,49 +13889,70 @@ class Data360Console extends LightningElement {
       this.recommendationUnavailable = error.message;
     }
   }
-  handleOpenDesktopSettings() {
-    this.desktopSettingsOpen = true;
-    this.desktopApiKey = "";
-    this.desktopMessage = "";
-  }
-  handleCloseDesktopSettings() {
-    this.desktopSettingsOpen = false;
-    this.desktopApiKey = "";
-  }
-  handleDesktopProviderChange(event) {
-    this.desktopProvider = event.target.value;
-    this.desktopModel = this.desktopSettings?.[this.desktopProvider]?.model || "";
-    this.desktopApiKey = "";
-  }
-  handleDesktopModelChange(event) {
-    this.desktopModel = event.target.value;
-  }
-  handleDesktopApiKeyChange(event) {
-    this.desktopApiKey = event.target.value;
-  }
-  async handleSaveDesktopSettings() {
-    if (!window.data360Desktop?.saveSettings) return;
-    this.setBusy("desktopSettings", true);
-    this.desktopMessage = "Saving settings and restarting local backend...";
+  async handleSaveLlmSettings() {
+    this.setBusy("saveSettings", true);
+    this.error = null;
     try {
-      const providerSettings = {
-        model: this.desktopModel
+      const body = {
+        provider: this.settingsProvider,
+        model: this.settingsModel,
+        apiKey: this.settingsApiKey
       };
-      if (this.desktopApiKey.trim()) {
-        providerSettings.apiKey = this.desktopApiKey.trim();
-      }
-      this.desktopSettings = await window.data360Desktop.saveSettings({
-        provider: this.desktopProvider,
-        [this.desktopProvider]: providerSettings
+      this.llmSettings = await request("/api/llm-settings", {
+        method: "PUT",
+        body
       });
-      this.desktopApiKey = "";
-      this.desktopSettingsOpen = false;
-      this.desktopMessage = "Model settings saved.";
-      await this.loadAll();
+      this.settingsApiKey = "";
     } catch (error) {
-      this.desktopMessage = error.message;
+      this.error = error.message;
     } finally {
-      this.setBusy("desktopSettings", false);
+      this.setBusy("saveSettings", false);
+    }
+  }
+  async handleCreateOrganization() {
+    if (!this.newOrganizationName.trim()) return;
+    this.setBusy("createOrganization", true);
+    try {
+      const org = await request("/api/organizations", {
+        method: "POST",
+        body: {
+          name: this.newOrganizationName
+        }
+      });
+      this.newOrganizationName = "";
+      this.selectedAdminOrgId = org.id;
+      await this.loadOrganizations();
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.setBusy("createOrganization", false);
+    }
+  }
+  handleSelectOrganization(event) {
+    this.selectedAdminOrgId = event.currentTarget.dataset.organizationId;
+    this.loadUsers();
+  }
+  async handleCreateUser() {
+    if (!this.selectedAdminOrgId) return;
+    this.setBusy("createUser", true);
+    try {
+      await request(`/api/organizations/${this.selectedAdminOrgId}/users`, {
+        method: "POST",
+        body: {
+          displayName: this.newUserName,
+          email: this.newUserEmail,
+          password: this.newUserPassword,
+          role: this.newUserRole
+        }
+      });
+      this.newUserName = "";
+      this.newUserEmail = "";
+      this.newUserPassword = "";
+      await this.loadUsers();
+    } catch (error) {
+      this.error = error.message;
+    } finally {
+      this.setBusy("createUser", false);
     }
   }
   async handleExportPlanSpec() {
@@ -13561,22 +13963,9 @@ class Data360Console extends LightningElement {
       await exportJson(`planspec-${this.currentDraft.plan.id}.json`, archive);
       this.exportMessage = "PlanSpec exported.";
     } catch (error) {
-      this.exportMessage = error.message;
+      this.error = error.message;
     } finally {
       this.setBusy("exportPlanSpec", false);
-    }
-  }
-  async handleExportRunLog() {
-    if (!this.currentRun?.id) return;
-    this.setBusy("exportRunLog", true);
-    try {
-      const archive = await request(`/api/runs/${this.currentRun.id}/export`);
-      await exportJson(`execution-log-${this.currentRun.id}.json`, archive);
-      this.exportMessage = "Execution log exported.";
-    } catch (error) {
-      this.exportMessage = error.message;
-    } finally {
-      this.setBusy("exportRunLog", false);
     }
   }
   setBusy(key, value) {
@@ -13588,7 +13977,7 @@ class Data360Console extends LightningElement {
   /*LWC compiler v9.2.2*/
 }
 registerDecorators(Data360Console, {
-  fields: ["activeTab", "user", "authUnavailable", "demo", "selectedAccountId", "scenarios", "selectedScenarioId", "goal", "currentDraft", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "isDesktop", "desktopSettings", "desktopSettingsOpen", "desktopProvider", "desktopModel", "desktopApiKey", "desktopMessage", "exportMessage", "busy", "error", "handleHashChange"]
+  fields: ["activeTab", "authReady", "setupRequired", "user", "setupOrganizationName", "setupDisplayName", "setupEmail", "setupPassword", "loginEmail", "loginPassword", "scenarios", "templates", "selectedScenarioId", "goal", "messages", "currentDraft", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "demo", "selectedAccountId", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "llmSettings", "settingsProvider", "settingsModel", "settingsApiKey", "organizations", "selectedAdminOrgId", "organizationUsers", "newOrganizationName", "newUserName", "newUserEmail", "newUserPassword", "newUserRole", "busy", "error", "exportMessage", "handleHashChange"]
 });
 const __lwc_component_class_internal = registerComponent(Data360Console, {
   tmpl: _tmpl,
@@ -13596,9 +13985,7 @@ const __lwc_component_class_internal = registerComponent(Data360Console, {
   apiVersion: 66
 });
 function delay(ms) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 async function exportJson(defaultFileName, payload) {
   if (window.data360Desktop?.exportJson) {

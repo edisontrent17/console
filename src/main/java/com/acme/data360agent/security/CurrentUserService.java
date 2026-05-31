@@ -1,5 +1,6 @@
 package com.acme.data360agent.security;
 
+import com.acme.data360agent.identity.LocalUserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -17,6 +18,9 @@ public class CurrentUserService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             return AppUser.anonymous();
+        }
+        if (authentication.getPrincipal() instanceof LocalUserPrincipal principal) {
+            return AppUser.from(principal);
         }
         var name = principalName(authentication);
         var authorities = authentication.getAuthorities().stream()

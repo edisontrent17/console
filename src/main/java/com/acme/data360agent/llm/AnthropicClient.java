@@ -41,12 +41,21 @@ public class AnthropicClient implements LlmClient {
         return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model));
     }
 
+    public LlmCompletion completeJson(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        var model = settings.model() == null || settings.model().isBlank() ? model(prompt) : settings.model();
+        return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model, settings.apiKey()));
+    }
+
     public String completeJson(String system, String user) {
         return completeJson(system, user, properties.model());
     }
 
     private String completeJson(String system, String user, String model) {
-        if (!configured()) {
+        return completeJson(system, user, model, properties.apiKey());
+    }
+
+    private String completeJson(String system, String user, String model, String apiKey) {
+        if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException("ANTHROPIC_API_KEY is not configured.");
         }
 
@@ -61,7 +70,7 @@ public class AnthropicClient implements LlmClient {
         var raw = webClient.post()
                 .uri("/v1/messages")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("x-api-key", properties.apiKey())
+                .header("x-api-key", apiKey)
                 .header("anthropic-version", "2023-06-01")
                 .bodyValue(request)
                 .retrieve()

@@ -1,6 +1,8 @@
 package com.acme.data360agent.security;
 
 import com.acme.data360agent.config.SecurityProperties;
+import com.acme.data360agent.identity.LocalSessionFilter;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -19,6 +21,9 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,23 +48,54 @@ public class SecurityConfig {
     private static final String[] DEMO = {ADMIN, ROLE_ADMIN, "SCOPE_data360.demo"};
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityProperties properties) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SecurityProperties properties, ObjectProvider<LocalSessionFilter> localSessionFilter) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        if (!properties.resolvedEnabled()) {
+        if ("disabled".equalsIgnoreCase(properties.resolvedMode())) {
             http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+            return http.build();
+        }
+
+        if ("local".equalsIgnoreCase(properties.resolvedMode())) {
+            localSessionFilter.ifAvailable(filter -> http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class));
+            http.authorizeHttpRequests(auth -> auth
+                            .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/assets/**", "/favicon.ico").permitAll()
+                            .requestMatchers("/api/auth/**").permitAll()
+                            .requestMatchers("/api/me").authenticated()
+                            .requestMatchers(HttpMethod.GET, "/api/scenarios", "/api/library", "/api/library/*").hasAnyAuthority(READ)
+                            .requestMatchers(HttpMethod.GET, "/api/plans", "/api/plans/*", "/api/plans/*/export", "/api/runs/*", "/api/runs/*/approvals").hasAnyAuthority(READ)
+                            .requestMatchers(HttpMethod.GET, "/api/monitors", "/api/monitors/*", "/api/monitors/*/runs", "/api/monitors/recommendations").hasAnyAuthority(READ)
+                            .requestMatchers(HttpMethod.GET, "/api/demo/dormant-revenue-recovery").hasAnyAuthority(READ)
+                            .requestMatchers(HttpMethod.GET, "/api/llm-settings").hasAnyAuthority(READ)
+                            .requestMatchers(HttpMethod.PUT, "/api/llm-settings").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                            .requestMatchers(HttpMethod.GET, "/api/organizations", "/api/organizations/*/users").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                            .requestMatchers(HttpMethod.POST, "/api/organizations", "/api/organizations/*/users").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                            .requestMatchers(HttpMethod.POST, "/api/plans", "/api/library/*/plans").hasAnyAuthority(PLAN)
+                            .requestMatchers(HttpMethod.POST, "/api/plans/*/runs").hasAnyAuthority(EXECUTE)
+                            .requestMatchers(HttpMethod.POST, "/api/runs/*/steps/*/approve", "/api/monitors/recommendations/*/approve", "/api/monitors/recommendations/*/reject").hasAnyAuthority(APPROVE)
+                            .requestMatchers(HttpMethod.POST, "/api/monitors/*/run-now").hasAnyAuthority(MONITOR)
+                            .requestMatchers(HttpMethod.GET, "/api/runs/*/audit", "/api/runs/*/export").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                            .requestMatchers("/api/data360/diagnostics", "/api/data360/diagnostics/**").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                            .requestMatchers(HttpMethod.POST, "/api/demo/dormant-revenue-recovery/**").hasAnyAuthority(DEMO)
+                            .requestMatchers("/api/**").denyAll()
+                            .anyRequest().denyAll());
             return http.build();
         }
 
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index.html", "/styles.css", "/app.js", "/assets/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/api/auth/status").permitAll()
                         .requestMatchers("/api/me").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/scenarios", "/api/library", "/api/library/*").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.GET, "/api/plans", "/api/plans/*", "/api/plans/*/export", "/api/runs/*", "/api/runs/*/approvals").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.GET, "/api/monitors", "/api/monitors/*", "/api/monitors/*/runs", "/api/monitors/recommendations").hasAnyAuthority(READ)
                         .requestMatchers(HttpMethod.GET, "/api/demo/dormant-revenue-recovery").hasAnyAuthority(READ)
+                        .requestMatchers(HttpMethod.GET, "/api/llm-settings").hasAnyAuthority(READ)
+                        .requestMatchers(HttpMethod.PUT, "/api/llm-settings").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/organizations", "/api/organizations/*/users").hasAnyAuthority(ADMIN, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/organizations", "/api/organizations/*/users").hasAnyAuthority(ADMIN, ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/plans", "/api/library/*/plans").hasAnyAuthority(PLAN)
                         .requestMatchers(HttpMethod.POST, "/api/plans/*/runs").hasAnyAuthority(EXECUTE)
                         .requestMatchers(HttpMethod.POST, "/api/runs/*/steps/*/approve", "/api/monitors/recommendations/*/approve", "/api/monitors/recommendations/*/reject").hasAnyAuthority(APPROVE)
@@ -74,10 +110,15 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource(SecurityProperties properties) {
         var configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(properties.resolvedAllowedOrigins());
-        configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "X-Data360-Desktop-Token"));
         configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
@@ -88,11 +129,16 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder(org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties properties, SecurityProperties security) {
+        if (!"jwt".equalsIgnoreCase(security.resolvedMode())) {
+            return token -> {
+                throw new IllegalStateException("JWT auth is not enabled.");
+            };
+        }
         var jwt = properties.getJwt();
-        if (security.resolvedEnabled() && (jwt.getIssuerUri() == null || jwt.getIssuerUri().isBlank())) {
+        if (jwt.getIssuerUri() == null || jwt.getIssuerUri().isBlank()) {
             throw new IllegalStateException("OAUTH2_ISSUER_URI is required when app.security.enabled=true.");
         }
-        if (security.resolvedEnabled() && (security.requiredAudience() == null || security.requiredAudience().isBlank())) {
+        if (security.requiredAudience() == null || security.requiredAudience().isBlank()) {
             throw new IllegalStateException("APP_SECURITY_REQUIRED_AUDIENCE is required when app.security.enabled=true.");
         }
         NimbusJwtDecoder decoder;

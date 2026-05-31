@@ -1,44 +1,63 @@
 import { LightningElement } from "lwc";
 import { request } from "c/api";
-import { compactCurrency, number, slug } from "c/format";
+import { slug } from "c/format";
 
 const TABS = [
-    { id: "plan", label: "Plan Review" },
-    { id: "execution", label: "Execution" },
+    { id: "chat", label: "Chat" },
+    { id: "templates", label: "Templates" },
+    { id: "review", label: "Review" },
     { id: "monitors", label: "Monitors" },
-    { id: "audit", label: "Audit" }
+    { id: "audit", label: "Audit" },
+    { id: "admin", label: "Admin" }
 ];
 
 export default class Data360Console extends LightningElement {
-    activeTab = "plan";
-    user = { username: "Demo mode", authenticated: false };
-    authUnavailable = null;
-    demo = null;
-    selectedAccountId = null;
+    activeTab = "chat";
+    authReady = false;
+    setupRequired = false;
+    user = { username: "anonymous", authenticated: false, authorities: [] };
+    setupOrganizationName = "Acme Travel";
+    setupDisplayName = "";
+    setupEmail = "";
+    setupPassword = "";
+    loginEmail = "";
+    loginPassword = "";
+
     scenarios = [];
+    templates = [];
     selectedScenarioId = "";
-    goal = "Recover dormant high-value accounts";
+    goal = "";
+    messages = [];
     currentDraft = null;
     currentRun = null;
     plannerStatus = "Ready";
     selectedStepId = null;
     diagnostics = null;
+    demo = null;
+    selectedAccountId = null;
     monitors = [];
     lastMonitorRun = null;
     recommendations = [];
     recommendationUnavailable = null;
     approvalHistory = [];
     approvalHistoryUnavailable = null;
-    isDesktop = false;
-    desktopSettings = null;
-    desktopSettingsOpen = false;
-    desktopProvider = "anthropic";
-    desktopModel = "claude-sonnet-4-5";
-    desktopApiKey = "";
-    desktopMessage = "";
-    exportMessage = "";
+
+    llmSettings = null;
+    settingsProvider = "anthropic";
+    settingsModel = "claude-sonnet-4-5";
+    settingsApiKey = "";
+    organizations = [];
+    selectedAdminOrgId = "";
+    organizationUsers = [];
+    newOrganizationName = "";
+    newUserName = "";
+    newUserEmail = "";
+    newUserPassword = "";
+    newUserRole = "MEMBER";
+
     busy = {};
     error = null;
+    exportMessage = "";
 
     connectedCallback() {
         const hash = window.location.hash.replace("#", "");
@@ -46,8 +65,7 @@ export default class Data360Console extends LightningElement {
             this.activeTab = hash;
         }
         window.addEventListener("hashchange", this.handleHashChange);
-        this.loadDesktopSettings();
-        this.loadAll();
+        this.loadAuthStatus();
     }
 
     disconnectedCallback() {
@@ -61,22 +79,32 @@ export default class Data360Console extends LightningElement {
         }
     };
 
+    get showAuthScreen() {
+        return this.authReady && !this.user.authenticated;
+    }
+
+    get authSubtitle() {
+        return this.setupRequired ? "Create the first organization and owner." : "Sign in to continue.";
+    }
+
     get tabs() {
         return TABS.map((tab) => ({
             ...tab,
-            itemClass: `slds-tabs_default__item ${this.activeTab === tab.id ? "slds-is-active" : ""}`,
-            panelClass: this.activeTab === tab.id ? "slds-tabs_default__content slds-show" : "slds-tabs_default__content slds-hide",
-            selected: this.activeTab === tab.id ? "true" : "false",
-            href: `#${tab.id}`
+            href: `#${tab.id}`,
+            className: `nav-item ${this.activeTab === tab.id ? "active" : ""}`
         }));
     }
 
-    get isPlan() {
-        return this.activeTab === "plan";
+    get isChat() {
+        return this.activeTab === "chat";
     }
 
-    get isExecution() {
-        return this.activeTab === "execution";
+    get isTemplates() {
+        return this.activeTab === "templates";
+    }
+
+    get isReview() {
+        return this.activeTab === "review";
     }
 
     get isMonitors() {
@@ -87,119 +115,91 @@ export default class Data360Console extends LightningElement {
         return this.activeTab === "audit";
     }
 
-    get summary() {
-        return this.demo?.summary || {};
-    }
-
-    get goalTitle() {
-        return this.goal || this.summary.command;
+    get isAdmin() {
+        return this.activeTab === "admin";
     }
 
     get userLabel() {
-        if (this.authUnavailable) return "Auth unavailable";
-        return this.user.authenticated ? this.user.username : "Demo mode";
+        return this.user.authenticated ? this.user.username : "Not signed in";
     }
 
-    get userClass() {
-        if (this.authUnavailable) return "slds-badge slds-theme_error";
-        return this.user.authenticated ? "slds-badge slds-theme_success" : "slds-badge";
+    get modelLabel() {
+        if (!this.llmSettings) return "Model not configured";
+        const configured = this.llmSettings.apiKeyConfigured ? "ready" : "missing token";
+        return `${this.llmSettings.provider} / ${this.llmSettings.model} (${configured})`;
     }
 
-    get diagnosticsLabel() {
-        if (!this.diagnostics) return "Checking Data 360 client";
-        const configured = this.diagnostics.configured ? "configured" : "not configured";
-        return `Data 360 ${this.diagnostics.mode}: ${this.diagnostics.status} (${configured})`;
+    get settingsProviderIsAnthropic() {
+        return this.settingsProvider === "anthropic";
     }
 
-    get diagnosticsClass() {
-        return `slds-badge status-badge ${slug(this.diagnostics?.status || "checking")}`;
+    get settingsProviderIsOpenRouter() {
+        return this.settingsProvider === "openrouter";
     }
 
-    get metricCards() {
-        const summary = this.summary;
-        const waiting = this.demo?.actions?.filter((action) => action.status === "Waiting Approval").length || 0;
-        const approvalGates = this.currentDraft?.plan?.steps?.filter((step) => step.needsApproval).length || 0;
-        return [
-            { label: "Recoverable revenue", value: compactCurrency(summary.recoverableRevenue || 0) },
-            { label: "Eligible audience", value: number(summary.accountsIdentified || 0) },
-            { label: "Actions waiting", value: number(summary.actionsWaitingApproval || waiting) },
-            { label: "Plan approvals", value: number(approvalGates) }
-        ];
+    get settingsKeyStatus() {
+        if (!this.llmSettings?.apiKeyConfigured) return "No token saved";
+        return this.llmSettings.apiKeyLast4 ? `Saved token ending ${this.llmSettings.apiKeyLast4}` : "Token saved";
     }
 
-    get headerStatusClass() {
-        return `slds-badge status-badge ${slug(this.summary.status || this.plannerStatus)}`;
+    get organizationRows() {
+        return (this.organizations || []).map((org) => ({
+            ...org,
+            className: `org-row ${org.id === this.selectedAdminOrgId ? "selected" : ""}`
+        }));
     }
 
-    get headerStatusLabel() {
-        return this.summary.status || this.plannerStatus;
+    get userRows() {
+        return this.organizationUsers || [];
     }
 
-    get canExportPlanSpec() {
-        return Boolean(this.currentDraft?.plan?.id);
+    get newUserRoleIsMember() {
+        return this.newUserRole === "MEMBER";
     }
 
-    get canExportRunLog() {
-        return Boolean(this.currentRun?.id);
+    get newUserRoleIsAdmin() {
+        return this.newUserRole === "ADMIN";
     }
 
-    get planExportDisabled() {
-        return !this.canExportPlanSpec || this.busy.exportPlanSpec;
+    get newUserRoleIsViewer() {
+        return this.newUserRole === "VIEWER";
     }
 
-    get runLogExportDisabled() {
-        return !this.canExportRunLog || this.busy.exportRunLog;
-    }
-
-    get desktopProviderIsAnthropic() {
-        return this.desktopProvider === "anthropic";
-    }
-
-    get desktopProviderIsOpenRouter() {
-        return this.desktopProvider === "openrouter";
-    }
-
-    get desktopKeyStatus() {
-        const provider = this.desktopSettings?.[this.desktopProvider] || {};
-        if (!provider.apiKeyConfigured) {
-            return "No API key stored";
+    async loadAuthStatus() {
+        this.error = null;
+        try {
+            const status = await request("/api/auth/status");
+            this.user = status.user || this.user;
+            this.setupRequired = Boolean(status.setupRequired);
+            this.authReady = true;
+            if (this.user.authenticated) {
+                await this.loadAll();
+            }
+        } catch (error) {
+            this.authReady = true;
+            this.error = error.message;
         }
-        return provider.apiKeyLast4 ? `Stored key ending ${provider.apiKeyLast4}` : "API key stored";
-    }
-
-    get desktopStorageStatus() {
-        if (!this.desktopSettings) return "";
-        return this.desktopSettings.keyStorageAvailable
-            ? "Stored with OS-backed encryption"
-            : "Secure key storage unavailable; keys will not be persisted";
     }
 
     async loadAll() {
         await Promise.all([
-            this.loadUser(),
             this.loadDemo(),
             this.loadScenarios(),
+            this.loadTemplates(),
             this.loadDiagnostics(),
             this.loadMonitors(),
-            this.loadRecommendations()
+            this.loadRecommendations(),
+            this.loadLlmSettings(),
+            this.loadOrganizations()
         ]);
-    }
-
-    async loadUser() {
-        try {
-            this.user = await request("/api/me");
-            this.authUnavailable = null;
-        } catch (error) {
-            this.authUnavailable = error.message;
-        }
     }
 
     async loadDemo() {
         try {
             this.demo = await request("/api/demo/dormant-revenue-recovery");
             this.selectedAccountId ||= this.demo.accounts?.[0]?.id;
-        } catch (error) {
-            this.error = error.message;
+        } catch {
+            this.demo = null;
         }
     }
 
@@ -208,11 +208,17 @@ export default class Data360Console extends LightningElement {
             this.scenarios = await request("/api/scenarios");
             const first = this.scenarios[0];
             this.selectedScenarioId = this.selectedScenarioId || first?.id || "";
-            this.goal = first?.defaultUtterances?.[0] || first?.name || this.goal;
-            this.resetCurrentDraft();
+            this.goal = this.goal || first?.defaultUtterances?.[0] || "";
         } catch (error) {
             this.error = error.message;
-            this.plannerStatus = "Error";
+        }
+    }
+
+    async loadTemplates() {
+        try {
+            this.templates = await request("/api/library");
+        } catch {
+            this.templates = [];
         }
     }
 
@@ -227,34 +233,47 @@ export default class Data360Console extends LightningElement {
     async loadMonitors() {
         try {
             this.monitors = await request("/api/monitors");
-        } catch (error) {
+        } catch {
             this.monitors = [];
-            this.lastMonitorRun = { status: "ERROR", recommendation: error.message, observedValue: 0, thresholdBreached: true };
         }
     }
 
     async loadRecommendations() {
-        this.recommendationUnavailable = null;
         try {
             this.recommendations = await request("/api/monitors/recommendations");
+            this.recommendationUnavailable = null;
         } catch (error) {
             this.recommendations = [];
             this.recommendationUnavailable = error.message;
         }
     }
 
-    async loadDesktopSettings() {
-        if (!window.data360Desktop?.getSettings) {
-            return;
-        }
-        this.isDesktop = true;
+    async loadLlmSettings() {
         try {
-            this.desktopSettings = await window.data360Desktop.getSettings();
-            this.desktopProvider = this.desktopSettings.provider || "anthropic";
-            this.desktopModel = this.desktopSettings[this.desktopProvider]?.model || this.desktopModel;
+            this.llmSettings = await request("/api/llm-settings");
+            this.settingsProvider = this.llmSettings.provider || "anthropic";
+            this.settingsModel = this.llmSettings.model || this.settingsModel;
         } catch (error) {
-            this.desktopMessage = error.message;
+            this.error = error.message;
         }
+    }
+
+    async loadOrganizations() {
+        try {
+            this.organizations = await request("/api/organizations");
+            this.selectedAdminOrgId = this.selectedAdminOrgId || this.user.organizationId || this.organizations[0]?.id || "";
+            if (this.selectedAdminOrgId) {
+                await this.loadUsers();
+            }
+        } catch {
+            this.organizations = [];
+            this.organizationUsers = [];
+        }
+    }
+
+    async loadUsers() {
+        if (!this.selectedAdminOrgId) return;
+        this.organizationUsers = await request(`/api/organizations/${this.selectedAdminOrgId}/users`);
     }
 
     handleTab(event) {
@@ -266,37 +285,129 @@ export default class Data360Console extends LightningElement {
         }
     }
 
-    async handleResetDemo() {
-        this.setBusy("resetDemo", true);
+    handleFieldChange(event) {
+        this[event.target.dataset.field] = event.target.value;
+    }
+
+    handleLoginKeydown(event) {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        this.handleLogin();
+    }
+
+    async handleBootstrap() {
+        this.setBusy("auth", true);
+        this.error = null;
         try {
-            this.demo = await request("/api/demo/dormant-revenue-recovery/reset", { method: "POST" });
-            this.selectedAccountId = this.demo.accounts?.[0]?.id;
+            const status = await request("/api/auth/bootstrap", {
+                method: "POST",
+                body: {
+                    organizationName: this.setupOrganizationName,
+                    displayName: this.setupDisplayName,
+                    email: this.setupEmail,
+                    password: this.setupPassword
+                }
+            });
+            this.afterAuth(status);
+        } catch (error) {
+            this.error = error.message;
         } finally {
-            this.setBusy("resetDemo", false);
+            this.setBusy("auth", false);
         }
     }
 
-    handleSelectAccount(event) {
-        this.selectedAccountId = event.detail.accountId;
+    async handleLogin() {
+        this.setBusy("auth", true);
+        this.error = null;
+        try {
+            const status = await request("/api/auth/login", {
+                method: "POST",
+                body: { email: this.loginEmail, password: this.loginPassword }
+            });
+            this.afterAuth(status);
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.setBusy("auth", false);
+        }
     }
 
-    async handleActionTransition(event) {
-        const { actionId, transition } = event.detail;
-        this.demo = await request(`/api/demo/dormant-revenue-recovery/actions/${actionId}/${transition}`, {
-            method: "POST"
-        });
+    async afterAuth(status) {
+        this.user = status.user;
+        this.setupRequired = false;
+        this.loginPassword = "";
+        this.setupPassword = "";
+        this.messages = [
+            { role: "assistant", text: "What should Data 360 set up?", meta: "I will draft a governed PlanSpec for approval before execution." }
+        ];
+        await this.loadAll();
+    }
+
+    async handleLogout() {
+        await request("/api/auth/logout", { method: "POST" });
+        this.user = { username: "anonymous", authenticated: false, authorities: [] };
+        this.currentDraft = null;
+        this.currentRun = null;
+        this.messages = [];
+        await this.loadAuthStatus();
+    }
+
+    async handleChatMessage(event) {
+        const text = event.detail.text;
+        this.messages = [...this.messages, { role: "user", text }];
+        this.goal = text;
+        await this.handleDraftPlan();
+        if (this.currentDraft?.plan) {
+            const count = this.currentDraft.plan.steps?.length || 0;
+            this.messages = [...this.messages, {
+                role: "assistant",
+                text: `I drafted a PlanSpec with ${count} ${count === 1 ? "step" : "steps"}. Review it before running.`,
+                meta: this.currentDraft.validation?.ok ? "Validation passed." : "Validation needs attention."
+            }];
+        }
     }
 
     handleScenarioChange(event) {
         const scenario = this.scenarios.find((item) => item.id === event.detail.scenarioId);
         this.selectedScenarioId = scenario?.id || "";
-        this.goal = scenario?.defaultUtterances?.[0] || scenario?.name || "";
+        this.goal = scenario?.defaultUtterances?.[0] || scenario?.name || this.goal;
         this.resetCurrentDraft();
     }
 
     handleGoalChange(event) {
         this.goal = event.detail.goal;
         this.resetCurrentDraft();
+    }
+
+    handleUseTemplate(event) {
+        const template = event.detail.template;
+        this.goal = template ? `${template.title}: ${template.outcome || template.summary || ""}` : this.goal;
+        this.activeTab = "chat";
+        this.messages = [...this.messages, { role: "assistant", text: this.goal, meta: "Template loaded as the next chat goal." }];
+    }
+
+    async handleInstantiateTemplate(event) {
+        const templateId = event.detail.templateId;
+        if (!templateId) return;
+        this.setBusy("instantiateTemplate", true);
+        try {
+            this.currentDraft = await request(`/api/library/${templateId}/plans`, {
+                method: "POST",
+                body: {
+                    context: {
+                        org: this.user.organizationName || "default-org",
+                        dataspace: "default",
+                        environment: "sandbox"
+                    }
+                }
+            });
+            this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
+            this.activeTab = "review";
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.setBusy("instantiateTemplate", false);
+        }
     }
 
     resetCurrentDraft() {
@@ -309,18 +420,18 @@ export default class Data360Console extends LightningElement {
     }
 
     async handleDraftPlan() {
-        const scenario = this.scenarios.find((item) => item.id === this.selectedScenarioId);
-        if (!scenario) return;
+        const scenario = this.scenarios.find((item) => item.id === this.selectedScenarioId) || this.scenarios[0];
         this.setBusy("draftPlan", true);
         this.plannerStatus = "Planning";
+        this.error = null;
         try {
             this.currentDraft = await request("/api/plans", {
                 method: "POST",
                 body: {
-                    scenarioId: scenario.id,
+                    scenarioId: scenario?.id,
                     goal: this.goal,
                     context: {
-                        org: "demo-org",
+                        org: this.user.organizationName || "default-org",
                         dataspace: "default",
                         environment: "sandbox"
                     }
@@ -331,9 +442,12 @@ export default class Data360Console extends LightningElement {
             this.approvalHistory = [];
             this.approvalHistoryUnavailable = null;
             this.plannerStatus = this.currentDraft.validation?.ok ? "Ready" : "Review";
+            return this.currentDraft;
         } catch (error) {
             this.error = error.message;
             this.plannerStatus = "Error";
+            this.messages = [...this.messages, { role: "assistant", text: "I could not draft the PlanSpec.", meta: error.message }];
+            return null;
         } finally {
             this.setBusy("draftPlan", false);
         }
@@ -344,8 +458,6 @@ export default class Data360Console extends LightningElement {
         this.setBusy("startPlan", true);
         this.plannerStatus = "Running";
         try {
-            this.approvalHistory = [];
-            this.approvalHistoryUnavailable = null;
             const response = await request(`/api/plans/${this.currentDraft.plan.id}/runs`, { method: "POST" });
             if (!response.id) {
                 this.currentDraft = response;
@@ -354,8 +466,12 @@ export default class Data360Console extends LightningElement {
                 return;
             }
             this.currentRun = response;
+            this.messages = [...this.messages, { role: "assistant", text: `Run ${response.id} started.`, meta: response.status }];
             await this.pollRun(response.id);
             await this.loadMonitors();
+        } catch (error) {
+            this.error = error.message;
+            this.plannerStatus = "Error";
         } finally {
             this.setBusy("startPlan", false);
         }
@@ -364,9 +480,7 @@ export default class Data360Console extends LightningElement {
     async handleApproveStep(event) {
         if (!this.currentRun) return;
         this.plannerStatus = "Approving";
-        this.currentRun = await request(`/api/runs/${this.currentRun.id}/steps/${event.detail.stepId}/approve`, {
-            method: "POST"
-        });
+        this.currentRun = await request(`/api/runs/${this.currentRun.id}/steps/${event.detail.stepId}/approve`, { method: "POST" });
         await this.pollRun(this.currentRun.id);
         await this.loadMonitors();
     }
@@ -386,11 +500,11 @@ export default class Data360Console extends LightningElement {
     }
 
     async loadApprovalHistory(runId) {
-        this.approvalHistory = [];
-        this.approvalHistoryUnavailable = null;
         try {
             this.approvalHistory = await request(`/api/runs/${runId}/approvals`);
+            this.approvalHistoryUnavailable = null;
         } catch (error) {
+            this.approvalHistory = [];
             this.approvalHistoryUnavailable = error.message;
         }
     }
@@ -428,52 +542,65 @@ export default class Data360Console extends LightningElement {
         }
     }
 
-    handleOpenDesktopSettings() {
-        this.desktopSettingsOpen = true;
-        this.desktopApiKey = "";
-        this.desktopMessage = "";
-    }
-
-    handleCloseDesktopSettings() {
-        this.desktopSettingsOpen = false;
-        this.desktopApiKey = "";
-    }
-
-    handleDesktopProviderChange(event) {
-        this.desktopProvider = event.target.value;
-        this.desktopModel = this.desktopSettings?.[this.desktopProvider]?.model || "";
-        this.desktopApiKey = "";
-    }
-
-    handleDesktopModelChange(event) {
-        this.desktopModel = event.target.value;
-    }
-
-    handleDesktopApiKeyChange(event) {
-        this.desktopApiKey = event.target.value;
-    }
-
-    async handleSaveDesktopSettings() {
-        if (!window.data360Desktop?.saveSettings) return;
-        this.setBusy("desktopSettings", true);
-        this.desktopMessage = "Saving settings and restarting local backend...";
+    async handleSaveLlmSettings() {
+        this.setBusy("saveSettings", true);
+        this.error = null;
         try {
-            const providerSettings = { model: this.desktopModel };
-            if (this.desktopApiKey.trim()) {
-                providerSettings.apiKey = this.desktopApiKey.trim();
-            }
-            this.desktopSettings = await window.data360Desktop.saveSettings({
-                provider: this.desktopProvider,
-                [this.desktopProvider]: providerSettings
-            });
-            this.desktopApiKey = "";
-            this.desktopSettingsOpen = false;
-            this.desktopMessage = "Model settings saved.";
-            await this.loadAll();
+            const body = {
+                provider: this.settingsProvider,
+                model: this.settingsModel,
+                apiKey: this.settingsApiKey
+            };
+            this.llmSettings = await request("/api/llm-settings", { method: "PUT", body });
+            this.settingsApiKey = "";
         } catch (error) {
-            this.desktopMessage = error.message;
+            this.error = error.message;
         } finally {
-            this.setBusy("desktopSettings", false);
+            this.setBusy("saveSettings", false);
+        }
+    }
+
+    async handleCreateOrganization() {
+        if (!this.newOrganizationName.trim()) return;
+        this.setBusy("createOrganization", true);
+        try {
+            const org = await request("/api/organizations", { method: "POST", body: { name: this.newOrganizationName } });
+            this.newOrganizationName = "";
+            this.selectedAdminOrgId = org.id;
+            await this.loadOrganizations();
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.setBusy("createOrganization", false);
+        }
+    }
+
+    handleSelectOrganization(event) {
+        this.selectedAdminOrgId = event.currentTarget.dataset.organizationId;
+        this.loadUsers();
+    }
+
+    async handleCreateUser() {
+        if (!this.selectedAdminOrgId) return;
+        this.setBusy("createUser", true);
+        try {
+            await request(`/api/organizations/${this.selectedAdminOrgId}/users`, {
+                method: "POST",
+                body: {
+                    displayName: this.newUserName,
+                    email: this.newUserEmail,
+                    password: this.newUserPassword,
+                    role: this.newUserRole
+                }
+            });
+            this.newUserName = "";
+            this.newUserEmail = "";
+            this.newUserPassword = "";
+            await this.loadUsers();
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.setBusy("createUser", false);
         }
     }
 
@@ -485,23 +612,9 @@ export default class Data360Console extends LightningElement {
             await exportJson(`planspec-${this.currentDraft.plan.id}.json`, archive);
             this.exportMessage = "PlanSpec exported.";
         } catch (error) {
-            this.exportMessage = error.message;
+            this.error = error.message;
         } finally {
             this.setBusy("exportPlanSpec", false);
-        }
-    }
-
-    async handleExportRunLog() {
-        if (!this.currentRun?.id) return;
-        this.setBusy("exportRunLog", true);
-        try {
-            const archive = await request(`/api/runs/${this.currentRun.id}/export`);
-            await exportJson(`execution-log-${this.currentRun.id}.json`, archive);
-            this.exportMessage = "Execution log exported.";
-        } catch (error) {
-            this.exportMessage = error.message;
-        } finally {
-            this.setBusy("exportRunLog", false);
         }
     }
 
@@ -511,9 +624,7 @@ export default class Data360Console extends LightningElement {
 }
 
 function delay(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    });
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function exportJson(defaultFileName, payload) {

@@ -10,35 +10,43 @@ public class LlmGateway {
     private final LlmProperties properties;
     private final AnthropicClient anthropic;
     private final OpenRouterClient openRouter;
+    private final LlmSettingsService settings;
 
-    public LlmGateway(LlmProperties properties, AnthropicClient anthropic, OpenRouterClient openRouter) {
+    public LlmGateway(LlmProperties properties, AnthropicClient anthropic, OpenRouterClient openRouter, LlmSettingsService settings) {
         this.properties = properties;
         this.anthropic = anthropic;
         this.openRouter = openRouter;
+        this.settings = settings;
     }
 
     public boolean configured() {
-        var selected = selected();
-        return selected != null && selected.configured();
+        var effective = settings.effective();
+        return selected(effective.provider()) != null && effective.configured();
     }
 
     public String provider() {
-        return properties.resolvedProvider();
+        return settings.effective().provider();
     }
 
     public LlmCompletion completeJson(String system, String user) {
-        var selected = selected();
+        var effective = settings.effective();
+        var selected = selected(effective.provider());
         if (selected == null) {
-            throw new IllegalStateException("Unsupported LLM provider: " + provider());
+            throw new IllegalStateException("Unsupported LLM provider: " + effective.provider());
         }
-        if (!selected.configured()) {
+        if (!effective.configured()) {
             throw new IllegalStateException("LLM provider is not configured: " + selected.provider());
         }
-        return selected.completeJson(new LlmPrompt(system, user, properties.model()));
+        var prompt = new LlmPrompt(system, user, effective.model());
+        return switch (effective.provider().toLowerCase(Locale.ROOT)) {
+            case "anthropic" -> anthropic.completeJson(prompt, effective);
+            case "openrouter" -> openRouter.completeJson(prompt, effective);
+            default -> selected.completeJson(prompt);
+        };
     }
 
-    private LlmClient selected() {
-        return switch (provider().toLowerCase(Locale.ROOT)) {
+    private LlmClient selected(String provider) {
+        return switch (provider.toLowerCase(Locale.ROOT)) {
             case "anthropic" -> anthropic;
             case "openrouter" -> openRouter;
             case "fallback", "none", "mock" -> null;
