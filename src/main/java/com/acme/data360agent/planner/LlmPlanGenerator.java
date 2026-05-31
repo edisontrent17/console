@@ -63,6 +63,7 @@ public class LlmPlanGenerator {
 
                 Required JSON shape:
                 {
+                  "schemaVersion": "2026-05-31",
                   "id": "plan_<short id>",
                   "scenarioId": "...",
                   "goal": "...",

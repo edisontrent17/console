@@ -12,6 +12,30 @@ class PlanValidatorTest {
     private final PlanValidator validator = new PlanValidator(new OperationRegistry());
 
     @Test
+    void rejectsUnsupportedSchemaVersion() {
+        var plan = new PlanSpec(
+                "1900-01-01",
+                "plan_test",
+                null,
+                "Preview records",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "preview",
+                        "Preview records",
+                        Data360Action.QUERY,
+                        Map.of("sql", "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10"),
+                        List.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Unsupported PlanSpec schemaVersion"));
+    }
+
+    @Test
     void rejectsQueryWithoutLimit() {
         var plan = new PlanSpec(
                 "plan_test",

@@ -33,6 +33,10 @@ public class PlanValidator {
             return new PlanValidationResult(List.of(ValidationIssue.error(null, "Plan is missing.")));
         }
 
+        if (!PlanSpec.CURRENT_SCHEMA_VERSION.equals(plan.schemaVersion())) {
+            issues.add(ValidationIssue.error(null, "Unsupported PlanSpec schemaVersion: " + plan.schemaVersion()));
+        }
+
         if (plan.steps().size() > MAX_STEPS) {
             issues.add(ValidationIssue.error(null, "Plan cannot contain more than " + MAX_STEPS + " steps."));
         }

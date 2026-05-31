@@ -35,6 +35,9 @@ The current PlanSpec phases are:
 PlanSpec deliberately stays small. It supports ordered steps, dependencies,
 typed inputs, approval flags, and simple `inputBindings`. It does not support
 loops, arbitrary expressions, raw HTTP, custom retries, or generated code.
+The canonical PlanSpec schema is versioned JSON Schema at
+`schemas/planspec.schema.json`; XML can be added later as an import/export format
+that compiles into canonical JSON before validation and execution.
 
 ## Real Scenario Packs
 

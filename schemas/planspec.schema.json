@@ -1,0 +1,807 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data360-agent-console.local/schemas/planspec/2026-05-31",
+  "title": "Data 360 PlanSpec",
+  "description": "Human-reviewable Data 360 plan contract. PlanSpec is intentionally not a workflow engine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "goal",
+    "context",
+    "steps"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "2026-05-31"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "scenarioId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "context": {
+      "$ref": "#/$defs/context"
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    }
+  },
+  "$defs": {
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "org",
+        "dataspace",
+        "environment"
+      ],
+      "properties": {
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dataspace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "environment": {
+          "enum": [
+            "sandbox",
+            "production"
+          ]
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "phase",
+        "action",
+        "input",
+        "dependsOn",
+        "inputBindings",
+        "needsApproval"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "phase": {
+          "$ref": "#/$defs/phase"
+        },
+        "action": {
+          "$ref": "#/$defs/data360Action"
+        },
+        "input": {
+          "$ref": "#/$defs/inputObject"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+          },
+          "uniqueItems": true
+        },
+        "inputBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/inputBinding"
+          }
+        },
+        "needsApproval": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "phase": {
+                "const": "monitor"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "action": {
+                "const": "data360.monitor.metric"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.monitor.metric"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "phase": {
+                "const": "monitor"
+              },
+              "input": {
+                "$ref": "#/$defs/monitorMetricInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "data360.calculatedInsight.create",
+                  "data360.calculatedInsight.run",
+                  "data360.createSegment",
+                  "data360.updateSegment",
+                  "data360.publishSegment",
+                  "data360.createActivation",
+                  "data360.runActivation"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "needsApproval": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.search"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/searchInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.metadata.describe"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/metadataDescribeInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.query"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/queryInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.calculatedInsight.create"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/createCalculatedInsightInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.calculatedInsight.run"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/runCalculatedInsightInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.createSegment"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/createSegmentInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.updateSegment"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/updateSegmentInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.publishSegment"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/segmentReferenceInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.createActivation"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/createActivationInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.runActivation"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/activationReferenceInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "data360.identityRuleset.get"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "input": {
+                "$ref": "#/$defs/identityRulesetInput"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "phase": {
+      "enum": [
+        "discover",
+        "setup",
+        "monitor"
+      ]
+    },
+    "data360Action": {
+      "enum": [
+        "data360.search",
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.calculatedInsight.create",
+        "data360.calculatedInsight.run",
+        "data360.createSegment",
+        "data360.updateSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.runActivation",
+        "data360.identityRuleset.get",
+        "data360.monitor.metric"
+      ]
+    },
+    "inputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fromStep",
+        "path"
+      ],
+      "properties": {
+        "fromStep": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^\\$\\."
+        }
+      }
+    },
+    "inputObject": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/inputValue"
+      }
+    },
+    "inputValue": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 4096
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inputValue"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/inputValue"
+          }
+        }
+      ]
+    },
+    "safeName": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _().-]{0,79}$"
+    },
+    "searchInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "metadataDescribeInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "anyOf": [
+            {
+              "required": [
+                "objects"
+              ]
+            },
+            {
+              "required": [
+                "objectApiNames"
+              ]
+            }
+          ],
+          "properties": {
+            "objects": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "objectApiNames": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "queryInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "sql"
+          ],
+          "properties": {
+            "sql": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+            }
+          }
+        }
+      ]
+    },
+    "createCalculatedInsightInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "name"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "sql"
+              ]
+            },
+            {
+              "required": [
+                "definition"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/safeName"
+            },
+            "sql": {
+              "type": "string",
+              "minLength": 1
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "runCalculatedInsightInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "anyOf": [
+            {
+              "required": [
+                "insightId"
+              ]
+            },
+            {
+              "required": [
+                "insightIdFromStep"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "createSegmentInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "name"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "criteria"
+              ]
+            },
+            {
+              "required": [
+                "criteriaFromStep"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/safeName"
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 1024
+            }
+          }
+        }
+      ]
+    },
+    "updateSegmentInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "name",
+            "criteria"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "segmentId"
+              ]
+            },
+            {
+              "required": [
+                "segmentIdFromStep"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/safeName"
+            }
+          }
+        }
+      ]
+    },
+    "segmentReferenceInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "anyOf": [
+            {
+              "required": [
+                "segmentId"
+              ]
+            },
+            {
+              "required": [
+                "segmentIdFromStep"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "createActivationInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "name",
+            "destination"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "segmentId"
+              ]
+            },
+            {
+              "required": [
+                "segmentIdFromStep"
+              ]
+            }
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/safeName"
+            },
+            "destination": {
+              "$ref": "#/$defs/safeName"
+            }
+          }
+        }
+      ]
+    },
+    "activationReferenceInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "anyOf": [
+            {
+              "required": [
+                "activationId"
+              ]
+            },
+            {
+              "required": [
+                "activationIdFromStep"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "identityRulesetInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "anyOf": [
+            {
+              "required": [
+                "rulesetId"
+              ]
+            },
+            {
+              "required": [
+                "rulesetName"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "monitorMetricInput": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/inputObject"
+        },
+        {
+          "required": [
+            "cadence",
+            "threshold"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "query"
+              ]
+            },
+            {
+              "required": [
+                "queryFromStep"
+              ]
+            },
+            {
+              "required": [
+                "metric"
+              ]
+            }
+          ],
+          "properties": {
+            "metric": {
+              "type": "string",
+              "minLength": 1
+            },
+            "cadence": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "threshold": {
+              "$ref": "#/$defs/monitorThreshold"
+            }
+          }
+        }
+      ]
+    },
+    "monitorThreshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "operator": {
+          "enum": [
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "=="
+          ]
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}
