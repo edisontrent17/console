@@ -4,5 +4,6 @@ public enum Effect {
     READ,
     WRITE,
     PUBLISH,
-    ACTIVATE
+    ACTIVATE,
+    DESTRUCTIVE
 }

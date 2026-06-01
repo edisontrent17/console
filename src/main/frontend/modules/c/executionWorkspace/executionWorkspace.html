@@ -1,0 +1,154 @@
+<template>
+    <template if:false={hasDemo}>
+        <div class="slds-card">
+            <div class="slds-card__body slds-card__body_inner empty-state">Loading execution workspace...</div>
+        </div>
+    </template>
+
+    <template if:true={hasDemo}>
+        <div class="execution-layout">
+            <aside class="slds-card account-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">Priority Accounts</h2>
+                            <p class="slds-text-body_small slds-text-color_weak">Unified profiles ranked for recovery</p>
+                        </div>
+                    </header>
+                    <button class="slds-button slds-button_neutral slds-button_x-small" onclick={handleReset}>Reset</button>
+                </div>
+                <div class="slds-card__body slds-card__body_inner account-list">
+                    <template for:each={accounts} for:item="account">
+                        <button key={account.id} class={account.rowClass} data-account-id={account.id} onclick={handleSelectAccount}>
+                            <span>
+                                <strong>{account.name}</strong>
+                                <small>{account.contractLabel} • {account.activationGapDays}d gap</small>
+                            </span>
+                            <em class={account.badgeClass}>{account.priority}</em>
+                        </button>
+                    </template>
+                </div>
+            </aside>
+
+            <section class="slds-card focus-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">{selectedAccount.name}</h2>
+                            <p class="slds-text-body_small slds-text-color_weak">{selectedAccount.recommendedMotion}</p>
+                        </div>
+                    </header>
+                    <span class={selectedAccount.badgeClass}>{selectedAccount.priority}</span>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <div class="score-grid">
+                        <div><strong>{selectedAccount.contractLabel}</strong><span>Contract</span></div>
+                        <div><strong>{selectedAccount.scoreLabel}</strong><span>Priority</span></div>
+                        <div><strong>{selectedAccount.riskLabel}</strong><span>Support risk</span></div>
+                    </div>
+
+                    <h3 class="section-label">Evidence</h3>
+                    <div class="evidence-list">
+                        <template for:each={selectedEvidence} for:item="item">
+                            <article key={item.signal} class="evidence-item">
+                                <div>
+                                    <strong>{item.signal}</strong>
+                                    <p>{item.detail}</p>
+                                </div>
+                                <span>{item.source}</span>
+                            </article>
+                        </template>
+                    </div>
+
+                    <template if:true={activation}>
+                        <h3 class="section-label">Activation</h3>
+                        <section class="activation-panel">
+                            <div>
+                                <strong>{activation.provider}</strong>
+                                <p>{activation.safetyRule}</p>
+                                <p>{activation.audience}</p>
+                            </div>
+                            <span class="slds-badge">{activationSentLabel} sent</span>
+                        </section>
+                        <ol class="email-steps">
+                            <template for:each={activation.sequence} for:item="step">
+                                <li key={step.title}>
+                                    <strong>{step.timing} • {step.title}</strong>
+                                    <p>{step.content}</p>
+                                </li>
+                            </template>
+                        </ol>
+                    </template>
+                </div>
+            </section>
+
+            <aside class="slds-card action-card-wrap">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">Work Queue</h2>
+                            <p class="slds-text-body_small slds-text-color_weak">Human approval before activation</p>
+                        </div>
+                    </header>
+                </div>
+                <div class="slds-card__body slds-card__body_inner action-list">
+                    <template for:each={actions} for:item="action">
+                        <article key={action.id} class={action.className}>
+                            <div class="action-head">
+                                <div>
+                                    <strong>{action.title}</strong>
+                                    <p>{action.targetSystem} • {action.type}</p>
+                                </div>
+                                <span class={action.statusClass}>{action.status}</span>
+                            </div>
+                            <p>{action.rationale}</p>
+                            <details>
+                                <summary>Draft</summary>
+                                <p>{action.draftContent}</p>
+                            </details>
+                            <div class="slds-button-group slds-m-top_small" role="group">
+                                <template if:false={action.isExecuted}>
+                                    <button class="slds-button slds-button_brand slds-button_x-small" data-action-id={action.id} data-transition={action.primaryTransition} onclick={handleAction}>{action.primaryLabel}</button>
+                                    <button class="slds-button slds-button_neutral slds-button_x-small" data-action-id={action.id} data-transition="reject" onclick={handleAction}>Reject</button>
+                                </template>
+                                <template if:true={action.isExecuted}>
+                                    <span class="slds-text-color_success">Executed</span>
+                                </template>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+            </aside>
+
+            <section class="slds-card analytics-card">
+                <div class="slds-card__header">
+                    <h2 class="slds-card__header-title">Recovery Funnel</h2>
+                </div>
+                <div class="slds-card__body slds-card__body_inner metric-list">
+                    <template for:each={funnel} for:item="item">
+                        <article key={item.label} class="metric-row">
+                            <div><strong>{item.label}</strong><span>{item.value}</span></div>
+                            <div class="bar"><span style={item.style}></span></div>
+                            <p>{item.narrative}</p>
+                        </article>
+                    </template>
+                </div>
+            </section>
+
+            <section class="slds-card analytics-card">
+                <div class="slds-card__header">
+                    <h2 class="slds-card__header-title">Impact</h2>
+                </div>
+                <div class="slds-card__body slds-card__body_inner metric-list">
+                    <template for:each={impact} for:item="item">
+                        <article key={item.label} class="metric-row">
+                            <div><strong>{item.label}</strong><span>{item.value}</span></div>
+                            <div class="bar"><span style={item.style}></span></div>
+                            <p>{item.narrative}</p>
+                        </article>
+                    </template>
+                </div>
+            </section>
+        </div>
+    </template>
+</template>

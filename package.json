@@ -1,0 +1,73 @@
+{
+  "name": "data360-agent-console",
+  "version": "0.1.0",
+  "description": "Installable local Data 360 Agent Console for governed PlanSpec execution.",
+  "homepage": "https://github.com/edisontrent17/console",
+  "author": {
+    "name": "Data 360 Agent Console",
+    "email": "data360-agent-console@example.com"
+  },
+  "private": true,
+  "type": "module",
+  "main": "desktop/electron/main.mjs",
+  "scripts": {
+    "build": "node scripts/copy-slds.mjs && rollup -c",
+    "backend:package": "npm run build && mvn -q -DskipTests package",
+    "desktop:prepare": "node scripts/prepare-electron-backend.mjs",
+    "desktop:dev": "npm run backend:package && npm run desktop:prepare && electron .",
+    "desktop:pack": "npm run backend:package && npm run desktop:prepare && electron-builder --dir",
+    "desktop:dist": "npm run backend:package && npm run desktop:prepare && electron-builder",
+    "check": "npm run build",
+    "test:e2e": "playwright test",
+    "validate:asl": "node scripts/validate-planspec-asl.mjs"
+  },
+  "dependencies": {
+    "@lwc/synthetic-shadow": "9.2.2",
+    "@salesforce-ux/design-system": "2.30.4",
+    "lwc": "9.2.2"
+  },
+  "devDependencies": {
+    "@lwc/rollup-plugin": "9.2.2",
+    "@playwright/test": "^1.60.0",
+    "@rollup/plugin-node-resolve": "16.0.3",
+    "@rollup/plugin-replace": "^6.0.2",
+    "asl-validator": "^4.0.0",
+    "electron": "37.10.3",
+    "electron-builder": "25.1.8",
+    "rollup": "4.60.4"
+  },
+  "build": {
+    "appId": "com.acme.data360-agent-console",
+    "productName": "Data 360 Agent Console",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "package.json",
+      "desktop/electron/**"
+    ],
+    "extraResources": [
+      {
+        "from": "desktop/dist/backend",
+        "to": "backend"
+      }
+    ],
+    "asar": true,
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.business",
+      "hardenedRuntime": true
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+      "maintainer": "Data 360 Agent Console <data360-agent-console@example.com>"
+    }
+  }
+}

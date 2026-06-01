@@ -1,0 +1,91 @@
+<template>
+    <section class="chat-shell" aria-label="Data 360 chat">
+        <header class="chat-topbar">
+            <div class="chat-title">
+                <h1>Data 360 Agent</h1>
+                <p>{subtitle}</p>
+            </div>
+            <div class="status-stack" aria-label="Status">
+                <span class={plannerStatusClass}>{plannerStatus}</span>
+            </div>
+        </header>
+
+        <div class={chatScrollClass}>
+            <template for:each={messageRows} for:item="message">
+                <article key={message.key} class={message.className}>
+                    <div class="avatar">{message.avatar}</div>
+                    <div class="bubble">
+                        <p>{message.text}</p>
+                        <template if:true={message.meta}>
+                            <span>{message.meta}</span>
+                        </template>
+                        <template if:true={message.hasTrace}>
+                            <details class="trace-panel">
+                                <summary>
+                                    <strong>Trace</strong>
+                                    <em>{message.traceSummary}</em>
+                                </summary>
+                                <ol class="trace-list">
+                                    <template for:each={message.traceRows} for:item="trace">
+                                        <li key={trace.key} class={trace.className}>
+                                            <div class="trace-line">
+                                                <strong>{trace.label}</strong>
+                                                <template if:true={trace.duration}>
+                                                    <span>{trace.duration}</span>
+                                                </template>
+                                            </div>
+                                            <template if:true={trace.detail}>
+                                                <p>{trace.detail}</p>
+                                            </template>
+                                            <template if:true={trace.hasData}>
+                                                <dl>
+                                                    <template for:each={trace.dataRows} for:item="item">
+                                                        <div key={item.key}>
+                                                            <dt>{item.name}</dt>
+                                                            <dd>{item.value}</dd>
+                                                        </div>
+                                                    </template>
+                                                </dl>
+                                            </template>
+                                        </li>
+                                    </template>
+                                </ol>
+                            </details>
+                        </template>
+                    </div>
+                </article>
+            </template>
+        </div>
+
+        <template if:true={hasDraft}>
+            <aside class="review-strip" aria-label="Plan review">
+                <div>
+                    <strong>{planTitle}</strong>
+                    <span>{planSummary}</span>
+                </div>
+                <div class="review-actions">
+                    <button class="slds-button slds-button_neutral" onclick={handleExportPlanSpec} disabled={exportPlanDisabled}>Export PlanSpec</button>
+                    <button class="slds-button slds-button_neutral" onclick={handleApprovePlan} disabled={approveDisabled}>{approveLabel}</button>
+                    <button class="slds-button slds-button_brand" onclick={handleStartPlan} disabled={startDisabled}>{startLabel}</button>
+                </div>
+            </aside>
+        </template>
+
+        <footer class="composer">
+            <textarea class="composer-input" placeholder="Ask Data 360 to set up a goal..." oninput={handleInput} onkeydown={handleKeydown}>{draftMessage}</textarea>
+            <div class="composer-toolbar">
+                <div class="composer-tools">
+                    <button type="button" class="tool-button" title="Attach context">+</button>
+                    <div class="mode-picker" role="group" aria-label="Agent mode">
+                        <template for:each={modeRows} for:item="mode">
+                            <button key={mode.value} type="button" class={mode.className} data-mode={mode.value} title={mode.title} onclick={handleModeChange}>{mode.label}</button>
+                        </template>
+                    </div>
+                    <span class="composer-chip">{modelLabel}</span>
+                    <span class="composer-chip">{userLabel}</span>
+                </div>
+                <button class="send-button" title={sendLabel} onclick={handleSend} disabled={sendDisabled}>↑</button>
+            </div>
+        </footer>
+    </section>
+</template>

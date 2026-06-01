@@ -1,0 +1,126 @@
+[
+  {
+    "name": "fallback_salesforce_event_pipeline",
+    "provider": "fallback",
+    "scenarioId": null,
+    "goal": "Turn event engagement into pipeline with session attendance follow up",
+    "context": {
+      "org": "org",
+      "dataspace": "default",
+      "environment": "sandbox"
+    },
+    "completionPlanScenarioId": null,
+    "expected": {
+      "scenarioId": "salesforce_event_pipeline",
+      "validationOk": true,
+      "graphStages": [
+        "draft_plan",
+        "validate_plan"
+      ],
+      "stepIds": [
+        "inspect_model",
+        "preview_audience",
+        "create_goal_insight",
+        "create_segment",
+        "publish_segment",
+        "create_activation",
+        "monitor_goal"
+      ],
+      "actions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.calculatedInsight.create",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "approvalStepIds": [
+        "create_goal_insight",
+        "create_segment",
+        "publish_segment",
+        "create_activation"
+      ],
+      "artifactTypes": [
+        "plan_dag"
+      ]
+    }
+  },
+  {
+    "name": "llm_travel_ltv_golden_plan",
+    "provider": "llm",
+    "scenarioId": "travel_ltv_snowflake_crm",
+    "goal": "Create a travel LTV audience from Snowflake bookings and CRM contacts",
+    "context": {
+      "org": "demo-org",
+      "dataspace": "default",
+      "environment": "sandbox"
+    },
+    "completionPlanScenarioId": "travel_ltv_snowflake_crm",
+    "expected": {
+      "scenarioId": "travel_ltv_snowflake_crm",
+      "validationOk": true,
+      "graphStages": [
+        "draft_plan",
+        "validate_plan"
+      ],
+      "stepIds": [
+        "describe_metadata",
+        "create_customer_stream",
+        "create_itinerary_stream",
+        "create_order_stream",
+        "create_contact_stream",
+        "map_customer_to_individual",
+        "map_contact_to_individual",
+        "map_order_to_itinerary",
+        "create_identity_ruleset",
+        "run_identity_resolution",
+        "create_lifetime_value_insight",
+        "run_lifetime_value_insight",
+        "preview_audience",
+        "create_segment",
+        "publish_segment",
+        "create_activation",
+        "monitor_activation"
+      ],
+      "actions": [
+        "data360.metadata.describe",
+        "data360.dataStream.snowflake.create",
+        "data360.dataStream.snowflake.create",
+        "data360.dataStream.snowflake.create",
+        "data360.dataStream.crm.create",
+        "data360.mapping.create",
+        "data360.mapping.create",
+        "data360.mapping.create",
+        "data360.identityResolution.ruleset.create",
+        "data360.identityResolution.run",
+        "data360.calculatedInsight.create",
+        "data360.calculatedInsight.run",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "approvalStepIds": [
+        "create_customer_stream",
+        "create_itinerary_stream",
+        "create_order_stream",
+        "create_contact_stream",
+        "map_customer_to_individual",
+        "map_contact_to_individual",
+        "map_order_to_itinerary",
+        "create_identity_ruleset",
+        "run_identity_resolution",
+        "create_lifetime_value_insight",
+        "run_lifetime_value_insight",
+        "create_segment",
+        "publish_segment",
+        "create_activation"
+      ],
+      "artifactTypes": [
+        "plan_dag"
+      ]
+    }
+  }
+]

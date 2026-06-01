@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "data360-asl-profile-2026-05-31",
+  "id": "plan_reactivate_dormant_accounts",
+  "scenarioId": "fedex_dormant_reactivation",
+  "goal": "Recover dormant high-value accounts",
+  "context": {
+    "org": "demo-org",
+    "dataspace": "default",
+    "environment": "sandbox"
+  },
+  "definition": {
+    "Version": "1.0",
+    "QueryLanguage": "JSONPath",
+    "StartAt": "preview_audience",
+    "States": {
+      "preview_audience": {
+        "Type": "Task",
+        "Comment": "Preview the candidate audience",
+        "Resource": "urn:salesforce:data360:capability:query",
+        "Parameters": {
+          "sql": "SELECT unified_account_id, account_name FROM UnifiedAccount LIMIT 100",
+          "limit": 100
+        },
+        "ResultPath": "$.preview_audience",
+        "Next": "create_segment"
+      },
+      "create_segment": {
+        "Type": "Task",
+        "Comment": "Create dormant account segment",
+        "Resource": "urn:salesforce:data360:capability:segment.create",
+        "Parameters": {
+          "name": "Dormant High Value Accounts",
+          "criteriaFromStep": "preview_audience"
+        },
+        "ResultPath": "$.create_segment",
+        "Next": "monitor_goal"
+      },
+      "monitor_goal": {
+        "Type": "Task",
+        "Comment": "Monitor recovered revenue",
+        "Resource": "urn:salesforce:data360:capability:monitor.metric",
+        "Parameters": {
+          "metric": "recovered_revenue",
+          "cadence": "daily",
+          "threshold": {
+            "operator": "<",
+            "value": 100000
+          },
+          "queryFromStep": "preview_audience"
+        },
+        "ResultPath": "$.monitor_goal",
+        "End": true
+      }
+    }
+  }
+}

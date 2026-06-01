@@ -7,12 +7,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class AnthropicClient {
+public class AnthropicClient implements LlmClient {
     private static final TypeReference<Map<String, Object>> MAP = new TypeReference<>() {
     };
 
@@ -30,13 +29,41 @@ public class AnthropicClient {
         return properties.configured();
     }
 
+    @Override
+    public String provider() {
+        return "anthropic";
+    }
+
+    @Override
+    public LlmCompletion completeJson(LlmPrompt prompt) {
+        var model = model(prompt);
+        return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model));
+    }
+
+    public LlmCompletion completeJson(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        var model = settings.model() == null || settings.model().isBlank() ? model(prompt) : settings.model();
+        return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model, settings.apiKey()));
+    }
+
+    public LlmCompletion completeText(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        return completeJson(prompt, settings);
+    }
+
     public String completeJson(String system, String user) {
-        if (!configured()) {
+        return completeJson(system, user, properties.model());
+    }
+
+    private String completeJson(String system, String user, String model) {
+        return completeJson(system, user, model, properties.apiKey());
+    }
+
+    private String completeJson(String system, String user, String model, String apiKey) {
+        if (apiKey == null || apiKey.isBlank()) {
             throw new IllegalStateException("ANTHROPIC_API_KEY is not configured.");
         }
 
         var request = Map.of(
-                "model", properties.model(),
+                "model", model,
                 "max_tokens", 2400,
                 "temperature", 0,
                 "system", system,
@@ -46,12 +73,12 @@ public class AnthropicClient {
         var raw = webClient.post()
                 .uri("/v1/messages")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("x-api-key", properties.apiKey())
+                .header("x-api-key", apiKey)
                 .header("anthropic-version", "2023-06-01")
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block(Duration.ofSeconds(45));
+                .block();
 
         try {
             var response = objectMapper.readValue(raw, MAP);
@@ -65,5 +92,12 @@ public class AnthropicClient {
         } catch (Exception e) {
             throw new IllegalStateException("Unable to parse Anthropic response.", e);
         }
+    }
+
+    private String model(LlmPrompt prompt) {
+        if (prompt != null && prompt.model() != null && !prompt.model().isBlank()) {
+            return prompt.model();
+        }
+        return properties.model();
     }
 }

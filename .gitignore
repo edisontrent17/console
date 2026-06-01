@@ -1,6 +1,12 @@
 target/
+data/
+node_modules/
 .idea/
 .vscode/
 *.iml
 .env
 *.log
+release/
+desktop/dist/
+test-results/
+playwright-report/

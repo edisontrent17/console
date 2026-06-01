@@ -1,0 +1,1211 @@
+[
+  {
+    "scenario": {
+      "id": "fedex_dormant_reactivation",
+      "name": "Dormant Account Reactivation",
+      "industry": "Logistics",
+      "sourceUrl": "https://www.salesforce.com/customer-stories/fedex",
+      "sourceSummary": "FedEx publicly describes using Data 360 to reactivate dormant accounts and improve activation.",
+      "defaultUtterances": [
+        "Recover dormant high-value accounts",
+        "Find inactive customers with shipping intent and launch reactivation"
+      ],
+      "goalMetrics": [
+        "activation_rate",
+        "recovered_revenue",
+        "email_engagement"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "dormant",
+        "reactivation",
+        "inactive",
+        "account",
+        "revenue",
+        "fedex",
+        "shipping"
+      ],
+      "audienceEntity": "UnifiedAccount",
+      "previewSql": "SELECT unified_account_id, account_name, annual_revenue, last_engagement_date, intent_score FROM UnifiedAccount WHERE annual_revenue > 100000 AND days_since_last_engagement > 90 LIMIT 100",
+      "segmentName": "Dormant High Value Accounts",
+      "activationName": "Dormant Account Reactivation Draft",
+      "activationDestination": "MarketingCloud",
+      "monitorMetric": "activation_rate",
+      "monitorThreshold": 0.13,
+      "sourceSystems": [],
+      "targetModelingNotes": [],
+      "calculatedInsight": null,
+      "segment": null,
+      "monitors": []
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_fedex_dormant_reactivation",
+      "scenarioId": "fedex_dormant_reactivation",
+      "goal": "Recover dormant high-value accounts",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe audience and activation metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedAccount",
+                "Engagement",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview dormant high value accounts",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_account_id, account_name, annual_revenue, last_engagement_date, intent_score FROM UnifiedAccount WHERE annual_revenue > 100000 AND days_since_last_engagement > 90 LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create dormant account segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "Dormant High Value Accounts",
+              "description": "FedEx publicly describes using Data 360 to reactivate dormant accounts and improve activation.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish dormant account segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create reactivation activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Dormant Account Reactivation Draft",
+              "destination": "MarketingCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_goal"
+          },
+          "monitor_goal": {
+            "Type": "Task",
+            "Comment": "Monitor activation rate",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "activation_rate",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.13
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_goal",
+            "End": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "uchicago_patient_access",
+      "name": "Patient Access and Conversion",
+      "industry": "Healthcare",
+      "sourceUrl": "https://www.salesforce.com/customer-stories/uchicago-medicine",
+      "sourceSummary": "UChicago Medicine publicly describes Data 360, Health Cloud, Marketing Cloud, Agentforce, and Tableau for patient engagement.",
+      "defaultUtterances": [
+        "Increase patient access and conversion with personalized outreach",
+        "Identify patients who need follow-up and route them into the right care journey"
+      ],
+      "goalMetrics": [
+        "appointment_conversion_rate",
+        "journey_engagement",
+        "care_gap_closure"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "patient",
+        "health",
+        "appointment",
+        "care",
+        "journey",
+        "uchicago",
+        "conversion"
+      ],
+      "audienceEntity": "UnifiedIndividual",
+      "previewSql": "SELECT unified_individual_id, preferred_channel, care_gap_count, last_appointment_date FROM UnifiedIndividual WHERE care_gap_count > 0 LIMIT 100",
+      "segmentName": "Patients Needing Follow Up",
+      "activationName": "Patient Access Outreach Draft",
+      "activationDestination": "MarketingCloud",
+      "monitorMetric": "appointment_conversion_rate",
+      "monitorThreshold": 0.6,
+      "sourceSystems": [],
+      "targetModelingNotes": [],
+      "calculatedInsight": null,
+      "segment": null,
+      "monitors": []
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_uchicago_patient_access",
+      "scenarioId": "uchicago_patient_access",
+      "goal": "Increase patient access and conversion with personalized outreach",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe patient journey metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedIndividual",
+                "CareGap",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview patients needing follow up",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_individual_id, preferred_channel, care_gap_count, last_appointment_date FROM UnifiedIndividual WHERE care_gap_count > 0 LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create patient follow up segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "Patients Needing Follow Up",
+              "description": "UChicago Medicine publicly describes Data 360, Health Cloud, Marketing Cloud, Agentforce, and Tableau for patient engagement.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish patient follow up segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create patient outreach activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Patient Access Outreach Draft",
+              "destination": "MarketingCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_goal"
+          },
+          "monitor_goal": {
+            "Type": "Task",
+            "Comment": "Monitor appointment conversion rate",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "appointment_conversion_rate",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.6
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_goal",
+            "End": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "pacers_fan_engagement",
+      "name": "Fan Loyalty and Revenue",
+      "industry": "Sports and Entertainment",
+      "sourceUrl": "https://www.salesforce.com/customer-stories/pacers-sports-entertainment-data-360",
+      "sourceSummary": "Pacers Sports & Entertainment publicly describes unifying fan data sources with Data 360 for personalized journeys.",
+      "defaultUtterances": [
+        "Grow fan loyalty and revenue through personalized journeys",
+        "Find high-intent fans and activate a game-day offer journey"
+      ],
+      "goalMetrics": [
+        "offer_conversion_rate",
+        "fan_engagement_score",
+        "ticket_revenue"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "fan",
+        "ticket",
+        "sports",
+        "pacers",
+        "loyalty",
+        "offer",
+        "game"
+      ],
+      "audienceEntity": "UnifiedIndividual",
+      "previewSql": "SELECT unified_individual_id, favorite_team, ticket_purchase_score, app_engagement_score FROM UnifiedIndividual WHERE ticket_purchase_score > 70 LIMIT 100",
+      "segmentName": "High Intent Fans",
+      "activationName": "Fan Journey Activation Draft",
+      "activationDestination": "MarketingCloud",
+      "monitorMetric": "offer_conversion_rate",
+      "monitorThreshold": 0.18,
+      "sourceSystems": [],
+      "targetModelingNotes": [],
+      "calculatedInsight": null,
+      "segment": null,
+      "monitors": []
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_pacers_fan_engagement",
+      "scenarioId": "pacers_fan_engagement",
+      "goal": "Grow fan loyalty and revenue through personalized journeys",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe fan engagement metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedIndividual",
+                "FanEngagement",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview high intent fans",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_individual_id, favorite_team, ticket_purchase_score, app_engagement_score FROM UnifiedIndividual WHERE ticket_purchase_score > 70 LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create high intent fan segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "High Intent Fans",
+              "description": "Pacers Sports & Entertainment publicly describes unifying fan data sources with Data 360 for personalized journeys.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish high intent fan segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create fan journey activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Fan Journey Activation Draft",
+              "destination": "MarketingCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_goal"
+          },
+          "monitor_goal": {
+            "Type": "Task",
+            "Comment": "Monitor offer conversion rate",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "offer_conversion_rate",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.18
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_goal",
+            "End": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "salesforce_event_pipeline",
+      "name": "Event-to-Pipeline Acceleration",
+      "industry": "Technology",
+      "sourceUrl": "https://www.salesforce.com/customer-stories/agentforce-for-events-agent/unified-data/",
+      "sourceSummary": "Salesforce publicly describes using Data 360 event profiles and Agentforce to personalize event engagement and pipeline follow-up.",
+      "defaultUtterances": [
+        "Turn event engagement into pipeline",
+        "Use session attendance and engagement to prioritize sales follow-up"
+      ],
+      "goalMetrics": [
+        "meeting_conversion_rate",
+        "pipeline_created",
+        "followup_sla"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.calculatedInsight.create",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "event",
+        "pipeline",
+        "attendee",
+        "session",
+        "salesforce",
+        "meeting",
+        "followup"
+      ],
+      "audienceEntity": "UnifiedIndividual",
+      "previewSql": "SELECT unified_individual_id, company_name, session_count, product_interest_score FROM UnifiedIndividual WHERE session_count > 1 AND product_interest_score > 70 LIMIT 100",
+      "segmentName": "High Intent Event Attendees",
+      "activationName": "Event Follow Up Activation Draft",
+      "activationDestination": "SalesCloud",
+      "monitorMetric": "meeting_conversion_rate",
+      "monitorThreshold": 0.25,
+      "sourceSystems": [],
+      "targetModelingNotes": [],
+      "calculatedInsight": null,
+      "segment": null,
+      "monitors": []
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_salesforce_event_pipeline",
+      "scenarioId": "salesforce_event_pipeline",
+      "goal": "Turn event engagement into pipeline",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe event and pipeline metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedIndividual",
+                "EventEngagement",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview high intent event attendees",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_individual_id, company_name, session_count, product_interest_score FROM UnifiedIndividual WHERE session_count > 1 AND product_interest_score > 70 LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_engagement_insight"
+          },
+          "create_engagement_insight": {
+            "Type": "Task",
+            "Comment": "Create event engagement score insight",
+            "Resource": "urn:salesforce:data360:capability:calculatedInsight.create",
+            "Parameters": {
+              "name": "Event Engagement Score",
+              "description": "Score attendees for sales follow up using session count and product interest.",
+              "unifiedProfileObjectApiName": "UnifiedIndividual",
+              "unifiedProfileIdField": "unified_individual_id",
+              "transactionObjectApiName": "EventEngagement",
+              "transactionCustomerKeyField": "unified_individual_id",
+              "measure": {
+                "type": "SUM",
+                "field": "session_count",
+                "alias": "event_engagement_score"
+              }
+            },
+            "ResultPath": "$.create_engagement_insight",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create event attendee segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "High Intent Event Attendees",
+              "description": "Salesforce publicly describes using Data 360 event profiles and Agentforce to personalize event engagement and pipeline follow-up.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish event attendee segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create sales follow up activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Event Follow Up Activation Draft",
+              "destination": "SalesCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_goal"
+          },
+          "monitor_goal": {
+            "Type": "Task",
+            "Comment": "Monitor meeting conversion rate",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "meeting_conversion_rate",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.25
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_goal",
+            "End": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "pepsico_retailer_engagement",
+      "name": "Retailer Engagement and Store Execution",
+      "industry": "Consumer Goods",
+      "sourceUrl": "https://www.salesforce.com/customer-stories/pepsico-data-360",
+      "sourceSummary": "PepsiCo publicly describes using Data 360 with Agentforce Marketing, MuleSoft, retail execution, service, and loyalty data.",
+      "defaultUtterances": [
+        "Improve store execution and personalized retailer engagement",
+        "Find retailers with execution gaps and launch the right next action"
+      ],
+      "goalMetrics": [
+        "retailer_engagement_rate",
+        "execution_gap_closure",
+        "promotion_uplift"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "retail",
+        "retailer",
+        "store",
+        "pepsico",
+        "execution",
+        "promotion",
+        "loyalty"
+      ],
+      "audienceEntity": "UnifiedAccount",
+      "previewSql": "SELECT unified_account_id, store_name, execution_gap_score, promotion_response_score FROM UnifiedAccount WHERE execution_gap_score > 60 LIMIT 100",
+      "segmentName": "Retailers With Execution Gaps",
+      "activationName": "Retailer Execution Activation Draft",
+      "activationDestination": "MarketingCloud",
+      "monitorMetric": "execution_gap_closure",
+      "monitorThreshold": 0.2,
+      "sourceSystems": [],
+      "targetModelingNotes": [],
+      "calculatedInsight": null,
+      "segment": null,
+      "monitors": []
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_pepsico_retailer_engagement",
+      "scenarioId": "pepsico_retailer_engagement",
+      "goal": "Improve store execution and personalized retailer engagement",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe retailer execution metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedAccount",
+                "RetailExecution",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview retailers with execution gaps",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_account_id, store_name, execution_gap_score, promotion_response_score FROM UnifiedAccount WHERE execution_gap_score > 60 LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create retailer execution segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "Retailers With Execution Gaps",
+              "description": "PepsiCo publicly describes using Data 360 with Agentforce Marketing, MuleSoft, retail execution, service, and loyalty data.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish retailer execution segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create retailer activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Retailer Execution Activation Draft",
+              "destination": "MarketingCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_goal"
+          },
+          "monitor_goal": {
+            "Type": "Task",
+            "Comment": "Monitor execution gap closure",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "execution_gap_closure",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.2
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_goal",
+            "End": true
+          }
+        }
+      }
+    }
+  },
+  {
+    "scenario": {
+      "id": "travel_ltv_snowflake_crm",
+      "name": "Travel Customer LTV",
+      "industry": "Travel and Hospitality",
+      "sourceUrl": "snowflake://DCBOOTCAMP/PUBLIC",
+      "sourceSummary": "Prompt-sourced travel scenario joining Snowflake DCBOOTCAMP.PUBLIC CUSTOMER, ITINERARY, and ITINERARY_ORDER data with CRM Contact profiles for Data 360 LTV activation.",
+      "defaultUtterances": [
+        "Create a travel LTV audience from Snowflake bookings and CRM contacts",
+        "Use CUSTOMER, ITINERARY, ITINERARY_ORDER, and Contact to find high-value travelers"
+      ],
+      "goalMetrics": [
+        "travel_lifetime_value",
+        "booking_frequency",
+        "activation_conversion_rate"
+      ],
+      "requiredActions": [
+        "data360.metadata.describe",
+        "data360.dataStream.snowflake.create",
+        "data360.dataStream.crm.create",
+        "data360.mapping.create",
+        "data360.identityResolution.ruleset.create",
+        "data360.identityResolution.run",
+        "data360.calculatedInsight.create",
+        "data360.calculatedInsight.run",
+        "data360.query",
+        "data360.createSegment",
+        "data360.publishSegment",
+        "data360.createActivation",
+        "data360.monitor.metric"
+      ],
+      "keywords": [
+        "travel",
+        "traveler",
+        "ltv",
+        "lifetime value",
+        "snowflake",
+        "dcbootcamp",
+        "customer",
+        "itinerary",
+        "itinerary_order",
+        "crm",
+        "contact",
+        "booking"
+      ],
+      "audienceEntity": "UnifiedIndividual",
+      "previewSql": "SELECT unified_individual_id, email, loyalty_tier, lifetime_value, itinerary_count, last_booking_date FROM UnifiedIndividual WHERE lifetime_value > 10000 AND marketing_consent = 'OptIn' LIMIT 100",
+      "segmentName": "High LTV Travelers",
+      "activationName": "Travel LTV Activation Draft",
+      "activationDestination": "MarketingCloud",
+      "monitorMetric": "high_ltv_activation_rate",
+      "monitorThreshold": 0.2,
+      "sourceSystems": [
+        {
+          "name": "Snowflake DCBOOTCAMP.PUBLIC",
+          "systemType": "Snowflake",
+          "tables": [
+            "CUSTOMER",
+            "ITINERARY",
+            "ITINERARY_ORDER"
+          ]
+        },
+        {
+          "name": "Salesforce CRM",
+          "systemType": "CRM",
+          "tables": [
+            "Contact"
+          ]
+        }
+      ],
+      "targetModelingNotes": [
+        {
+          "targetObject": "TravelCustomerDLO",
+          "objectType": "DLO",
+          "note": "Ingest DCBOOTCAMP.PUBLIC.CUSTOMER with stable externalCustomerId, email, loyalty tier, and home market fields."
+        },
+        {
+          "targetObject": "TravelItineraryDLO",
+          "objectType": "DLO",
+          "note": "Ingest DCBOOTCAMP.PUBLIC.ITINERARY as the booking header source with itinerary id, customer key, booking date, and trip status."
+        },
+        {
+          "targetObject": "TravelItineraryOrderDLO",
+          "objectType": "DLO",
+          "note": "Ingest DCBOOTCAMP.PUBLIC.ITINERARY_ORDER as order-level spend that rolls into transactionAmount for LTV."
+        },
+        {
+          "targetObject": "Individual",
+          "objectType": "DMO",
+          "note": "Map CRM Contact and Snowflake customer attributes into the profile model, using Contact email and externalCustomerId for identity rules."
+        },
+        {
+          "targetObject": "TravelItinerary",
+          "objectType": "DMO",
+          "note": "Model itinerary spend as the transaction object used by the LTV calculated insight."
+        }
+      ],
+      "calculatedInsight": {
+        "name": "Travel Customer Lifetime Value",
+        "description": "SUM TravelItinerary.transactionAmount by unified individual after identity resolution links CRM Contact to Snowflake customer records.",
+        "transactionObjectApiName": "TravelItinerary",
+        "measureAlias": "lifetime_value"
+      },
+      "segment": {
+        "name": "High LTV Travelers",
+        "criteria": "Unified individuals with lifetime_value greater than 10000, opt-in marketing consent, and recent itinerary activity."
+      },
+      "monitors": [
+        {
+          "metric": "high_ltv_activation_rate",
+          "cadence": "daily",
+          "threshold": "Alert below 0.20",
+          "recommendation": "Review activation performance and refresh segment criteria before expanding spend."
+        },
+        {
+          "metric": "travel_ltv_refresh_rate",
+          "cadence": "daily",
+          "threshold": "Alert when calculated insight has not refreshed in 24 hours",
+          "recommendation": "Rerun the LTV calculated insight after Snowflake data stream refresh."
+        },
+        {
+          "metric": "snowflake_travel_stream_health",
+          "cadence": "hourly",
+          "threshold": "Alert on failed CUSTOMER, ITINERARY, or ITINERARY_ORDER ingestion",
+          "recommendation": "Inspect Snowflake data stream failures before publishing the segment."
+        }
+      ]
+    },
+    "expectedSelectedOutputs": {
+      "create_identity_ruleset": {
+        "rulesetId": "irs_travel_identity",
+        "rulesetName": "Travel Customer Identity Ruleset",
+        "status": "draft"
+      },
+      "run_identity_resolution": {
+        "rulesetId": "irs_travel_identity",
+        "jobId": "job_travel_identity_run",
+        "status": "completed",
+        "unifiedProfileObjectApiName": "UnifiedIndividual",
+        "unifiedProfileIdField": "UnifiedIndividualId"
+      },
+      "create_lifetime_value_insight": {
+        "insightId": "ci_travel_customer_ltv",
+        "apiName": "Travel_Customer_Lifetime_Value",
+        "name": "Travel Customer Lifetime Value",
+        "status": "draft"
+      },
+      "preview_audience": {
+        "columns": [
+          "unified_individual_id",
+          "email",
+          "loyalty_tier",
+          "lifetime_value",
+          "itinerary_count",
+          "last_booking_date"
+        ],
+        "rowCount": 2,
+        "rows": [
+          {
+            "unified_individual_id": "masked_traveler_001",
+            "email": "masked001@example.invalid",
+            "loyalty_tier": "Platinum",
+            "lifetime_value": 12840,
+            "itinerary_count": 9,
+            "last_booking_date": "2026-05-20"
+          },
+          {
+            "unified_individual_id": "masked_traveler_002",
+            "email": "masked002@example.invalid",
+            "loyalty_tier": "Gold",
+            "lifetime_value": 18110,
+            "itinerary_count": 14,
+            "last_booking_date": "2026-05-28"
+          }
+        ]
+      },
+      "create_segment": {
+        "segmentId": "seg_high_ltv_travelers",
+        "name": "High LTV Travelers",
+        "status": "draft"
+      },
+      "create_activation": {
+        "activationId": "act_travel_ltv_marketing_cloud",
+        "name": "Travel LTV Activation Draft",
+        "destination": "MarketingCloud",
+        "status": "draft"
+      }
+    },
+    "goldenPlan": {
+      "schemaVersion": "data360-asl-profile-2026-05-31",
+      "id": "plan_travel_ltv_snowflake_crm",
+      "scenarioId": "travel_ltv_snowflake_crm",
+      "goal": "Create a travel LTV audience from Snowflake bookings and CRM contacts",
+      "context": {
+        "org": "demo-org",
+        "dataspace": "default",
+        "environment": "sandbox"
+      },
+      "definition": {
+        "Version": "1.0",
+        "QueryLanguage": "JSONPath",
+        "StartAt": "describe_metadata",
+        "States": {
+          "describe_metadata": {
+            "Type": "Task",
+            "Comment": "Describe travel audience metadata",
+            "Resource": "urn:salesforce:data360:capability:metadata.describe",
+            "Parameters": {
+              "objects": [
+                "UnifiedIndividual",
+                "TravelCustomerDLO",
+                "TravelItineraryDLO",
+                "TravelItineraryOrderDLO",
+                "Individual",
+                "TravelItinerary",
+                "Segment",
+                "Activation"
+              ]
+            },
+            "ResultPath": "$.describe_metadata",
+            "Next": "create_customer_stream"
+          },
+          "create_customer_stream": {
+            "Type": "Task",
+            "Comment": "Create Snowflake customer data stream",
+            "Resource": "urn:salesforce:data360:capability:dataStream.snowflake.create",
+            "Parameters": {
+              "streamName": "travel_customer_stream",
+              "label": "Travel Customer Stream",
+              "connectionName": "Snowflake DCBOOTCAMP",
+              "database": "DCBOOTCAMP",
+              "schema": "PUBLIC",
+              "objectName": "CUSTOMER",
+              "dataSpaceName": "default",
+              "dloName": "TravelCustomerDLO",
+              "dloLabel": "Travel Customer DLO",
+              "category": "Profile",
+              "refreshMode": "Scheduled"
+            },
+            "ResultPath": "$.create_customer_stream",
+            "Next": "create_itinerary_stream"
+          },
+          "create_itinerary_stream": {
+            "Type": "Task",
+            "Comment": "Create Snowflake itinerary data stream",
+            "Resource": "urn:salesforce:data360:capability:dataStream.snowflake.create",
+            "Parameters": {
+              "streamName": "travel_itinerary_stream",
+              "label": "Travel Itinerary Stream",
+              "connectionName": "Snowflake DCBOOTCAMP",
+              "database": "DCBOOTCAMP",
+              "schema": "PUBLIC",
+              "objectName": "ITINERARY",
+              "dataSpaceName": "default",
+              "dloName": "TravelItineraryDLO",
+              "dloLabel": "Travel Itinerary DLO",
+              "category": "Engagement",
+              "refreshMode": "Scheduled"
+            },
+            "ResultPath": "$.create_itinerary_stream",
+            "Next": "create_order_stream"
+          },
+          "create_order_stream": {
+            "Type": "Task",
+            "Comment": "Create Snowflake itinerary order data stream",
+            "Resource": "urn:salesforce:data360:capability:dataStream.snowflake.create",
+            "Parameters": {
+              "streamName": "travel_itinerary_order_stream",
+              "label": "Travel Itinerary Order Stream",
+              "connectionName": "Snowflake DCBOOTCAMP",
+              "database": "DCBOOTCAMP",
+              "schema": "PUBLIC",
+              "objectName": "ITINERARY_ORDER",
+              "dataSpaceName": "default",
+              "dloName": "TravelItineraryOrderDLO",
+              "dloLabel": "Travel Itinerary Order DLO",
+              "category": "Engagement",
+              "refreshMode": "Scheduled"
+            },
+            "ResultPath": "$.create_order_stream",
+            "Next": "create_contact_stream"
+          },
+          "create_contact_stream": {
+            "Type": "Task",
+            "Comment": "Create CRM contact data stream",
+            "Resource": "urn:salesforce:data360:capability:dataStream.crm.create",
+            "Parameters": {
+              "streamName": "crm_contact_stream",
+              "label": "CRM Contact Stream",
+              "sourceObject": "Contact",
+              "dataSpaceName": "default",
+              "dloName": "ContactDLO",
+              "dloLabel": "Contact DLO",
+              "category": "Profile"
+            },
+            "ResultPath": "$.create_contact_stream",
+            "Next": "map_customer_to_individual"
+          },
+          "map_customer_to_individual": {
+            "Type": "Task",
+            "Comment": "Map Snowflake customer DLO to Individual",
+            "Resource": "urn:salesforce:data360:capability:mapping.create",
+            "Parameters": {
+              "sourceDloName": "TravelCustomerDLO",
+              "targetDmoName": "Individual",
+              "dataspace": "default",
+              "fieldMappings": {
+                "externalCustomerId": "externalCustomerId",
+                "email": "email",
+                "loyaltyTier": "loyalty_tier"
+              }
+            },
+            "ResultPath": "$.map_customer_to_individual",
+            "Next": "map_contact_to_individual"
+          },
+          "map_contact_to_individual": {
+            "Type": "Task",
+            "Comment": "Map CRM contact DLO to Individual",
+            "Resource": "urn:salesforce:data360:capability:mapping.create",
+            "Parameters": {
+              "sourceDloName": "ContactDLO",
+              "targetDmoName": "Individual",
+              "dataspace": "default",
+              "fieldMappings": {
+                "Contact.Id": "crmContactId",
+                "Contact.Email": "email",
+                "Contact.Name": "fullName"
+              }
+            },
+            "ResultPath": "$.map_contact_to_individual",
+            "Next": "map_order_to_itinerary"
+          },
+          "map_order_to_itinerary": {
+            "Type": "Task",
+            "Comment": "Map Snowflake itinerary order DLO to TravelItinerary",
+            "Resource": "urn:salesforce:data360:capability:mapping.create",
+            "Parameters": {
+              "sourceDloName": "TravelItineraryOrderDLO",
+              "targetDmoName": "TravelItinerary",
+              "dataspace": "default",
+              "fieldMappings": {
+                "customer_id": "externalCustomerId",
+                "order_amount": "transactionAmount",
+                "itinerary_id": "itineraryId"
+              }
+            },
+            "ResultPath": "$.map_order_to_itinerary",
+            "Next": "create_identity_ruleset"
+          },
+          "create_identity_ruleset": {
+            "Type": "Task",
+            "Comment": "Create travel identity ruleset",
+            "Resource": "urn:salesforce:data360:capability:identityResolution.ruleset.create",
+            "Parameters": {
+              "name": "Travel Customer Identity Ruleset",
+              "description": "Link CRM contacts to Snowflake customer records by email and external customer id.",
+              "profileObject": "Individual",
+              "rules": [
+                {
+                  "name": "Exact email",
+                  "fields": [
+                    "email"
+                  ]
+                },
+                {
+                  "name": "Exact external customer id",
+                  "fields": [
+                    "externalCustomerId"
+                  ]
+                }
+              ]
+            },
+            "ResultPath": "$.create_identity_ruleset",
+            "Next": "run_identity_resolution"
+          },
+          "run_identity_resolution": {
+            "Type": "Task",
+            "Comment": "Run travel identity resolution",
+            "Resource": "urn:salesforce:data360:capability:identityResolution.run",
+            "Parameters": {
+              "rulesetId.$": "$.create_identity_ruleset.rulesetId"
+            },
+            "ResultPath": "$.run_identity_resolution",
+            "Next": "create_lifetime_value_insight"
+          },
+          "create_lifetime_value_insight": {
+            "Type": "Task",
+            "Comment": "Create travel customer lifetime value insight",
+            "Resource": "urn:salesforce:data360:capability:calculatedInsight.create",
+            "Parameters": {
+              "name": "Travel Customer Lifetime Value",
+              "description": "SUM TravelItinerary.transactionAmount by unified individual after identity resolution links CRM Contact to Snowflake customer records.",
+              "unifiedProfileObjectApiName.$": "$.run_identity_resolution.unifiedProfileObjectApiName",
+              "unifiedProfileIdField.$": "$.run_identity_resolution.unifiedProfileIdField",
+              "transactionObjectApiName": "TravelItinerary",
+              "transactionCustomerKeyField": "externalCustomerId",
+              "measure": {
+                "type": "SUM",
+                "field": "transactionAmount",
+                "alias": "lifetime_value"
+              },
+              "groupBy": [
+                "unified_individual_id"
+              ]
+            },
+            "ResultPath": "$.create_lifetime_value_insight",
+            "Next": "run_lifetime_value_insight"
+          },
+          "run_lifetime_value_insight": {
+            "Type": "Task",
+            "Comment": "Run travel customer lifetime value insight",
+            "Resource": "urn:salesforce:data360:capability:calculatedInsight.run",
+            "Parameters": {
+              "insightId.$": "$.create_lifetime_value_insight.insightId"
+            },
+            "ResultPath": "$.run_lifetime_value_insight",
+            "Next": "preview_audience"
+          },
+          "preview_audience": {
+            "Type": "Task",
+            "Comment": "Preview high LTV travelers",
+            "Resource": "urn:salesforce:data360:capability:query",
+            "Parameters": {
+              "sql": "SELECT unified_individual_id, email, loyalty_tier, lifetime_value, itinerary_count, last_booking_date FROM UnifiedIndividual WHERE lifetime_value > 10000 AND marketing_consent = 'OptIn' LIMIT 100",
+              "limit": 100
+            },
+            "ResultPath": "$.preview_audience",
+            "Next": "create_segment"
+          },
+          "create_segment": {
+            "Type": "Task",
+            "Comment": "Create high LTV traveler segment",
+            "Resource": "urn:salesforce:data360:capability:segment.create",
+            "Parameters": {
+              "name": "High LTV Travelers",
+              "description": "Unified individuals with lifetime_value greater than 10000, opt-in marketing consent, and recent itinerary activity.",
+              "criteriaFromStep": "preview_audience"
+            },
+            "ResultPath": "$.create_segment",
+            "Next": "publish_segment"
+          },
+          "publish_segment": {
+            "Type": "Task",
+            "Comment": "Publish high LTV traveler segment",
+            "Resource": "urn:salesforce:data360:capability:segment.publish",
+            "Parameters": {
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.publish_segment",
+            "Next": "create_activation"
+          },
+          "create_activation": {
+            "Type": "Task",
+            "Comment": "Create travel LTV activation",
+            "Resource": "urn:salesforce:data360:capability:activation.create",
+            "Parameters": {
+              "name": "Travel LTV Activation Draft",
+              "destination": "MarketingCloud",
+              "segmentId.$": "$.create_segment.segmentId"
+            },
+            "ResultPath": "$.create_activation",
+            "Next": "monitor_activation"
+          },
+          "monitor_activation": {
+            "Type": "Task",
+            "Comment": "Monitor high LTV activation rate",
+            "Resource": "urn:salesforce:data360:capability:monitor.metric",
+            "Parameters": {
+              "metric": "high_ltv_activation_rate",
+              "cadence": "daily",
+              "threshold": {
+                "operator": "<",
+                "value": 0.2
+              },
+              "queryFromStep": "preview_audience"
+            },
+            "ResultPath": "$.monitor_activation",
+            "End": true
+          }
+        }
+      }
+    }
+  }
+]

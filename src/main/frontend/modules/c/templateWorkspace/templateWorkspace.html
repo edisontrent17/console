@@ -1,0 +1,93 @@
+<template>
+    <div class="template-workspace">
+        <section class="slds-card scenario-section">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">Scenarios</h2>
+                        <p class="slds-text-body_small slds-text-color_weak">Customer contexts for planning</p>
+                    </div>
+                </header>
+                <span class="slds-badge">{selectedScenarioName}</span>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <template if:true={hasScenarios}>
+                    <div class="scenario-list" role="listbox" aria-label="Scenarios">
+                        <template for:each={scenarioRows} for:item="scenario">
+                            <article
+                                key={scenario.key}
+                                class={scenario.className}
+                                role="option"
+                                aria-selected={scenario.selected}
+                                tabindex="0"
+                                data-scenario-id={scenario.id}
+                                onclick={handleScenarioClick}
+                                onkeydown={handleScenarioKeydown}
+                            >
+                                <div>
+                                    <strong>{scenario.label}</strong>
+                                    <span>{scenario.detail}</span>
+                                </div>
+                                <span class={scenario.badgeClass}>Selected</span>
+                                <p>{scenario.utterance}</p>
+                                <template if:true={scenario.hasMetrics}>
+                                    <small>{scenario.metricLabel}</small>
+                                </template>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+                <template if:false={hasScenarios}>
+                    <div class="empty-state">No scenarios available.</div>
+                </template>
+            </div>
+        </section>
+
+        <section class="slds-card template-section">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">Templates</h2>
+                        <p class="slds-text-body_small slds-text-color_weak">Reusable governed activation patterns</p>
+                    </div>
+                </header>
+                <div class="status-pills" aria-label="Current plan state">
+                    <span class="slds-badge">{draftStatusLabel}</span>
+                    <span class="slds-badge">{runStatusLabel}</span>
+                    <span class="slds-badge">{planStepLabel}</span>
+                </div>
+            </div>
+            <div class="slds-card__body slds-card__body_inner">
+                <template if:true={hasTemplates}>
+                    <div class="template-grid">
+                        <template for:each={templateRows} for:item="item">
+                            <article key={item.key} class="template-card">
+                                <div class="template-head">
+                                    <div>
+                                        <strong>{item.title}</strong>
+                                        <span>{item.subtitle}</span>
+                                    </div>
+                                    <span class="slds-badge">{item.stepLabel}</span>
+                                </div>
+                                <p>{item.summary}</p>
+                                <template if:true={item.clouds}>
+                                    <div class="cloud-list">{item.clouds}</div>
+                                </template>
+                                <template for:each={item.notes} for:item="note">
+                                    <div key={note} class="architecture-note">{note}</div>
+                                </template>
+                                <div class="template-actions">
+                                    <button class="slds-button slds-button_neutral" data-template-id={item.id} onclick={handleUseTemplate} disabled={item.disabled}>{item.useLabel}</button>
+                                    <button class="slds-button slds-button_brand" data-template-id={item.id} onclick={handleInstantiateTemplate} disabled={item.disabled}>{item.instantiateLabel}</button>
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </template>
+                <template if:false={hasTemplates}>
+                    <div class="empty-state">No templates available.</div>
+                </template>
+            </div>
+        </section>
+    </div>
+</template>

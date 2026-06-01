@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://data360-agent-console.local/schemas/planspec/data360-asl-profile-2026-05-31",
+  "title": "Data 360 ASL PlanSpec",
+  "description": "A governed Amazon States Language profile for human-approved Data 360 setup and monitor plans.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "goal",
+    "context",
+    "definition"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "data360-asl-profile-2026-05-31"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "scenarioId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "context": {
+      "$ref": "#/$defs/context"
+    },
+    "definition": {
+      "$ref": "#/$defs/stateMachine"
+    },
+    "steps": {
+      "description": "Derived compatibility view for the current UI and executor. New planners should emit definition, not steps.",
+      "readOnly": true,
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/derivedStep"
+      }
+    }
+  },
+  "$defs": {
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "org",
+        "dataspace",
+        "environment"
+      ],
+      "properties": {
+        "org": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "dataspace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "environment": {
+          "enum": [
+            "sandbox",
+            "production"
+          ]
+        }
+      }
+    },
+    "stateMachine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Version",
+        "QueryLanguage",
+        "StartAt",
+        "States"
+      ],
+      "properties": {
+        "Version": {
+          "const": "1.0"
+        },
+        "QueryLanguage": {
+          "const": "JSONPath"
+        },
+        "StartAt": {
+          "$ref": "#/$defs/stateName"
+        },
+        "States": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 20,
+          "propertyNames": {
+            "$ref": "#/$defs/stateName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/taskState"
+          }
+        }
+      }
+    },
+    "taskState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Type",
+        "Resource",
+        "Parameters",
+        "ResultPath"
+      ],
+      "properties": {
+        "Type": {
+          "const": "Task"
+        },
+        "Comment": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "Resource": {
+          "$ref": "#/$defs/capabilityResource"
+        },
+        "Parameters": {
+          "$ref": "#/$defs/parameters"
+        },
+        "ResultPath": {
+          "type": "string",
+          "pattern": "^\\$\\.[A-Za-z][A-Za-z0-9_-]{0,63}$"
+        },
+        "Next": {
+          "$ref": "#/$defs/stateName"
+        },
+        "End": {
+          "const": true
+        },
+        "TimeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "Next"
+          ],
+          "not": {
+            "required": [
+              "End"
+            ]
+          }
+        },
+        {
+          "required": [
+            "End"
+          ],
+          "not": {
+            "required": [
+              "Next"
+            ]
+          }
+        }
+      ]
+    },
+    "stateName": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"
+    },
+    "capabilityResource": {
+      "enum": [
+        "urn:salesforce:data360:capability:search",
+        "urn:salesforce:data360:capability:metadata.describe",
+        "urn:salesforce:data360:capability:query",
+        "urn:salesforce:data360:capability:dataStream.snowflake.create",
+        "urn:salesforce:data360:capability:dataStream.crm.create",
+        "urn:salesforce:data360:capability:mapping.create",
+        "urn:salesforce:data360:capability:calculatedInsight.create",
+        "urn:salesforce:data360:capability:calculatedInsight.run",
+        "urn:salesforce:data360:capability:segment.create",
+        "urn:salesforce:data360:capability:segment.update",
+        "urn:salesforce:data360:capability:segment.publish",
+        "urn:salesforce:data360:capability:activation.create",
+        "urn:salesforce:data360:capability:activation.run",
+        "urn:salesforce:data360:capability:identityRuleset.get",
+        "urn:salesforce:data360:capability:identityResolution.ruleset.create",
+        "urn:salesforce:data360:capability:identityResolution.run",
+        "urn:salesforce:data360:capability:monitor.metric",
+        "urn:salesforce:data360:capability:mcp.execute"
+      ]
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/inputValue"
+      },
+      "propertyNames": {
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*(\\.\\$)?$"
+      }
+    },
+    "inputValue": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 4096
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inputValue"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/inputValue"
+          }
+        }
+      ]
+    },
+    "derivedStep": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "title",
+        "phase",
+        "action",
+        "input",
+        "dependsOn",
+        "inputBindings",
+        "needsApproval"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stateName"
+        },
+        "title": {
+          "type": "string"
+        },
+        "phase": {
+          "enum": [
+            "discover",
+            "setup",
+            "monitor"
+          ]
+        },
+        "action": {
+          "type": "string"
+        },
+        "input": {
+          "type": "object"
+        },
+        "dependsOn": {
+          "type": "array"
+        },
+        "inputBindings": {
+          "type": "object"
+        },
+        "needsApproval": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
