@@ -1,13 +1,17 @@
 package com.acme.data360agent.temporal;
 
 import com.acme.data360agent.execution.PlanInputResolver;
+import com.acme.data360agent.execution.ExecutionIdempotency;
+import com.acme.data360agent.execution.StepOutputSelector;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.StepStatus;
 import com.acme.data360agent.operation.Effect;
+import com.acme.data360agent.operation.OperationBindingResolver;
 import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.plan.PlanTopology;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.common.RetryOptions;
 import io.temporal.workflow.Workflow;
@@ -53,39 +57,40 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
     private final Map<String, OperationBindingSnapshot> bindingsByResource = new LinkedHashMap<>();
     private final Map<String, StepStatus> stepStatuses = new LinkedHashMap<>();
     private final Map<String, Map<String, Object>> outputsByStep = new LinkedHashMap<>();
+    private List<String> executionOrder = List.of();
     private RunStatus runStatus = RunStatus.RUNNING;
     private String waitingStepId;
     private String currentStepId;
     private String cancelReason;
 
     @Override
-    public String run(String runId, PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
-        initialize(plan, operationBindings);
+    public String run(String organizationId, String runId, PlanSpec plan, List<OperationBindingSnapshot> operationBindings, List<String> executionOrder) {
+        initialize(plan, operationBindings, executionOrder);
         while (cancelReason == null) {
-            skipReadyMonitorSteps(runId, plan);
+            skipReadyMonitorSteps(organizationId, runId, plan);
             var next = nextRunnableStep(plan);
             if (next == null) {
                 if (allTerminal()) {
                     runStatus = RunStatus.SUCCEEDED;
-                    state.completeRun(runId, plan.id());
+                    state.completeRun(organizationId, runId, plan.id());
                 }
                 return runId;
             }
 
-            if (next.needsApproval() && !approvedSteps.contains(next.id())) {
-                waitForApproval(runId, plan, next);
+            if (requiresApproval(next) && !approvedSteps.contains(next.id())) {
+                waitForApproval(organizationId, runId, plan, next);
                 if (cancelReason != null) {
                     break;
                 }
             }
 
-            executeStep(runId, plan, next);
+            executeStep(organizationId, runId, plan, next);
             if (runStatus == RunStatus.FAILED) {
                 return runId;
             }
         }
         runStatus = RunStatus.CANCELED;
-        state.cancelRun(runId, plan.id(), cancelReason);
+        state.cancelRun(organizationId, runId, plan.id(), cancelReason);
         return runId;
     }
 
@@ -112,10 +117,11 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         );
     }
 
-    private void initialize(PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
+    private void initialize(PlanSpec plan, List<OperationBindingSnapshot> operationBindings, List<String> approvedExecutionOrder) {
         if (!stepStatuses.isEmpty()) {
             return;
         }
+        executionOrder = normalizeExecutionOrder(plan, approvedExecutionOrder);
         for (var binding : operationBindings == null ? List.<OperationBindingSnapshot>of() : operationBindings) {
             bindingsByResource.put(binding.resource(), binding);
         }
@@ -125,49 +131,56 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         }
     }
 
-    private void waitForApproval(String runId, PlanSpec plan, PlanStep step) {
+    private void waitForApproval(String organizationId, String runId, PlanSpec plan, PlanStep step) {
         waitingStepId = step.id();
         currentStepId = null;
         runStatus = RunStatus.WAITING_APPROVAL;
         stepStatuses.put(step.id(), StepStatus.WAITING_APPROVAL);
-        state.waitingForApproval(runId, plan.id(), step.id(), step.action().value());
+        state.waitingForApproval(organizationId, runId, plan.id(), step.id(), step.action().value());
         Workflow.await(() -> approvedSteps.contains(step.id()) || cancelReason != null);
         waitingStepId = null;
         if (cancelReason == null) {
-            state.stepApproved(runId, plan.id(), step.id(), approvalActorsByStep.getOrDefault(step.id(), "system"));
+            state.stepApproved(organizationId, runId, plan.id(), step.id(), approvalActorsByStep.getOrDefault(step.id(), "system"));
             stepStatuses.put(step.id(), StepStatus.PENDING);
             runStatus = RunStatus.RUNNING;
         }
     }
 
-    private void executeStep(String runId, PlanSpec plan, PlanStep step) {
+    private void executeStep(String organizationId, String runId, PlanSpec plan, PlanStep step) {
         currentStepId = step.id();
         runStatus = RunStatus.RUNNING;
         stepStatuses.put(step.id(), StepStatus.RUNNING);
-        state.stepStarted(runId, plan.id(), step.id(), step.action().value());
+        state.stepStarted(organizationId, runId, plan.id(), step.id(), step.action().value());
         try {
             var binding = bindingFor(step);
             var resolved = PlanInputResolver.resolve(step, this::outputForStep);
-            state.stepToolCallPrepared(runId, plan.id(), step.id(), step.action().value(), binding, resolved);
-            var result = data360(binding).executeStep(new ActivityCommand(runId, plan.id(), plan.context(), binding, step, resolved));
-            outputsByStep.put(step.id(), result.output());
+            var idempotencyKey = ExecutionIdempotency.forStep(organizationId, runId, plan.id(), step, binding, resolved);
+            state.stepToolCallPrepared(organizationId, runId, plan.id(), step.id(), step.action().value(), binding, resolved, idempotencyKey);
+            var result = data360(binding).executeStep(new ActivityCommand(organizationId, runId, plan.id(), plan.context(), binding, step, resolved, idempotencyKey));
+            var output = StepOutputSelector.apply(step, result.output(), binding);
+            outputsByStep.put(step.id(), output);
             stepStatuses.put(step.id(), StepStatus.SUCCEEDED);
-            state.stepSucceeded(runId, plan.id(), step.id(), step.action().value(), result.output(), result.raw());
+            state.stepSucceeded(organizationId, runId, plan.id(), step.id(), step.action().value(), output, result.raw());
         } catch (Exception e) {
             runStatus = RunStatus.FAILED;
             stepStatuses.put(step.id(), StepStatus.FAILED);
-            state.stepFailed(runId, plan.id(), step.id(), message(e));
+            state.stepFailed(organizationId, runId, plan.id(), step.id(), message(e));
         } finally {
             currentStepId = null;
         }
     }
 
     private OperationBindingSnapshot bindingFor(PlanStep step) {
-        var binding = bindingsByResource.get(step.action().resource());
+        var resource = OperationBindingResolver.resourceFor(step);
+        var binding = bindingsByResource.get(resource);
         if (binding == null) {
-            throw new IllegalArgumentException("No operation binding snapshot for resource: " + step.action().resource());
+            throw new IllegalArgumentException("No operation binding snapshot for resource: " + resource);
         }
         return binding;
+    }
+
+    private boolean requiresApproval(PlanStep step) {
+        return step.needsApproval() || bindingFor(step).requiresApproval();
     }
 
     private Data360Activities data360(OperationBindingSnapshot binding) {
@@ -183,7 +196,7 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
     }
 
     private PlanStep nextRunnableStep(PlanSpec plan) {
-        for (var step : plan.steps()) {
+        for (var step : PlanTopology.steps(plan, executionOrder)) {
             if (step.phase() == PlanPhase.MONITOR) {
                 continue;
             }
@@ -198,15 +211,15 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
         return null;
     }
 
-    private void skipReadyMonitorSteps(String runId, PlanSpec plan) {
-        for (var step : plan.steps()) {
+    private void skipReadyMonitorSteps(String organizationId, String runId, PlanSpec plan) {
+        for (var step : PlanTopology.steps(plan, executionOrder)) {
             if (step.phase() != PlanPhase.MONITOR || stepStatuses.get(step.id()) != StepStatus.PENDING) {
                 continue;
             }
             if (dependenciesSucceeded(step.dependsOn())) {
                 stepStatuses.put(step.id(), StepStatus.SKIPPED);
                 outputsByStep.put(step.id(), Map.of("registeredAsMonitor", true));
-                state.skipMonitorStep(runId, plan.id(), step.id());
+                state.skipMonitorStep(organizationId, runId, plan.id(), step.id());
             }
         }
     }
@@ -217,6 +230,21 @@ public class Data360PlanWorkflowImpl implements Data360PlanWorkflow {
 
     private boolean allTerminal() {
         return stepStatuses.values().stream().allMatch(status -> status == StepStatus.SUCCEEDED || status == StepStatus.SKIPPED);
+    }
+
+    private List<String> normalizeExecutionOrder(PlanSpec plan, List<String> approvedExecutionOrder) {
+        if (approvedExecutionOrder == null || approvedExecutionOrder.isEmpty()) {
+            return PlanTopology.stepIds(plan);
+        }
+        var known = plan.steps().stream().map(PlanStep::id).collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new));
+        var ordered = new ArrayList<String>();
+        for (var id : approvedExecutionOrder) {
+            if (known.remove(id)) {
+                ordered.add(id);
+            }
+        }
+        ordered.addAll(known);
+        return List.copyOf(ordered);
     }
 
     private String message(Exception e) {

@@ -110,9 +110,7 @@ public class LlmSettingsService {
     }
 
     private String organizationId() {
-        return Optional.ofNullable(users.currentUser().organizationId())
-                .filter(value -> !value.isBlank())
-                .orElseGet(identities::defaultOrganizationId);
+        return users.organizationId();
     }
 
     private String normalizeProvider(String provider) {

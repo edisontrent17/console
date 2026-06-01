@@ -29,7 +29,9 @@
                 </div>
                 <div class="request-actions slds-m-top_medium">
                     <button class="slds-button slds-button_brand" onclick={handleDraft} disabled={busy.draftPlan}>{draftLabel}</button>
+                    <button class="slds-button slds-button_neutral" onclick={handleApprovePlan} disabled={approveDisabled}>{approveLabel}</button>
                     <button class="slds-button slds-button_neutral" onclick={handleStart} disabled={startDisabled}>{startLabel}</button>
+                    <button class="slds-button slds-button_neutral" onclick={handleExportPlanSpec} disabled={exportDisabled}>{exportLabel}</button>
                     <button class="slds-button slds-button_neutral" onclick={handleSmoke} disabled={busy.smokeData360}>{smokeLabel}</button>
                 </div>
             </div>
@@ -43,9 +45,10 @@
                         <p class="slds-text-body_small slds-text-color_weak">Governed ASL profile before any Data 360 mutation</p>
                     </div>
                 </header>
-                <template if:true={hasDraft}>
-                    <span class={validationClass}>{validationLabel}</span>
-                </template>
+                        <template if:true={hasDraft}>
+                            <span class={validationClass}>{validationLabel}</span>
+                            <span class={approvalClass}>{approvalLabel}</span>
+                        </template>
             </div>
             <div class="slds-card__body slds-card__body_inner">
                 <template if:false={hasDraft}>
@@ -67,6 +70,16 @@
                                 <strong>{stat.value}</strong>
                                 <span>{stat.label}</span>
                             </div>
+                        </template>
+                    </div>
+
+                    <div class="governance-grid" aria-label="Plan governance">
+                        <template for:each={governanceCards} for:item="card">
+                            <article key={card.label} class={card.className}>
+                                <span>{card.label}</span>
+                                <strong>{card.value}</strong>
+                                <p>{card.detail}</p>
+                            </article>
                         </template>
                     </div>
 
@@ -94,6 +107,13 @@
                         </div>
                     </template>
 
+                    <div class="plan-view-tabs" role="tablist" aria-label="Plan views">
+                        <template for:each={planViewOptions} for:item="option">
+                            <button key={option.key} class={option.className} data-view={option.key} onclick={handlePlanView}>{option.label}</button>
+                        </template>
+                    </div>
+
+                    <template if:true={showStepsView}>
                     <div class="table-wrap">
                         <table class="slds-table slds-table_cell-buffer slds-table_bordered plan-table">
                             <thead>
@@ -127,9 +147,129 @@
                             </tbody>
                         </table>
                     </div>
+                    </template>
+
+                    <template if:true={showDagView}>
+                        <section class="dag-panel" aria-label="Plan DAG">
+                            <template if:false={hasDag}>
+                                <div class="empty-state">No DAG artifact available.</div>
+                            </template>
+                            <template if:true={hasDag}>
+                                <div class="section-header">
+                                    <h3>{dagSourceLabel}</h3>
+                                    <span>{dagOrderCount} nodes ordered</span>
+                                </div>
+                                <div class="dag-groups">
+                                    <template for:each={dagRows} for:item="group">
+                                        <section key={group.id} class="dag-group">
+                                            <h3>{group.label}</h3>
+                                            <template for:each={group.nodes} for:item="node">
+                                                <button key={node.id} class={node.className} data-step-id={node.id} onclick={handleDagNode}>
+                                                    <span class="dag-node-title">{node.label}</span>
+                                                    <span class="dag-node-meta">{node.action}</span>
+                                                    <span class="dag-node-footer">
+                                                        <span>{node.effectLabel}</span>
+                                                        <span>{node.gateLabel}</span>
+                                                        <span>{node.status}</span>
+                                                    </span>
+                                                    <template if:true={node.hasWarnings}>
+                                                        <span class="dag-warning">{node.warningText}</span>
+                                                    </template>
+                                                </button>
+                                            </template>
+                                        </section>
+                                    </template>
+                                </div>
+                                <div class="dag-edge-list" aria-label="DAG edges">
+                                    <template for:each={dagEdges} for:item="edge">
+                                        <div key={edge.key} class={edge.className}>
+                                            <strong>{edge.from}</strong>
+                                            <span>{edge.type}</span>
+                                            <strong>{edge.to}</strong>
+                                            <template if:true={edge.label}>
+                                                <small>{edge.label}</small>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+                    </template>
+
+                    <div class="visibility-grid">
+                        <section class="visibility-panel registry-panel" aria-label="Registry drift">
+                            <div class="section-header">
+                                <h3>Registry drift</h3>
+                                <span>Frozen bindings</span>
+                            </div>
+                            <template if:true={hasRegistryDriftSignals}>
+                                <div class="signal-stack">
+                                    <template for:each={registryDriftSignals} for:item="signal">
+                                        <div key={signal.key} class={signal.className}>
+                                            <strong>{signal.source}</strong>
+                                            <span>{signal.status}</span>
+                                            <p>{signal.detail}</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <template if:false={hasRegistryDriftSignals}>
+                                <p class="slds-text-body_small slds-text-color_weak">{registryFallback}</p>
+                            </template>
+
+                            <template if:true={hasBindingRows}>
+                                <div class="binding-list">
+                                    <template for:each={bindingRows} for:item="binding">
+                                        <article key={binding.key} class={binding.className}>
+                                            <div>
+                                                <strong>{binding.resource}</strong>
+                                                <span>{binding.tool}</span>
+                                            </div>
+                                            <dl>
+                                                <div><dt>Effect</dt><dd>{binding.effect}</dd></div>
+                                                <div><dt>Gate</dt><dd>{binding.approval}</dd></div>
+                                                <div><dt>Schema</dt><dd>{binding.schemaHash}</dd></div>
+                                                <div><dt>Registry</dt><dd>{binding.registryHash}</dd></div>
+                                                <div><dt>Tool</dt><dd>{binding.toolSchemaHash}</dd></div>
+                                                <div><dt>Connector</dt><dd>{binding.connectorDefinitionHash}</dd></div>
+                                            </dl>
+                                            <span>{binding.statusLabel}</span>
+                                        </article>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+
+                        <section class="visibility-panel" aria-label="Redaction warnings">
+                            <div class="section-header">
+                                <h3>Redaction</h3>
+                                <span>Export and traces</span>
+                            </div>
+                            <template if:true={hasRedactionRows}>
+                                <div class="signal-stack">
+                                    <template for:each={redactionRows} for:item="row">
+                                        <div key={row.key} class={row.className}>
+                                            <strong>{row.scope}</strong>
+                                            <span>{row.status}</span>
+                                            <p>{row.detail}</p>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </section>
+                    </div>
 
                     <section class="approval-history">
-                        <h3>Approval history</h3>
+                        <h3>Approvals</h3>
+                        <template if:true={hasApprovedArtifactRows}>
+                            <template for:each={approvedArtifactRows} for:item="item">
+                                <div key={item.key} class="history-row plan-approval">
+                                    <strong>{item.step}</strong>
+                                    <span>{item.status}</span>
+                                    <p>{item.detail}</p>
+                                </div>
+                            </template>
+                        </template>
                         <template if:true={hasApprovalRows}>
                             <template for:each={approvalRows} for:item="item">
                                 <div key={item.key} class="history-row">
@@ -139,7 +279,7 @@
                                 </div>
                             </template>
                         </template>
-                        <template if:false={hasApprovalRows}>
+                        <template if:true={showApprovalFallback}>
                             <p class="slds-text-body_small slds-text-color_weak">{approvalFallback}</p>
                         </template>
                     </section>

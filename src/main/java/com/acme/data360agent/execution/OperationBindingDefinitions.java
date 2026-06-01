@@ -12,7 +12,8 @@ public final class OperationBindingDefinitions {
     }
 
     public static OperationDefinition from(OperationBindingSnapshot binding) {
-        var action = Data360Action.fromResource(binding.resource());
+        var resource = binding.resource();
+        var action = Data360Action.fromResource(resource.contains("#") ? resource.substring(0, resource.indexOf('#')) : resource);
         return new OperationDefinition(
                 action,
                 action.value(),

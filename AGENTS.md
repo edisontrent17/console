@@ -9,7 +9,7 @@ Current clean baseline: `c652942 Initial Data 360 agent console`.
 
 ## Where To Start
 
-- Root: `/home/manoj/Projects/data360-agent-console`
+- Root: `/home/manoj/Projects/data360-agent-console-capability-execution`
 - App entry point: `src/main/java/com/acme/data360agent/Data360AgentApplication.java`
 - Browser UI source: LWC OSS components under `src/main/frontend/modules/`
 - Browser UI static shell: `src/main/resources/static/index.html`, `styles.css`, and generated `app.js`
@@ -68,19 +68,36 @@ Electron. Keep desktop behavior behind the Electron launcher plus the
 
 ## Architecture Map
 
-The important boundary is:
+The current boundary is:
 
 ```text
 Goal -> Planner -> PlanSpec -> Human review -> Executor -> Data 360/MCP tools
 ```
 
+The MCP-executable roadmap target is:
+
+```text
+Goal -> Planner -> DraftPlan -> Validator/Plan DAG -> Human review -> ApprovedExecutablePlan -> Deterministic executor -> MCP tools
+```
+
 Keep these responsibilities separate:
 
-- Planner: drafts a small plan, using LangGraph4j plus Anthropic, OpenRouter, or deterministic fallback.
+- Planner: drafts a small `DraftPlan`, using LangGraph4j plus Anthropic,
+  OpenRouter, or deterministic fallback. Planner output is never executable by
+  itself.
 - PlanSpec: the reviewable contract. It should stay small and serializable.
+- Plan DAG compiler: derives a deterministic DAG artifact from the PlanSpec for
+  review, approval, import/export, and execution. Do not hand-author or mutate
+  this artifact at runtime.
+- ApprovedExecutablePlan: the frozen, validated, approved execution contract. It
+  contains resolved MCP task snapshots and the generated Plan DAG.
 - Operation bindings: immutable call-boundary snapshots resolved from PlanSpec
   capability URIs and frozen onto a run before execution.
-- Executor: runs approved steps in order and stores runtime outputs outside the plan. `LocalPlanExecutor` is default; `TemporalPlanExecutor` is the durable orchestration path.
+- MCP task registry: owns server/tool discovery, effect metadata, parameter
+  schemas, registry hashes, and selector contracts before approval.
+- Executor: runs only approved executable DAG nodes and stores runtime outputs
+  outside the plan. `LocalPlanExecutor` is default; `TemporalPlanExecutor` is the
+  durable orchestration path.
 - Monitor service: registers monitor-phase steps and evaluates goal health after setup.
 - MCP/Data360 client: the only place that translates approved actions into tool calls.
 - State stores: keep drafts, runs, approvals, audit events, monitor state, and Connect idempotency durable.
@@ -110,6 +127,12 @@ Keep these responsibilities separate:
 Be critical about PlanSpec changes. The current shape is intentionally simpler than
 a workflow engine:
 
+- Treat planner output as `DraftPlan` until validation, deterministic DAG
+  generation, human review, approval, and execution snapshot freezing produce an
+  `ApprovedExecutablePlan`.
+- `DraftPlan` may be LLM-generated or repaired. `ApprovedExecutablePlan` must be
+  deterministic and LLM-free: it is built from validated schema, registry metadata,
+  explicit approvals, and immutable execution snapshots.
 - Each node is a `PlanStep`.
 - Each step has a phase: `discover`, `setup`, or `monitor`.
 - Step input is the API/action parameters for that step, not arbitrary hidden state.
@@ -117,6 +140,70 @@ a workflow engine:
   static plan.
 - Tool names, MCP facade calls, Connect paths, schema hashes, and binding
   versions belong in `OperationBindingSnapshot`, not in PlanSpec.
+- MCP-executable roadmap work should compile typed actions or capability URIs into
+  a canonical generic MCP task snapshot:
+
+```json
+{
+  "serverId": "data360-prod",
+  "toolName": "d360_segment_create",
+  "params": {},
+  "effect": "write",
+  "approvalRequired": true,
+  "outputSelectors": {
+    "segmentId": "$.id"
+  }
+}
+```
+
+- `serverId` must resolve to an enabled MCP server setting that is explicitly
+  marked as an execution server. Discovery-only MCPs such as warehouse or CRM
+  inspection servers may help the planner, but they must not execute PlanSpec
+  setup tasks.
+- `toolName` must exist in the registry for that server. For the Data 360 MCP,
+  `toolName` is the underlying `d360_*` tool reached through the `execute`
+  facade. PlanSpec authors must not override the facade or call raw MCP tools.
+- `params` must validate against the tool schema when available. SQL-like generic
+  MCP tools must still pass the same read-only and bounded-query checks as typed
+  query steps.
+- Approval should freeze the current tenant-scoped MCP registry hash and tool schema
+  hash into `OperationBindingSnapshot`. Execution must fail closed on registry or
+  tool-schema drift until the plan is revalidated and reapproved.
+- MCP registry snapshots should carry each tool's input schema, output schema,
+  curated payload examples, effect classification, and selector contracts. Payload
+  examples are planner/review hints; schema hashes should cover executable schema
+  and selector contracts, not example text.
+- `effect` must come from `read`, `write`, `publish`, `activate`, or
+  `destructive`. The declared effect may be stricter than registry metadata, but
+  must never understate registry risk. `approvalRequired` must be true for every
+  non-read side effect.
+- `outputSelectors` are named, deterministic selectors over the tool result. They
+  are the only way later steps may consume prior MCP output. Keep selectors
+  declarative and bounded; do not add script execution, eval, network calls, or
+  model calls to selector evaluation.
+- Selector evaluation must reject missing paths, sensitive values, and oversized
+  selected values. A selector is for stable runtime IDs and small object names, not
+  raw MCP frames, tokens, cookies, bearer strings, or bulk payload export.
+- Generic MCP selectors must be declared for every executing generic MCP step.
+  Reject `$.raw`, `$.text`, whole `$.output`, and selector aliases/paths that do
+  not match a frozen tool selector contract when one is available.
+- When an MCP step declares selectors, persisted step output is selector-bounded:
+  top-level selector aliases plus `selected`. Later bindings may use
+  `$.selectorName` or `$.selected.selectorName`, but must not bind `$.raw`,
+  `$.text`, or arbitrary `$.output.*`.
+- Every validated PlanSpec must emit a mandatory deterministic Plan DAG artifact.
+  The DAG should use stable node IDs, explicit edges, topological order, effect and
+  approval metadata, task snapshot hashes, input bindings, and output selector
+  names. Reject cycles, missing dependencies, unresolved selectors, and hidden
+  runtime dependencies.
+- The DAG artifact must include `topologicalOrder`. Execution order should come
+  from `PlanExecutionOrder`, which reads the frozen `ApprovedExecutablePlan`
+  artifact first and falls back to `PlanTopology` only for legacy/test paths.
+- Scenario packs should also live as JSON fixtures under
+  `src/test/resources/scenarios/`. Each fixture should include the mirrored
+  `CustomerScenario` metadata and a canonical ASL `goldenPlan` that validates.
+  Treat these fixtures as the golden set for planner, validator, and demo
+  regression coverage.
 - If a step uses `Parameters` keys ending in `.$`, the referenced output must be
   declared on the source capability contract and the target input must be declared
   on the consuming capability contract.
@@ -136,21 +223,89 @@ scratchpad for the LLM.
 The execute path should not be broadly agentic by default.
 
 - The LLM may propose or repair a plan.
-- The executor should run only validated, approved, known operations.
+- The executor should run only validated, approved, known operations from an
+  `ApprovedExecutablePlan`.
+- Execution must be deterministic and LLM-free. Do not call the planner, model
+  gateway, MCP discovery, or registry refresh from inside the execution loop.
 - Never expose a generic unrestricted `d360.execute` from the plan surface.
 - Route side effects through named operations such as query, create segment, publish
   segment, create activation, or run activation.
 - Keep execution deterministic and auditable.
-- `PlanController` must pass the draft's `operationBindings` to `PlanExecutor.start`.
-  Do not let execution silently re-resolve tools after approval.
+- For MCP-executable work, invoke only frozen task snapshots with canonical
+  `serverId`, `toolName`, validated `params`, `effect`, `approvalRequired`, and
+  `outputSelectors`. The executor may resolve input bindings and evaluate output
+  selectors, but it must not invent calls, rewrite params, or pick alternate tools.
+- Generic MCP execution must use the `execute` facade only. Do not allow
+  PlanSpec-supplied `facadeTool` overrides.
+- MCP child processes must receive only explicitly configured environment values
+  and explicitly allowed passthrough variables. Never let stdio child processes
+  inherit the backend process environment wholesale.
+- `PlanController` must store a tenant-scoped `ApprovedExecutablePlan` through
+  `POST /api/plans/{planId}/approve` before a run can start. `POST
+  /api/plans/{planId}/runs` must consume that stored artifact, not a live draft,
+  and must require the exact approved `artifactId` and `planHash` in the request.
+- Approval may freeze operation bindings from registry metadata. Execution must
+  use the approved artifact as-is and must not silently re-resolve tools after
+  approval.
+- Typed Data 360 actions should freeze live Data 360 MCP descriptor metadata when
+  it is available. The static local catalog is the fallback shape, not permission
+  to skip registry hash/tool schema hash capture during approval.
+- Approval gates must honor both `PlanStep.needsApproval()` and the frozen
+  `OperationBindingSnapshot.requiresApproval()` value. The binding is the
+  authoritative execution risk boundary.
 - `LocalPlanExecutor` and `TemporalPlanExecutor` should call the configured
   `Data360Client` with the frozen binding snapshot from the run.
+- `LocalPlanExecutor` and `TemporalPlanExecutor` should traverse the frozen Plan
+  DAG order. Do not re-sort or infer a different order inside activities.
+- `RunContext.organizationId` is the authoritative tenant for background
+  Data360/MCP calls. Do not resolve MCP launch settings from `CurrentUserService`
+  inside local executor workers, Temporal activities, monitor runs, or other
+  non-request execution paths.
+- MCP registry discovery and cache entries must be tenant-scoped. Never validate
+  or execute a PlanSpec against a registry snapshot discovered for another
+  organization.
 - Runtime data dependencies should use ASL dynamic parameters plus contract
   validation. For IR-to-CI flows, bind identity resolution outputs such as
   `unifiedProfileObjectApiName` into calculated insight inputs; do not hard-code
   runtime unified model names in generated SQL.
+- Every executing step gets a deterministic idempotency key derived from tenant,
+  run, plan, step, binding hash, and resolved input. Connect uses it as an
+  `Idempotency-Key`; MCP execution may pass it only when the frozen tool schema
+  declares a compatible idempotency/request field.
+- Run cancellation must be supported by both local and Temporal executors and
+  must not let a late tool result overwrite a canceled run or step.
 - Use `PlanStore.withRunLock` for run mutations. Do not synchronize on a freshly loaded JDBC `PlanRun`.
 - Keep secrets, org credentials, and bearer tokens out of source files and logs.
+- API responses for MCP settings must redact environment values. When a user saves
+  masked values, preserve the previous stored value rather than replacing it with
+  the mask.
+- Import/export paths must redact traces through `SensitiveData`. Exports may carry
+  PlanSpec, Plan DAG, approval metadata, task hashes, status, and selected outputs,
+  but must not include bearer tokens, environment values, private keys, raw MCP
+  stdio frames, unredacted tool payloads, or PII-heavy traces. Imports must
+  revalidate schema, DAG, registry references, effects, selectors, and approvals
+  before any execution can resume.
+- Execution-log exports must use archive DTOs such as `ExecutionRunArchive`, not
+  raw mutable `PlanRun` objects. Audit and approval payloads must be redacted before
+  persistence as well as before API export.
+
+## Multi-Agent Workstreams
+
+This branch may have multiple agents editing at once. Keep roadmap work sliced by
+tracked checkbox in `RoadMap.md` and claim the smallest coherent workstream.
+
+- Schema/validator changes should land before executor behavior that depends on
+  those fields.
+- MCP registry work should define stable `serverId`, `toolName`, schema, effect,
+  and selector metadata before UI or planner features depend on it.
+- Executor work should consume generated DAG artifacts and frozen task snapshots,
+  not planner internals.
+- Planner harness and scenario work should produce `DraftPlan` fixtures that pass
+  validator checks without weakening the execution contract.
+- UI import/export work should use redacted artifacts and should not expose raw
+  traces or secrets for debugging convenience.
+- Keep docs updated with any contract changes, and avoid broad refactors across
+  another agent's active files.
 
 ## Temporal Mode
 
@@ -294,6 +449,21 @@ Desktop mode still protects `/api/**` with a per-launch
 remove that token gate or pass real API keys through command-line arguments,
 URLs, localStorage, IndexedDB, plan JSON, or execution exports. Export payloads
 must be redacted through `SensitiveData`.
+
+See `docs/security-threat-model.md` before changing MCP settings, plan import,
+approved artifacts, registry validation, or archive export. In particular,
+tenant-editable MCP stdio commands are only acceptable for local desktop or
+single-tenant developer deployments. Shared hosted deployments must use
+server-owned allowlisted connector definitions where tenants can only enable a
+connector and provide declared credentials or secret references. Keep
+`app.mcp.managed-connectors.enabled=true` for shared deployments, and do not add
+a hosted path where tenant admins can set command, arguments, working directory,
+transport, arbitrary environment passthrough, or process launch details.
+
+Plan imports are drafts, never execution authority. Saving or replacing a draft
+must invalidate any stored approved artifact for the same tenant and plan ID, and
+future archive-import work must not import approvals, runs, idempotency records,
+monitor leases, or approved executable artifacts without a fresh local approval.
 
 Database schema changes belong in Flyway migrations under
 `src/main/resources/db/migration/`. Do not reintroduce `schema.sql`. Keep

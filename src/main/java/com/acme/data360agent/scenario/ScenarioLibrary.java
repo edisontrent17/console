@@ -151,7 +151,8 @@ public class ScenarioLibrary {
                     "MarketingCloud",
                     "execution_gap_closure",
                     0.20
-            )
+            ),
+            travelLtvFromSnowflakeAndCrm()
     );
 
     public List<CustomerScenario> all() {
@@ -189,5 +190,94 @@ public class ScenarioLibrary {
             }
         }
         return score;
+    }
+
+    private static CustomerScenario travelLtvFromSnowflakeAndCrm() {
+        return new CustomerScenario(
+                "travel_ltv_snowflake_crm",
+                "Travel Customer LTV",
+                "Travel and Hospitality",
+                "snowflake://DCBOOTCAMP/PUBLIC",
+                "Prompt-sourced travel scenario joining Snowflake DCBOOTCAMP.PUBLIC CUSTOMER, ITINERARY, and ITINERARY_ORDER data with CRM Contact profiles for Data 360 LTV activation.",
+                List.of(
+                        "Create a travel LTV audience from Snowflake bookings and CRM contacts",
+                        "Use CUSTOMER, ITINERARY, ITINERARY_ORDER, and Contact to find high-value travelers"
+                ),
+                List.of("travel_lifetime_value", "booking_frequency", "activation_conversion_rate"),
+                List.of(
+                        Data360Action.METADATA_DESCRIBE,
+                        Data360Action.CREATE_SNOWFLAKE_DATA_STREAM,
+                        Data360Action.CREATE_CRM_DATA_STREAM,
+                        Data360Action.CREATE_MAPPING,
+                        Data360Action.CREATE_IDENTITY_RULESET,
+                        Data360Action.RUN_IDENTITY_RESOLUTION,
+                        Data360Action.CREATE_CALCULATED_INSIGHT,
+                        Data360Action.RUN_CALCULATED_INSIGHT,
+                        Data360Action.QUERY,
+                        Data360Action.CREATE_SEGMENT,
+                        Data360Action.PUBLISH_SEGMENT,
+                        Data360Action.CREATE_ACTIVATION,
+                        Data360Action.MONITOR_METRIC
+                ),
+                List.of(
+                        "travel",
+                        "traveler",
+                        "ltv",
+                        "lifetime value",
+                        "snowflake",
+                        "dcbootcamp",
+                        "customer",
+                        "itinerary",
+                        "itinerary_order",
+                        "crm",
+                        "contact",
+                        "booking"
+                ),
+                "UnifiedIndividual",
+                "SELECT unified_individual_id, email, loyalty_tier, lifetime_value, itinerary_count, last_booking_date FROM UnifiedIndividual WHERE lifetime_value > 10000 AND marketing_consent = 'OptIn' LIMIT 100",
+                "High LTV Travelers",
+                "Travel LTV Activation Draft",
+                "MarketingCloud",
+                "high_ltv_activation_rate",
+                0.20,
+                List.of(
+                        sourceSystem("Snowflake DCBOOTCAMP.PUBLIC", "Snowflake", "CUSTOMER", "ITINERARY", "ITINERARY_ORDER"),
+                        sourceSystem("Salesforce CRM", "CRM", "Contact")
+                ),
+                List.of(
+                        modelNote("TravelCustomerDLO", "DLO", "Ingest DCBOOTCAMP.PUBLIC.CUSTOMER with stable externalCustomerId, email, loyalty tier, and home market fields."),
+                        modelNote("TravelItineraryDLO", "DLO", "Ingest DCBOOTCAMP.PUBLIC.ITINERARY as the booking header source with itinerary id, customer key, booking date, and trip status."),
+                        modelNote("TravelItineraryOrderDLO", "DLO", "Ingest DCBOOTCAMP.PUBLIC.ITINERARY_ORDER as order-level spend that rolls into transactionAmount for LTV."),
+                        modelNote("Individual", "DMO", "Map CRM Contact and Snowflake customer attributes into the profile model, using Contact email and externalCustomerId for identity rules."),
+                        modelNote("TravelItinerary", "DMO", "Model itinerary spend as the transaction object used by the LTV calculated insight.")
+                ),
+                new CustomerScenario.CalculatedInsight(
+                        "Travel Customer Lifetime Value",
+                        "SUM TravelItinerary.transactionAmount by unified individual after identity resolution links CRM Contact to Snowflake customer records.",
+                        "TravelItinerary",
+                        "lifetime_value"
+                ),
+                new CustomerScenario.SegmentMetadata(
+                        "High LTV Travelers",
+                        "Unified individuals with lifetime_value greater than 10000, opt-in marketing consent, and recent itinerary activity."
+                ),
+                List.of(
+                        monitor("high_ltv_activation_rate", "daily", "Alert below 0.20", "Review activation performance and refresh segment criteria before expanding spend."),
+                        monitor("travel_ltv_refresh_rate", "daily", "Alert when calculated insight has not refreshed in 24 hours", "Rerun the LTV calculated insight after Snowflake data stream refresh."),
+                        monitor("snowflake_travel_stream_health", "hourly", "Alert on failed CUSTOMER, ITINERARY, or ITINERARY_ORDER ingestion", "Inspect Snowflake data stream failures before publishing the segment.")
+                )
+        );
+    }
+
+    private static CustomerScenario.SourceSystem sourceSystem(String name, String systemType, String... tables) {
+        return new CustomerScenario.SourceSystem(name, systemType, List.of(tables));
+    }
+
+    private static CustomerScenario.TargetModelNote modelNote(String targetObject, String objectType, String note) {
+        return new CustomerScenario.TargetModelNote(targetObject, objectType, note);
+    }
+
+    private static CustomerScenario.MonitorMetadata monitor(String metric, String cadence, String threshold, String recommendation) {
+        return new CustomerScenario.MonitorMetadata(metric, cadence, threshold, recommendation);
     }
 }

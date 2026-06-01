@@ -190,7 +190,8 @@
         "urn:salesforce:data360:capability:identityRuleset.get",
         "urn:salesforce:data360:capability:identityResolution.ruleset.create",
         "urn:salesforce:data360:capability:identityResolution.run",
-        "urn:salesforce:data360:capability:monitor.metric"
+        "urn:salesforce:data360:capability:monitor.metric",
+        "urn:salesforce:data360:capability:mcp.execute"
       ]
     },
     "parameters": {

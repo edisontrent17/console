@@ -1,8 +1,10 @@
 package com.acme.data360agent.mcp;
 
+import com.acme.data360agent.support.SensitiveData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -20,6 +22,8 @@ public class McpStdioClient {
     private static final String PROTOCOL_VERSION = "2024-11-05";
 
     private final List<String> command;
+    private final Map<String, String> environment;
+    private final String workingDirectory;
     private final Duration timeout;
     private final ObjectMapper objectMapper;
     private final ProcessFactory processFactory;
@@ -28,15 +32,29 @@ public class McpStdioClient {
         this(McpCommandParser.parse(command), DEFAULT_TIMEOUT, objectMapper);
     }
 
+    public McpStdioClient(McpLaunchConfiguration launch, ObjectMapper objectMapper) {
+        this(launch.commandLine(), launch.environment(), launch.workingDirectory(), DEFAULT_TIMEOUT, objectMapper);
+    }
+
     public McpStdioClient(List<String> command, Duration timeout, ObjectMapper objectMapper) {
-        this(command, timeout, objectMapper, ProcessBuilder::start);
+        this(command, Map.of(), null, timeout, objectMapper, ProcessBuilder::start);
+    }
+
+    public McpStdioClient(List<String> command, Map<String, String> environment, String workingDirectory, Duration timeout, ObjectMapper objectMapper) {
+        this(command, environment, workingDirectory, timeout, objectMapper, ProcessBuilder::start);
     }
 
     McpStdioClient(List<String> command, Duration timeout, ObjectMapper objectMapper, ProcessFactory processFactory) {
+        this(command, Map.of(), null, timeout, objectMapper, processFactory);
+    }
+
+    McpStdioClient(List<String> command, Map<String, String> environment, String workingDirectory, Duration timeout, ObjectMapper objectMapper, ProcessFactory processFactory) {
         if (command == null || command.isEmpty()) {
             throw new IllegalArgumentException("MCP command must not be empty.");
         }
         this.command = List.copyOf(command);
+        this.environment = environment == null ? Map.of() : Map.copyOf(environment);
+        this.workingDirectory = workingDirectory == null || workingDirectory.isBlank() ? null : workingDirectory.trim();
         this.timeout = timeout == null || timeout.isNegative() || timeout.isZero() ? DEFAULT_TIMEOUT : timeout;
         this.objectMapper = objectMapper;
         this.processFactory = processFactory;
@@ -76,7 +94,13 @@ public class McpStdioClient {
         Process process = null;
         var executor = Executors.newSingleThreadExecutor();
         try {
-            process = processFactory.start(new ProcessBuilder(command).redirectError(ProcessBuilder.Redirect.DISCARD));
+            var processBuilder = new ProcessBuilder(command).redirectError(ProcessBuilder.Redirect.DISCARD);
+            processBuilder.environment().clear();
+            processBuilder.environment().putAll(environment);
+            if (workingDirectory != null) {
+                processBuilder.directory(new File(workingDirectory));
+            }
+            process = processFactory.start(processBuilder);
             var codec = new McpMessageCodec(objectMapper);
             try (var inputStream = process.getInputStream();
                  var writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), StandardCharsets.UTF_8))) {
@@ -106,7 +130,7 @@ public class McpStdioClient {
     @SuppressWarnings("unchecked")
     private Map<String, Object> responseResult(Map<String, Object> response) {
         if (response.containsKey("error")) {
-            throw new McpException("MCP error: " + response.get("error"));
+            throw new McpException("MCP error: " + SensitiveData.redactValue(response.get("error")));
         }
         var result = response.get("result");
         if (result instanceof Map<?, ?> map) {

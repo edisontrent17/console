@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
@@ -57,6 +58,76 @@ class SecurityConfigTest {
 
         mvc.perform(get("/api/data360/diagnostics").with(jwt().authorities(scope("data360.admin"))))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void allowsPlanScopeToImportPlans() throws Exception {
+        var body = """
+                {
+                  "schemaVersion": "data360-asl-profile-2026-05-31",
+                  "id": "plan_security_import",
+                  "goal": "Preview audience",
+                  "context": { "org": "org", "dataspace": "default", "environment": "sandbox" },
+                  "definition": {
+                    "Version": "1.0",
+                    "QueryLanguage": "JSONPath",
+                    "StartAt": "preview",
+                    "States": {
+                      "preview": {
+                        "Type": "Task",
+                        "Comment": "Preview audience",
+                        "Resource": "urn:salesforce:data360:capability:query",
+                        "Parameters": { "sql": "SELECT unified_individual_id FROM UnifiedIndividual LIMIT 10" },
+                        "ResultPath": "$.preview",
+                        "End": true
+                      }
+                    }
+                  }
+                }
+                """;
+
+        mvc.perform(post("/api/plans/import")
+                        .contentType("application/json")
+                        .content(body)
+                        .with(jwt().authorities(scope("data360.read"))))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(post("/api/plans/import")
+                        .contentType("application/json")
+                        .content(body)
+                        .with(jwt().jwt(token -> token.claim("organization_id", "org_security_test"))
+                                .authorities(scope("data360.plan"))))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"));
+    }
+
+    @Test
+    void separatesPlanApprovalFromRunExecutionScopes() throws Exception {
+        mvc.perform(post("/api/plans/plan_security/approve").with(jwt().authorities(scope("data360.execute"))))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(post("/api/plans/plan_security/approve")
+                        .with(jwt().jwt(token -> token.claim("organization_id", "org_security_test"))
+                                .authorities(scope("data360.approve"))))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(post("/api/plans/plan_security/runs").with(jwt().authorities(scope("data360.approve"))))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(post("/api/plans/plan_security/runs")
+                        .with(jwt().jwt(token -> token.claim("organization_id", "org_security_test"))
+                                .authorities(scope("data360.execute"))))
+                .andExpect(status().isBadRequest());
+
+        mvc.perform(post("/api/runs/run_security/cancel").with(jwt().authorities(scope("data360.approve"))))
+                .andExpect(status().isForbidden());
+
+        mvc.perform(post("/api/runs/run_security/cancel")
+                        .contentType("application/json")
+                        .content("{\"reason\":\"test\"}")
+                        .with(jwt().jwt(token -> token.claim("organization_id", "org_security_test"))
+                                .authorities(scope("data360.execute"))))
+                .andExpect(status().isBadRequest());
     }
 
     private SimpleGrantedAuthority scope(String scope) {

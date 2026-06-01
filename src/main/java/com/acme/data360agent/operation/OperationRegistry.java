@@ -118,7 +118,7 @@ public class OperationRegistry {
                 Effect.WRITE,
                 true,
                 false,
-                "d360_calculated_insight_create",
+                "d360_ci_create",
                 List.of("sql", "definition", "semanticDefinition", "measure"),
                 List.of("name"),
                 fields(
@@ -143,7 +143,7 @@ public class OperationRegistry {
                 Effect.WRITE,
                 true,
                 false,
-                "d360_calculated_insight_run",
+                "d360_ci_run",
                 List.of("insightId", "insightIdFromStep"),
                 List.of(),
                 fields("insightId", "string", "insightIdFromStep", "string"),
@@ -215,7 +215,7 @@ public class OperationRegistry {
                 Effect.READ,
                 false,
                 false,
-                "d360_identity_ruleset_get",
+                "d360_ir_get",
                 List.of("rulesetId", "rulesetName"),
                 List.of(),
                 fields("rulesetId", "string", "rulesetName", "string", "identityResolution", "string"),
@@ -262,6 +262,26 @@ public class OperationRegistry {
                 List.of("cadence", "threshold"),
                 fields("query", "string", "queryFromStep", "string", "metric", "string", "cadence", "string", "threshold", "object"),
                 fields("metric", "string", "observedValue", "number", "threshold", "object", "status", "string", "checkedAt", "string")
+        ));
+        defs.put(Data360Action.MCP_EXECUTE, new OperationDefinition(
+                Data360Action.MCP_EXECUTE,
+                "Execute approved MCP tool",
+                Effect.READ,
+                false,
+                false,
+                "execute",
+                List.of(),
+                List.of("serverId", "toolName", "params"),
+                fields(
+                        "serverId", "string",
+                        "toolName", "string",
+                        "facadeTool", "string",
+                        "params", "object",
+                        "effect", "string",
+                        "approvalRequired", "boolean",
+                        "outputSelectors", "object"
+                ),
+                fields("output", "object", "selected", "object", "raw", "object", "text", "string")
         ));
         definitions = Map.copyOf(defs);
 

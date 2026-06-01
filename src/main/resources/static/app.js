@@ -11464,24 +11464,34 @@ ElementDescriptors.shadowRoot.get;
 
 function stylesheet$5(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f7f8fa;color: #181818;}.auth-screen", shadowSelector, " {display: grid;min-height: 100vh;place-items: center;padding: 1rem;}.auth-panel", shadowSelector, " {width: min(100%, 28rem);padding: 1.25rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 12px 36px rgba(24, 24, 24, 0.08);}.auth-brand", shadowSelector, ",.brand", shadowSelector, " {display: flex;align-items: center;gap: 0.75rem;}.auth-brand", shadowSelector, " {margin-bottom: 1.5rem;}.auth-brand", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.25rem;}.auth-brand", shadowSelector, " p", shadowSelector, ",.side-footer", shadowSelector, " span", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, ",.user-row", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 0.375rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.auth-form", shadowSelector, ",.user-form", shadowSelector, " {display: grid;gap: 0.75rem;}.auth-form", shadowSelector, " label", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, " {display: grid;gap: 0.25rem;font-weight: 700;}.side-nav", shadowSelector, " {position: fixed;inset: 0 auto 0 0;display: grid;grid-template-rows: auto minmax(0, 1fr) auto;width: 15rem;padding: 1rem;border-right: 1px solid #dddbda;background: #fff;box-shadow: 1px 0 0 rgba(24, 24, 24, 0.02);}.brand", shadowSelector, " {min-height: 3rem;font-weight: 800;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: grid;align-content: start;gap: 0.25rem;padding-top: 1rem;}.nav-item", shadowSelector, ",.org-row", shadowSelector, " {display: block;min-width: 0;padding: 0.625rem 0.75rem;border: 1px solid transparent;border-radius: 0.5rem;color: #3e3e3c;text-decoration: none;font-weight: 700;}.nav-item:hover", shadowSelector, ",.nav-item.active", shadowSelector, ",.org-row:hover", shadowSelector, ",.org-row.selected", shadowSelector, " {border-color: #d8e6fe;background: #eef4ff;color: #032d60;}.side-footer", shadowSelector, " {display: grid;gap: 0.5rem;}.footer-user", shadowSelector, " {color: #181818;font-weight: 700;}.footer-model", shadowSelector, " {display: block;max-width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}.workspace", shadowSelector, " {min-height: 100vh;margin-left: 15rem;padding: 1rem;}.workspace-header", shadowSelector, " {display: flex;align-items: flex-end;justify-content: space-between;max-width: 72rem;margin: 0 auto 0.75rem;padding: 0.25rem 0;}.workspace-header", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.375rem;font-weight: 800;}.workspace-header", shadowSelector, " p", shadowSelector, " {margin: 0.25rem 0 0;color: #5c5c5c;font-size: 0.875rem;}.admin-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));align-items: start;max-width: 72rem;margin: 0 auto;gap: 0.75rem;}.admin-panel", shadowSelector, " {display: grid;align-content: start;gap: 0.875rem;padding: 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.admin-panel", shadowSelector, " h2", shadowSelector, " {margin: 0;font-size: 1rem;font-weight: 800;}.inline-form", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;}.org-row", shadowSelector, " {width: 100%;background: transparent;text-align: left;}.user-row", shadowSelector, " {display: grid;gap: 0.125rem;padding: 0.625rem 0;border-top: 1px solid #f3f2f2;}.mcp-panel", shadowSelector, " {align-content: start;}.mcp-row", shadowSelector, " {display: grid;gap: 0.5rem;padding: 0.75rem 0;border-top: 1px solid #f3f2f2;}.mcp-row:first-of-type", shadowSelector, " {border-top: 0;padding-top: 0;}.mcp-toggle", shadowSelector, " {display: grid;grid-template-columns: auto minmax(0, 1fr);align-items: start;gap: 0.5rem;color: #181818;}.mcp-toggle", shadowSelector, " input", shadowSelector, " {margin-top: 0.125rem;}.mcp-toggle", shadowSelector, " span", shadowSelector, " {display: grid;gap: 0.125rem;}.mcp-toggle", shadowSelector, " small", shadowSelector, " {color: #5c5c5c;font-weight: 400;line-height: 1.35;}.mcp-row", shadowSelector, " .slds-input", shadowSelector, " {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;font-size: 0.8125rem;}.floating-alert", shadowSelector, ",.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;max-width: min(32rem, calc(100vw - 2rem));border-radius: 0.375rem;}.export-toast", shadowSelector, " {background: #eef8f1;color: #2e844a;}@media (max-width: 980px) {.side-nav", shadowSelector, " {position: static;width: auto;border-right: 0;border-bottom: 1px solid #dddbda;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: flex;overflow-x: auto;padding-top: 0.75rem;}.workspace", shadowSelector, " {margin-left: 0;}.side-footer", shadowSelector, " {padding-top: 0.75rem;}.admin-grid", shadowSelector, " {grid-template-columns: 1fr;}}@media (max-width: 640px) {.workspace", shadowSelector, " {padding: 0.5rem;}.workspace-header", shadowSelector, " {display: block;}.inline-form", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return [".app-frame", shadowSelector, " {min-height: 100vh;max-width: 100vw;overflow-x: hidden;background: #f7f8fa;color: #181818;}.auth-screen", shadowSelector, " {display: grid;min-height: 100vh;place-items: center;padding: 1rem;}.auth-panel", shadowSelector, " {width: min(100%, 28rem);padding: 1.25rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 12px 36px rgba(24, 24, 24, 0.08);}.auth-brand", shadowSelector, ",.brand", shadowSelector, " {display: flex;align-items: center;gap: 0.75rem;}.auth-brand", shadowSelector, " {margin-bottom: 1.5rem;}.auth-brand", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.25rem;}.auth-brand", shadowSelector, " p", shadowSelector, ",.side-footer", shadowSelector, " span", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, ",.user-row", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.brand-mark", shadowSelector, " {display: inline-grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 0.375rem;background: #0176d3;color: #fff;font-size: 0.6875rem;font-weight: 800;}.auth-form", shadowSelector, ",.user-form", shadowSelector, " {display: grid;gap: 0.75rem;}.auth-form", shadowSelector, " label", shadowSelector, ",.admin-panel", shadowSelector, " label", shadowSelector, " {display: grid;gap: 0.25rem;font-weight: 700;}.side-nav", shadowSelector, " {position: fixed;inset: 0 auto 0 0;display: grid;grid-template-rows: auto minmax(0, 1fr) auto;width: 15rem;padding: 1rem;border-right: 1px solid #dddbda;background: #fff;box-shadow: 1px 0 0 rgba(24, 24, 24, 0.02);}.brand", shadowSelector, " {min-height: 3rem;font-weight: 800;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: grid;align-content: start;gap: 0.25rem;padding-top: 1rem;}.nav-item", shadowSelector, ",.org-row", shadowSelector, " {display: block;min-width: 0;padding: 0.625rem 0.75rem;border: 1px solid transparent;border-radius: 0.5rem;color: #3e3e3c;text-decoration: none;font-weight: 700;}.nav-item:hover", shadowSelector, ",.nav-item.active", shadowSelector, ",.org-row:hover", shadowSelector, ",.org-row.selected", shadowSelector, " {border-color: #d8e6fe;background: #eef4ff;color: #032d60;}.side-footer", shadowSelector, " {display: grid;gap: 0.5rem;}.footer-user", shadowSelector, " {color: #181818;font-weight: 700;}.footer-model", shadowSelector, " {display: block;max-width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}.workspace", shadowSelector, " {min-height: 100vh;margin-left: 15rem;padding: 1rem;}.workspace-header", shadowSelector, " {display: flex;align-items: flex-end;justify-content: space-between;max-width: 72rem;margin: 0 auto 0.75rem;padding: 0.25rem 0;}.workspace-header", shadowSelector, " h1", shadowSelector, " {margin: 0;font-size: 1.375rem;font-weight: 800;}.workspace-header", shadowSelector, " p", shadowSelector, " {margin: 0.25rem 0 0;color: #5c5c5c;font-size: 0.875rem;}.settings-shell", shadowSelector, " {display: grid;grid-template-columns: 15rem minmax(0, 1fr);min-height: calc(100vh - 2rem);max-width: 76rem;margin: 0 auto;border: 1px solid #dddbda;border-radius: 0.5rem;overflow: hidden;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.settings-sidebar", shadowSelector, " {padding: 1rem 0.75rem;border-right: 1px solid #e5e5e5;background: #fbfbfb;}.settings-title", shadowSelector, " {padding: 0.375rem 0.625rem 0.875rem;color: #5c5c5c;font-size: 0.75rem;font-weight: 800;text-transform: uppercase;}.settings-nav-item", shadowSelector, ",.mcp-server-option", shadowSelector, " {display: grid;width: 100%;border: 0;background: transparent;color: #2e2e2e;text-align: left;cursor: pointer;}.settings-nav-item", shadowSelector, " {min-height: 2.25rem;align-items: center;padding: 0 0.625rem;border-radius: 0.375rem;font-weight: 700;}.settings-nav-item:hover", shadowSelector, ",.settings-nav-item.active", shadowSelector, " {background: #eef4ff;color: #032d60;}.settings-main", shadowSelector, " {min-width: 0;padding: 1.5rem 2rem;}.settings-header", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;max-width: 52rem;margin: 0 auto 1.25rem;}.settings-header", shadowSelector, " p", shadowSelector, " {margin: 0 0 0.25rem;color: #5c5c5c;font-size: 0.8125rem;font-weight: 700;}.settings-header", shadowSelector, " h1", shadowSelector, ",.settings-card", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 800;}.settings-feedback", shadowSelector, " {display: grid;gap: 0.625rem;max-width: 52rem;margin: 0 auto 1rem;padding: 0.75rem 0.875rem;border: 1px solid #c9c9c9;border-radius: 0.375rem;background: #f7f7f7;color: #181818;font-size: 0.875rem;}.settings-feedback.passed", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #194e31;}.settings-feedback.failed", shadowSelector, " {border-color: #feb8ab;background: #fff1ee;color: #8e030f;}.settings-feedback.neutral", shadowSelector, " {border-color: #d8dde6;background: #f3f3f3;color: #444;}.validation-list", shadowSelector, " {display: grid;gap: 0.5rem;}.validation-row", shadowSelector, " {display: grid;gap: 0.125rem;padding-top: 0.5rem;border-top: 1px solid rgba(0, 0, 0, 0.08);}.validation-row", shadowSelector, " span", shadowSelector, " {font-weight: 800;}.validation-row", shadowSelector, " small", shadowSelector, " {line-height: 1.4;}.validation-row", shadowSelector, " code", shadowSelector, " {overflow: hidden;color: inherit;font-size: 0.75rem;text-overflow: ellipsis;white-space: nowrap;}.settings-card", shadowSelector, " {display: grid;gap: 0.875rem;max-width: 40rem;margin: 0 auto;}.settings-card", shadowSelector, " label", shadowSelector, ",.mcp-editor", shadowSelector, " label", shadowSelector, ",.field-group", shadowSelector, " {display: grid;gap: 0.375rem;color: #2e2e2e;font-size: 0.8125rem;font-weight: 700;}.mcp-settings-layout", shadowSelector, " {display: grid;grid-template-columns: 15rem minmax(0, 1fr);gap: 2rem;max-width: 52rem;margin: 0 auto;}.mcp-server-list", shadowSelector, " {display: grid;align-content: start;gap: 0.375rem;}.mcp-server-option", shadowSelector, " {gap: 0.125rem;padding: 0.625rem 0.75rem;border-radius: 0.375rem;}.mcp-server-option", shadowSelector, " span", shadowSelector, " {font-weight: 800;}.mcp-server-option", shadowSelector, " small", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.mcp-server-option:hover", shadowSelector, ",.mcp-server-option.active", shadowSelector, " {background: #f3f6fb;}.mcp-editor", shadowSelector, " {display: grid;gap: 1rem;}.toggle-label", shadowSelector, " {grid-template-columns: auto minmax(0, 1fr);align-items: center;justify-content: start;}.toggle-label", shadowSelector, " input", shadowSelector, " {margin: 0;}.field-label", shadowSelector, " {color: #2e2e2e;}.transport-picker", shadowSelector, " {display: inline-grid;grid-template-columns: repeat(2, minmax(8rem, auto));width: fit-content;overflow: hidden;border: 1px solid #c9c9c9;border-radius: 0.375rem;}.transport-option", shadowSelector, " {min-height: 2rem;padding: 0 0.875rem;border: 0;border-right: 1px solid #c9c9c9;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 800;cursor: pointer;}.transport-option:last-child", shadowSelector, " {border-right: 0;}.transport-option.active", shadowSelector, " {background: #181818;color: #fff;}.repeat-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) 2rem;gap: 0.5rem;align-items: center;}.repeat-row.two-col", shadowSelector, " {grid-template-columns: minmax(8rem, 0.8fr) minmax(0, 1.2fr) 2rem;}.icon-button", shadowSelector, " {display: grid;width: 2rem;height: 2rem;place-items: center;border: 1px solid #c9c9c9;border-radius: 0.375rem;background: #fff;color: #3e3e3c;font-size: 1.125rem;line-height: 1;cursor: pointer;}.text-action", shadowSelector, " {justify-self: start;min-height: 2rem;padding: 0;border: 0;background: transparent;color: #0176d3;font-weight: 800;cursor: pointer;}.monospace-input", shadowSelector, " {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;font-size: 0.8125rem;}.inline-form", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;}.org-row", shadowSelector, " {width: 100%;background: transparent;text-align: left;}.user-row", shadowSelector, " {display: grid;gap: 0.125rem;padding: 0.625rem 0;border-top: 1px solid #f3f2f2;}.mcp-panel", shadowSelector, " {align-content: start;}.mcp-row", shadowSelector, " {display: grid;gap: 0.5rem;padding: 0.75rem 0;border-top: 1px solid #f3f2f2;}.mcp-row:first-of-type", shadowSelector, " {border-top: 0;padding-top: 0;}.mcp-toggle", shadowSelector, " {display: grid;grid-template-columns: auto minmax(0, 1fr);align-items: start;gap: 0.5rem;color: #181818;}.mcp-toggle", shadowSelector, " input", shadowSelector, " {margin-top: 0.125rem;}.mcp-toggle", shadowSelector, " span", shadowSelector, " {display: grid;gap: 0.125rem;}.mcp-toggle", shadowSelector, " small", shadowSelector, " {color: #5c5c5c;font-weight: 400;line-height: 1.35;}.mcp-row", shadowSelector, " .slds-input", shadowSelector, " {font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;font-size: 0.8125rem;}.floating-alert", shadowSelector, ",.export-toast", shadowSelector, " {position: fixed;right: 1rem;bottom: 1rem;z-index: 9000;max-width: min(32rem, calc(100vw - 2rem));border-radius: 0.375rem;}.export-toast", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.75rem;align-items: center;min-width: min(22rem, calc(100vw - 2rem));background: #eef8f1;color: #2e844a;}.toast-dismiss", shadowSelector, " {display: grid;width: 1.75rem;height: 1.75rem;place-items: center;border: 1px solid rgba(46, 132, 74, 0.24);border-radius: 0.25rem;background: transparent;color: #194e31;font-size: 1.25rem;font-weight: 700;line-height: 1;cursor: pointer;}.toast-dismiss:hover", shadowSelector, ",.toast-dismiss:focus", shadowSelector, " {background: rgba(46, 132, 74, 0.1);}@media (max-width: 980px) {.side-nav", shadowSelector, " {position: static;width: auto;border-right: 0;border-bottom: 1px solid #dddbda;}.side-nav", shadowSelector, " nav", shadowSelector, " {display: flex;overflow-x: auto;padding-top: 0.75rem;}.workspace", shadowSelector, " {margin-left: 0;}.side-footer", shadowSelector, " {padding-top: 0.75rem;}.settings-shell", shadowSelector, ", .mcp-settings-layout", shadowSelector, " {grid-template-columns: 1fr;}.settings-sidebar", shadowSelector, " {border-right: 0;border-bottom: 1px solid #e5e5e5;}.settings-main", shadowSelector, " {padding: 1rem;}.repeat-row.two-col", shadowSelector, " {grid-template-columns: 1fr 1fr 2rem;}}@media (max-width: 640px) {.workspace", shadowSelector, " {padding: 0.5rem;}.workspace-header", shadowSelector, " {display: block;}.inline-form", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$5 = [stylesheet$5];
 
 function stylesheet$4(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".chat-shell", shadowSelector, " {display: grid;grid-template-rows: auto minmax(0, 1fr) auto auto;min-height: calc(100vh - 2rem);max-width: 980px;margin: 0 auto;}.chat-topbar", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;padding: 1.25rem 0;}.chat-topbar", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 700;}.chat-topbar", shadowSelector, " p", shadowSelector, ",.bubble", shadowSelector, " span", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.status-stack", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.chip", shadowSelector, " {display: inline-flex;align-items: center;min-height: 1.625rem;padding: 0 0.625rem;border: 1px solid #dddbda;border-radius: 999px;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;}.chip.status.ready", shadowSelector, ",.chip.status.succeeded", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #2e844a;}.chip.status.planning", shadowSelector, ",.chip.status.running", shadowSelector, ",.chip.status.review", shadowSelector, ",.chip.status.waiting-approval", shadowSelector, " {border-color: #ffba90;background: #fff7e0;color: #8a5a00;}.chip.status.error", shadowSelector, ",.chip.status.failed", shadowSelector, " {border-color: #ffb3b7;background: #fff1f2;color: #ba0517;}.chat-scroll", shadowSelector, " {display: grid;align-content: end;gap: 1rem;min-height: 0;padding: 1rem 0 1.5rem;overflow-y: auto;}.chat-scroll.empty", shadowSelector, " {align-content: center;padding-bottom: 5rem;}.chat-scroll.empty", shadowSelector, " .message", shadowSelector, " {justify-self: center;width: min(100%, 46rem);}.message", shadowSelector, " {display: grid;grid-template-columns: 2.25rem minmax(0, 1fr);gap: 0.75rem;align-items: flex-start;}.message.user", shadowSelector, " {grid-template-columns: minmax(0, 1fr) 2.25rem;}.message.user", shadowSelector, " .avatar", shadowSelector, " {grid-column: 2;grid-row: 1;}.message.user", shadowSelector, " .bubble", shadowSelector, " {grid-column: 1;justify-self: end;background: #032d60;color: #fff;}.message.user", shadowSelector, " .bubble", shadowSelector, " span", shadowSelector, " {color: #d8e6fe;}.avatar", shadowSelector, " {display: grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 999px;background: #eaf5fe;color: #032d60;font-size: 0.6875rem;font-weight: 800;}.bubble", shadowSelector, " {max-width: 45rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;box-shadow: 0 1px 2px rgba(24, 24, 24, 0.04);}.bubble", shadowSelector, " p", shadowSelector, " {margin: 0;color: inherit;white-space: pre-wrap;}.bubble", shadowSelector, " span", shadowSelector, " {display: block;margin-top: 0.5rem;}.review-strip", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 1rem;margin-bottom: 0.75rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.review-strip", shadowSelector, " strong", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {display: block;}.review-actions", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.5rem;}.composer", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.75rem;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 0.75rem;background: #fff;box-shadow: 0 8px 24px rgba(24, 24, 24, 0.08);}.composer-input", shadowSelector, " {min-height: 3.25rem;max-height: 12rem;resize: vertical;border: 0;outline: 0;color: #181818;font: inherit;}.send-button", shadowSelector, " {align-self: end;}@media (max-width: 720px) {.chat-shell", shadowSelector, " {min-height: calc(100vh - 1rem);}.chat-topbar", shadowSelector, ", .review-strip", shadowSelector, " {display: grid;}.status-stack", shadowSelector, ", .review-actions", shadowSelector, " {justify-content: flex-start;}.composer", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return [".chat-shell", shadowSelector, " {display: grid;grid-template-rows: auto minmax(0, 1fr) auto auto;min-height: calc(100vh - 2rem);max-width: 1080px;margin: 0 auto;}.chat-topbar", shadowSelector, " {display: flex;align-items: flex-start;justify-content: space-between;gap: 1rem;padding: 1rem 0 0.75rem;}.chat-title", shadowSelector, " {min-width: 0;}.chat-topbar", shadowSelector, " h1", shadowSelector, " {margin: 0;color: #181818;font-size: 1.25rem;font-weight: 700;}.chat-topbar", shadowSelector, " p", shadowSelector, ",.bubble", shadowSelector, " span", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.status-stack", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.375rem;}.chip", shadowSelector, " {display: inline-flex;align-items: center;min-height: 1.625rem;padding: 0 0.625rem;border: 1px solid #dddbda;border-radius: 999px;background: #fff;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;}.chip.status.ready", shadowSelector, ",.chip.status.succeeded", shadowSelector, " {border-color: #91db8b;background: #eef8f1;color: #2e844a;}.chip.status.planning", shadowSelector, ",.chip.status.running", shadowSelector, ",.chip.status.review", shadowSelector, ",.chip.status.waiting-approval", shadowSelector, " {border-color: #ffba90;background: #fff7e0;color: #8a5a00;}.chip.status.error", shadowSelector, ",.chip.status.failed", shadowSelector, " {border-color: #ffb3b7;background: #fff1f2;color: #ba0517;}.chat-scroll", shadowSelector, " {display: grid;align-content: end;gap: 1rem;min-height: 0;padding: 1rem 4rem 1.5rem;overflow-y: auto;}.chat-scroll.empty", shadowSelector, " {align-content: center;padding-bottom: 5rem;}.chat-scroll.empty", shadowSelector, " .message", shadowSelector, " {justify-self: center;width: min(100%, 46rem);}.message", shadowSelector, " {display: grid;grid-template-columns: 2.25rem minmax(0, 1fr);gap: 0.75rem;align-items: flex-start;}.message.user", shadowSelector, " {grid-template-columns: minmax(0, 1fr) 2.25rem;}.message.user", shadowSelector, " .avatar", shadowSelector, " {grid-column: 2;grid-row: 1;}.message.user", shadowSelector, " .bubble", shadowSelector, " {grid-column: 1;justify-self: end;background: #f4f4f4;color: #181818;border-color: transparent;box-shadow: none;}.message.user", shadowSelector, " .bubble", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;}.avatar", shadowSelector, " {display: grid;width: 2.25rem;height: 2.25rem;place-items: center;border-radius: 999px;background: #eaf5fe;color: #032d60;font-size: 0.6875rem;font-weight: 800;}.bubble", shadowSelector, " {max-width: 45rem;padding: 0.75rem 0.875rem;border: 0;border-radius: 0.75rem;background: #fff;box-shadow: none;}.bubble", shadowSelector, " p", shadowSelector, " {margin: 0;color: inherit;white-space: pre-wrap;}.bubble", shadowSelector, " span", shadowSelector, " {display: block;margin-top: 0.5rem;}.trace-panel", shadowSelector, " {margin-top: 0.75rem;border: 1px solid #e5e5e5;border-radius: 0.5rem;background: #fbfbfb;}.trace-panel", shadowSelector, " summary", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 0.75rem;min-height: 2rem;padding: 0 0.625rem;color: #2e2e2e;cursor: pointer;list-style: none;}.trace-panel", shadowSelector, " summary", shadowSelector, "::-webkit-details-marker {display: none;}.trace-panel", shadowSelector, " summary", shadowSelector, " strong", shadowSelector, " {font-size: 0.75rem;font-weight: 800;}.trace-panel", shadowSelector, " summary", shadowSelector, " em", shadowSelector, " {color: #706e6b;font-size: 0.75rem;font-style: normal;font-weight: 700;}.trace-list", shadowSelector, " {display: grid;gap: 0.5rem;margin: 0;padding: 0.25rem 0.625rem 0.625rem 1.25rem;}.trace-step", shadowSelector, " {padding: 0.5rem 0 0;border-top: 1px solid #ecebea;}.trace-line", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 0.75rem;}.trace-line", shadowSelector, " strong", shadowSelector, " {color: #181818;font-size: 0.8125rem;}.trace-line", shadowSelector, " span", shadowSelector, ",.trace-step", shadowSelector, " p", shadowSelector, ",.trace-step", shadowSelector, " dt", shadowSelector, ",.trace-step", shadowSelector, " dd", shadowSelector, " {color: #5c5c5c;font-size: 0.75rem;}.trace-step.failed", shadowSelector, " .trace-line", shadowSelector, " strong", shadowSelector, " {color: #ba0517;}.trace-step", shadowSelector, " p", shadowSelector, " {margin: 0.25rem 0 0;}.trace-step", shadowSelector, " dl", shadowSelector, " {display: grid;gap: 0.25rem;margin: 0.5rem 0 0;}.trace-step", shadowSelector, " dl", shadowSelector, " div", shadowSelector, " {display: grid;grid-template-columns: 7rem minmax(0, 1fr);gap: 0.5rem;}.trace-step", shadowSelector, " dt", shadowSelector, " {font-weight: 800;}.trace-step", shadowSelector, " dd", shadowSelector, " {min-width: 0;margin: 0;overflow-wrap: anywhere;font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;}.review-strip", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 1rem;margin-bottom: 0.75rem;padding: 0.875rem 1rem;border: 1px solid #dddbda;border-radius: 0.5rem;background: #fff;}.review-strip", shadowSelector, " strong", shadowSelector, ",.review-strip", shadowSelector, " span", shadowSelector, " {display: block;}.review-actions", shadowSelector, " {display: flex;flex-wrap: wrap;justify-content: flex-end;gap: 0.5rem;}.composer", shadowSelector, " {display: grid;gap: 0.625rem;width: min(100%, 54rem);margin: 0 auto;padding: 0.875rem;border: 1px solid #dddbda;border-radius: 1rem;background: #fff;box-shadow: 0 8px 24px rgba(24, 24, 24, 0.08);}.composer-input", shadowSelector, " {min-height: 4rem;max-height: 11rem;resize: vertical;border: 0;outline: 0;color: #181818;font: inherit;}.composer-toolbar", shadowSelector, " {display: flex;align-items: center;justify-content: space-between;gap: 0.75rem;}.composer-tools", shadowSelector, " {display: flex;min-width: 0;flex-wrap: wrap;align-items: center;gap: 0.375rem;}.tool-button", shadowSelector, ",.send-button", shadowSelector, " {display: grid;width: 2rem;height: 2rem;flex: 0 0 auto;place-items: center;border: 1px solid #d8dde6;border-radius: 999px;background: #fff;color: #181818;font-size: 1.125rem;font-weight: 800;line-height: 1;cursor: pointer;}.composer-chip", shadowSelector, " {display: inline-flex;align-items: center;max-width: min(22rem, 100%);min-height: 2rem;padding: 0 0.625rem;overflow: hidden;border: 1px solid #d8dde6;border-radius: 999px;color: #3e3e3c;font-size: 0.75rem;font-weight: 700;text-overflow: ellipsis;white-space: nowrap;}.mode-picker", shadowSelector, " {display: inline-flex;min-height: 2rem;overflow: hidden;border: 1px solid #d8dde6;border-radius: 999px;background: #fff;}.mode-button", shadowSelector, " {min-width: 4.25rem;padding: 0 0.75rem;border: 0;border-right: 1px solid #d8dde6;background: transparent;color: #3e3e3c;font-size: 0.75rem;font-weight: 800;cursor: pointer;}.mode-button:last-child", shadowSelector, " {border-right: 0;}.mode-button:hover", shadowSelector, " {background: #f3f3f3;}.mode-button.active", shadowSelector, " {background: #181818;color: #fff;}.send-button", shadowSelector, " {border-color: #181818;background: #181818;color: #fff;}.send-button:disabled", shadowSelector, " {border-color: #c9c9c9;background: #c9c9c9;cursor: not-allowed;}@media (max-width: 720px) {.chat-shell", shadowSelector, " {min-height: calc(100vh - 1rem);}.chat-topbar", shadowSelector, ", .review-strip", shadowSelector, " {display: grid;}.status-stack", shadowSelector, ", .review-actions", shadowSelector, " {justify-content: flex-start;}.chat-scroll", shadowSelector, " {padding-right: 0;padding-left: 0;}.composer-toolbar", shadowSelector, " {align-items: flex-end;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$4 = [stylesheet$4];
 
-const $fragment1$5 = parseFragment`<header class="chat-topbar${0}"${2}><div${3}><h1${3}>Data 360 Agent</h1><p${3}>${"t5"}</p></div><div class="status-stack${0}" aria-label="Status"${2}><span${"c7"}${2}>${"t8"}</span><span class="chip${0}"${2}>${"t10"}</span><span class="chip${0}"${2}>${"t12"}</span></div></header>`;
+const $fragment1$5 = parseFragment`<header class="chat-topbar${0}"${2}><div class="chat-title${0}"${2}><h1${3}>Data 360 Agent</h1><p${3}>${"t5"}</p></div><div class="status-stack${0}" aria-label="Status"${2}><span${"c7"}${2}>${"t8"}</span></div></header>`;
 const $fragment2$5 = parseFragment`<div class="avatar${0}"${2}>${"t1"}</div>`;
 const $fragment3$5 = parseFragment`<p${3}>${"t1"}</p>`;
 const $fragment4$5 = parseFragment`<span${3}>${"t1"}</span>`;
-const $fragment5$5 = parseFragment`<aside class="review-strip${0}" aria-label="Plan review"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="review-actions${0}"${2}><button class="slds-button slds-button_neutral${0}"${"a7:disabled"}${2}>Export PlanSpec</button><button class="slds-button slds-button_brand${0}"${"a9:disabled"}${2}>${"t10"}</button></div></aside>`;
-const $fragment6$5 = parseFragment`<footer class="composer${0}"${2}><textarea class="composer-input${0}" placeholder="Ask Data 360 to set up a goal..."${2}>${"t2"}</textarea><button class="slds-button slds-button_brand send-button${0}"${"a3:disabled"}${2}>${"t4"}</button></footer>`;
+const $fragment5$5 = parseFragment`<summary${3}><strong${3}>Trace</strong><em${3}>${"t4"}</em></summary>`;
+const $fragment6$5 = parseFragment`<strong${3}>${"t1"}</strong>`;
+const $fragment7$5 = parseFragment`<span${3}>${"t1"}</span>`;
+const $fragment8$4 = parseFragment`<p${3}>${"t1"}</p>`;
+const $fragment9$4 = parseFragment`<div${3}><dt${3}>${"t2"}</dt><dd${3}>${"t4"}</dd></div>`;
+const $fragment10$4 = parseFragment`<aside class="review-strip${0}" aria-label="Plan review"${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><div class="review-actions${0}"${2}><button class="slds-button slds-button_neutral${0}"${"a7:disabled"}${2}>Export PlanSpec</button><button class="slds-button slds-button_neutral${0}"${"a9:disabled"}${2}>${"t10"}</button><button class="slds-button slds-button_brand${0}"${"a11:disabled"}${2}>${"t12"}</button></div></aside>`;
+const $fragment11$4 = parseFragment`<textarea class="composer-input${0}" placeholder="Ask Data 360 to set up a goal..."${2}>${"t1"}</textarea>`;
+const $fragment12$4 = parseFragment`<button type="button" class="tool-button${0}" title="Attach context"${2}>+</button>`;
+const $fragment13$4 = parseFragment`<button type="button"${"c0"}${"a0:data-mode"}${"a0:title"}${2}>${"t1"}</button>`;
+const $fragment14$3 = parseFragment`<span class="composer-chip${0}"${2}>${"t1"}</span>`;
+const $fragment15$3 = parseFragment`<span class="composer-chip${0}"${2}>${"t1"}</span>`;
+const $fragment16$2 = parseFragment`<button class="send-button${0}"${"a0:title"}${"a0:disabled"}${2}>↑</button>`;
 const stc0$5 = {
   classMap: {
     "chat-shell": true
@@ -11497,20 +11507,76 @@ const stc1$5 = {
   },
   key: 7
 };
+const stc2$5 = {
+  classMap: {
+    "trace-panel": true
+  },
+  key: 12
+};
+const stc3$5 = {
+  classMap: {
+    "trace-list": true
+  },
+  key: 15
+};
+const stc4$5 = {
+  classMap: {
+    "trace-line": true
+  },
+  key: 17
+};
+const stc5$4 = {
+  key: 24
+};
+const stc6$4 = {
+  classMap: {
+    "composer": true
+  },
+  key: 29
+};
+const stc7$4 = {
+  classMap: {
+    "composer-toolbar": true
+  },
+  key: 32
+};
+const stc8$3 = {
+  classMap: {
+    "composer-tools": true
+  },
+  key: 33
+};
+const stc9$3 = {
+  classMap: {
+    "mode-picker": true
+  },
+  attrs: {
+    "role": "group",
+    "aria-label": "Agent mode"
+  },
+  key: 36
+};
 function tmpl$5($api, $cmp, $slotset, $ctx) {
   const {d: api_dynamic_text, ncls: api_normalize_class_name, sp: api_static_part, st: api_static_fragment, k: api_key, h: api_element, i: api_iterator, b: api_bind} = $api;
-  const {_m0, _m1, _m2, _m3} = $ctx;
+  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8} = $ctx;
   return [api_element("section", stc0$5, [api_static_fragment($fragment1$5, 2, [api_static_part(5, null, api_dynamic_text($cmp.subtitle)), api_static_part(7, {
     className: api_normalize_class_name($cmp.plannerStatusClass)
-  }, null), api_static_part(8, null, api_dynamic_text($cmp.plannerStatus)), api_static_part(10, null, api_dynamic_text($cmp.modelLabel)), api_static_part(12, null, api_dynamic_text($cmp.userLabel))]), api_element("div", {
+  }, null), api_static_part(8, null, api_dynamic_text($cmp.plannerStatus))]), api_element("div", {
     className: api_normalize_class_name($cmp.chatScrollClass),
     key: 3
   }, api_iterator($cmp.messageRows, function (message) {
     return api_element("article", {
       className: api_normalize_class_name(message.className),
       key: api_key(4, message.key)
-    }, [api_static_fragment($fragment2$5, 6, [api_static_part(1, null, api_dynamic_text(message.avatar))]), api_element("div", stc1$5, [api_static_fragment($fragment3$5, 9, [api_static_part(1, null, api_dynamic_text(message.text))]), message.meta ? api_static_fragment($fragment4$5, 11, [api_static_part(1, null, api_dynamic_text(message.meta))]) : null])]);
-  })), $cmp.hasDraft ? api_static_fragment($fragment5$5, 13, [api_static_part(3, null, api_dynamic_text($cmp.planTitle)), api_static_part(5, null, api_dynamic_text($cmp.planSummary)), api_static_part(7, {
+    }, [api_static_fragment($fragment2$5, 6, [api_static_part(1, null, api_dynamic_text(message.avatar))]), api_element("div", stc1$5, [api_static_fragment($fragment3$5, 9, [api_static_part(1, null, api_dynamic_text(message.text))]), message.meta ? api_static_fragment($fragment4$5, 11, [api_static_part(1, null, api_dynamic_text(message.meta))]) : null, message.hasTrace ? api_element("details", stc2$5, [api_static_fragment($fragment5$5, 14, [api_static_part(4, null, api_dynamic_text(message.traceSummary))]), api_element("ol", stc3$5, api_iterator(message.traceRows, function (trace) {
+      return api_element("li", {
+        className: api_normalize_class_name(trace.className),
+        key: api_key(16, trace.key)
+      }, [api_element("div", stc4$5, [api_static_fragment($fragment6$5, 19, [api_static_part(1, null, api_dynamic_text(trace.label))]), trace.duration ? api_static_fragment($fragment7$5, 21, [api_static_part(1, null, api_dynamic_text(trace.duration))]) : null]), trace.detail ? api_static_fragment($fragment8$4, 23, [api_static_part(1, null, api_dynamic_text(trace.detail))]) : null, trace.hasData ? api_element("dl", stc5$4, api_iterator(trace.dataRows, function (item) {
+        return api_static_fragment($fragment9$4, api_key(26, item.key), [api_static_part(2, null, api_dynamic_text(item.name)), api_static_part(4, null, api_dynamic_text(item.value))]);
+      })) : null]);
+    }))]) : null])]);
+  })), $cmp.hasDraft ? api_static_fragment($fragment10$4, 28, [api_static_part(3, null, api_dynamic_text($cmp.planTitle)), api_static_part(5, null, api_dynamic_text($cmp.planSummary)), api_static_part(7, {
     on: _m0 || ($ctx._m0 = {
       "click": api_bind($cmp.handleExportPlanSpec)
     }),
@@ -11519,24 +11585,43 @@ function tmpl$5($api, $cmp, $slotset, $ctx) {
     }
   }, null), api_static_part(9, {
     on: _m1 || ($ctx._m1 = {
+      "click": api_bind($cmp.handleApprovePlan)
+    }),
+    attrs: {
+      "disabled": $cmp.approveDisabled ? "" : null
+    }
+  }, null), api_static_part(10, null, api_dynamic_text($cmp.approveLabel)), api_static_part(11, {
+    on: _m2 || ($ctx._m2 = {
       "click": api_bind($cmp.handleStartPlan)
     }),
     attrs: {
       "disabled": $cmp.startDisabled ? "" : null
     }
-  }, null), api_static_part(10, null, api_dynamic_text($cmp.startLabel))]) : null, api_static_fragment($fragment6$5, 15, [api_static_part(1, {
-    on: _m2 || ($ctx._m2 = {
+  }, null), api_static_part(12, null, api_dynamic_text($cmp.startLabel))]) : null, api_element("footer", stc6$4, [api_static_fragment($fragment11$4, 31, [api_static_part(0, {
+    on: _m4 || ($ctx._m4 = {
       "input": api_bind($cmp.handleInput),
       "keydown": api_bind($cmp.handleKeydown)
     })
-  }, null), api_static_part(2, null, api_dynamic_text($cmp.draftMessage)), api_static_part(3, {
-    on: _m3 || ($ctx._m3 = {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.draftMessage))]), api_element("div", stc7$4, [api_element("div", stc8$3, [api_static_fragment($fragment12$4, 35), api_element("div", stc9$3, api_iterator($cmp.modeRows, function (mode) {
+    return api_static_fragment($fragment13$4, api_key(38, mode.value), [api_static_part(0, {
+      on: _m6 || ($ctx._m6 = {
+        "click": api_bind($cmp.handleModeChange)
+      }),
+      className: api_normalize_class_name(mode.className),
+      attrs: {
+        "data-mode": mode.value,
+        "title": mode.title
+      }
+    }, null), api_static_part(1, null, api_dynamic_text(mode.label))]);
+  })), api_static_fragment($fragment14$3, 40, [api_static_part(1, null, api_dynamic_text($cmp.modelLabel))]), api_static_fragment($fragment15$3, 42, [api_static_part(1, null, api_dynamic_text($cmp.userLabel))])]), api_static_fragment($fragment16$2, 44, [api_static_part(0, {
+    on: _m8 || ($ctx._m8 = {
       "click": api_bind($cmp.handleSend)
     }),
     attrs: {
+      "title": $cmp.sendLabel,
       "disabled": $cmp.sendDisabled ? "" : null
     }
-  }, null), api_static_part(4, null, api_dynamic_text($cmp.sendLabel))])])];
+  }, null)])])])])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl$5 = registerTemplate(tmpl$5);
@@ -11576,8 +11661,10 @@ class ChatWorkspace extends LightningElement {
     this.modelLabel = "Model not configured";
     this.userLabel = "Not signed in";
     this.currentDraft = void 0;
+    this.approvedPlan = void 0;
     this.currentRun = void 0;
     this.busy = {};
+    this.chatMode = "auto";
     this.draftMessage = "";
   }
   get subtitle() {
@@ -11596,12 +11683,18 @@ class ChatWorkspace extends LightningElement {
       text: "What should Data 360 set up?",
       meta: "Describe the customer goal and the systems involved."
     }];
-    return rows.map((message, index) => ({
-      ...message,
-      key: message.id || `${message.role}-${index}`,
-      avatar: message.role === "user" ? "You" : "D360",
-      className: `message ${message.role === "user" ? "user" : "assistant"}`
-    }));
+    return rows.map((message, index) => {
+      const traceRows = normalizeTrace(message.trace, index);
+      return {
+        ...message,
+        key: message.id || `${message.role}-${index}`,
+        avatar: message.role === "user" ? "You" : "D360",
+        className: `message ${message.role === "user" ? "user" : "assistant"}`,
+        hasTrace: traceRows.length > 0,
+        traceRows,
+        traceSummary: traceRows.length === 1 ? "1 step" : `${traceRows.length} steps`
+      };
+    });
   }
   get hasDraft() {
     return Boolean(this.currentDraft?.plan);
@@ -11615,19 +11708,45 @@ class ChatWorkspace extends LightningElement {
     return `${steps} ${steps === 1 ? "step" : "steps"} • ${validation}`;
   }
   get sendDisabled() {
-    return !this.draftMessage.trim() || this.busy.draftPlan;
+    return !this.draftMessage.trim() || this.busy.draftPlan || this.busy.chat;
   }
   get sendLabel() {
+    if (this.busy.chat) return "Thinking...";
     return this.busy.draftPlan ? "Planning..." : "Send";
   }
   get startDisabled() {
-    return !this.currentDraft?.validation?.ok || this.busy.startPlan;
+    return !this.approvedPlan || this.busy.startPlan || this.busy.approvePlan;
+  }
+  get approveDisabled() {
+    return !this.currentDraft?.validation?.ok || this.busy.approvePlan || Boolean(this.approvedPlan);
   }
   get startLabel() {
     return this.busy.startPlan ? "Running..." : "Run plan";
   }
+  get approveLabel() {
+    if (this.busy.approvePlan) return "Approving...";
+    return this.approvedPlan ? "Approved" : "Approve";
+  }
   get exportPlanDisabled() {
     return !this.currentDraft?.plan?.id || this.busy.exportPlanSpec;
+  }
+  get modeRows() {
+    return [{
+      value: "auto",
+      label: "Auto",
+      title: "Decide between exploration and planning from the request."
+    }, {
+      value: "plan",
+      label: "Plan",
+      title: "Draft a governed PlanSpec for approval."
+    }, {
+      value: "execute",
+      label: "Execute",
+      title: "Use connected tools for live read-only exploration."
+    }].map(mode => ({
+      ...mode,
+      className: `mode-button ${this.chatMode === mode.value ? "active" : ""}`
+    }));
   }
   handleInput(event) {
     this.draftMessage = event.target.value;
@@ -11649,12 +11768,23 @@ class ChatWorkspace extends LightningElement {
     }
     this.dispatchEvent(new CustomEvent("sendmessage", {
       detail: {
-        text
+        text,
+        mode: this.chatMode
+      }
+    }));
+  }
+  handleModeChange(event) {
+    this.dispatchEvent(new CustomEvent("chatmodechange", {
+      detail: {
+        mode: event.currentTarget.dataset.mode
       }
     }));
   }
   handleStartPlan() {
     this.dispatchEvent(new CustomEvent("startplan"));
+  }
+  handleApprovePlan() {
+    this.dispatchEvent(new CustomEvent("approveplan"));
   }
   handleExportPlanSpec() {
     this.dispatchEvent(new CustomEvent("exportplanspec"));
@@ -11678,10 +11808,16 @@ registerDecorators(ChatWorkspace, {
     currentDraft: {
       config: 0
     },
+    approvedPlan: {
+      config: 0
+    },
     currentRun: {
       config: 0
     },
     busy: {
+      config: 0
+    },
+    chatMode: {
       config: 0
     }
   },
@@ -11692,6 +11828,35 @@ const __lwc_component_class_internal$5 = registerComponent(ChatWorkspace, {
   sel: "c-chat-workspace",
   apiVersion: 66
 });
+function normalizeTrace(trace, messageIndex) {
+  return (trace || []).map((entry, index) => {
+    const dataRows = Object.entries(entry.data || {}).map(([name, value]) => ({
+      key: `${messageIndex}-${index}-${name}`,
+      name,
+      value: traceValue(value)
+    }));
+    return {
+      key: `${messageIndex}-${index}`,
+      className: `trace-step ${slug(entry.status || "completed")}`,
+      label: entry.label || entry.stage || "Trace step",
+      detail: entry.detail || "",
+      stage: entry.stage || "",
+      status: entry.status || "",
+      duration: typeof entry.durationMs === "number" ? `${entry.durationMs} ms` : "",
+      dataRows,
+      hasData: dataRows.length > 0
+    };
+  });
+}
+function traceValue(value) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+  if (typeof value === "object") {
+    return JSON.stringify(value);
+  }
+  return String(value);
+}
 
 function stylesheet$3(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
@@ -11964,7 +12129,7 @@ const __lwc_component_class_internal$4 = registerComponent(TemplateWorkspace, {
 
 function stylesheet$2(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
-  return [".plan-layout", shadowSelector, " {display: grid;grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 0.46fr);gap: 0.75rem;align-items: start;}.slds-card", shadowSelector, " {border-color: #dddbda;}.request-actions", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;}.request-actions", shadowSelector, " .slds-button", shadowSelector, " {width: 100%;justify-content: center;white-space: nowrap;}.request-actions", shadowSelector, " .slds-button:first-child", shadowSelector, " {grid-column: 1 / -1;}.plan-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;padding-bottom: 0.75rem;border-bottom: 1px solid #dddbda;}.plan-head", shadowSelector, " strong", shadowSelector, " {color: #181818;}.plan-head", shadowSelector, " p", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.review-stats", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 1px;margin: 0.75rem 0;border: 1px solid #dddbda;border-radius: 0.25rem;overflow: hidden;background: #dddbda;}.review-stats", shadowSelector, " div", shadowSelector, " {min-width: 0;padding: 0.625rem;background: #fff;}.review-stats", shadowSelector, " strong", shadowSelector, ",.review-stats", shadowSelector, " span", shadowSelector, " {display: block;}.review-stats", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;text-transform: uppercase;}.validation-ok", shadowSelector, " {justify-content: flex-start;min-height: auto;padding: 0.5rem 0.75rem;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.timeline", shadowSelector, " {display: grid;grid-template-columns: repeat(auto-fit, minmax(18px, 1fr));gap: 0.25rem;margin: 0.75rem 0;}.timeline-dot", shadowSelector, " {height: 0.375rem;border-radius: 999px;background: #c9c9c9;}.timeline-dot.succeeded", shadowSelector, " {background: #2e844a;}.timeline-dot.running", shadowSelector, ",.timeline-dot.waiting-approval", shadowSelector, " {background: #dd9a1e;}.timeline-dot.failed", shadowSelector, ",.timeline-dot.error", shadowSelector, " {background: #ba0517;}.table-wrap", shadowSelector, " {overflow-x: auto;}.plan-table", shadowSelector, " th", shadowSelector, ",.plan-table", shadowSelector, " td", shadowSelector, " {vertical-align: middle;}.plan-row", shadowSelector, " {cursor: pointer;}.plan-row.selected", shadowSelector, ",.plan-row:hover", shadowSelector, " {background: #eef4ff;}.plan-row:focus-visible", shadowSelector, " {outline: 2px solid #1b96ff;outline-offset: -2px;}.plan-row", shadowSelector, " th", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;font-weight: 400;}.status.succeeded", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status.running", shadowSelector, ",.status.waiting-approval", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status.failed", shadowSelector, ",.status.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.approval-history", shadowSelector, " {margin-top: 1rem;padding-top: 0.75rem;border-top: 1px solid #dddbda;}.approval-history", shadowSelector, " h3", shadowSelector, " {margin-bottom: 0.5rem;font-size: 0.8125rem;font-weight: 700;}.history-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;padding: 0.5rem 0;border-bottom: 1px solid #f3f2f2;}.history-row", shadowSelector, " p", shadowSelector, " {grid-column: 1 / -1;color: #706e6b;font-size: 0.75rem;}.inspector-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;align-items: flex-start;}.inspector-list", shadowSelector, " {display: grid;gap: 0.5rem;margin-top: 0.75rem;}.inspector-list", shadowSelector, " div", shadowSelector, " {display: grid;grid-template-columns: 5.25rem minmax(0, 1fr);gap: 0.5rem;}.inspector-list", shadowSelector, " dt", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.json-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;margin-top: 0.75rem;}.json-preview", shadowSelector, " {min-width: 0;padding: 0.5rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fafaf9;}.json-preview", shadowSelector, " strong", shadowSelector, " {font-size: 0.75rem;}.json-preview", shadowSelector, " pre", shadowSelector, " {max-height: 14rem;margin: 0.375rem 0 0;overflow: auto;color: #032d60;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size: 0.6875rem;line-height: 1.4;white-space: pre-wrap;}.empty-state", shadowSelector, " {display: grid;min-height: 12rem;place-items: center;border: 1px dashed #dddbda;border-radius: 0.25rem;color: #706e6b;background: #fafaf9;}@media (max-width: 1450px) {.plan-layout", shadowSelector, " {grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);}.inspector-card", shadowSelector, " {grid-column: 1 / -1;}}@media (max-width: 980px) {.plan-layout", shadowSelector, ", .review-stats", shadowSelector, ", .json-grid", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
+  return [".plan-layout", shadowSelector, " {display: grid;grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(320px, 0.46fr);gap: 0.75rem;align-items: start;}.slds-card", shadowSelector, " {border-color: #dddbda;}.request-actions", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;}.request-actions", shadowSelector, " .slds-button", shadowSelector, " {width: 100%;justify-content: center;white-space: nowrap;}.request-actions", shadowSelector, " .slds-button:first-child", shadowSelector, " {grid-column: 1 / -1;}.plan-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;padding-bottom: 0.75rem;border-bottom: 1px solid #dddbda;}.plan-head", shadowSelector, " strong", shadowSelector, " {color: #181818;}.plan-head", shadowSelector, " p", shadowSelector, " {color: #5c5c5c;font-size: 0.8125rem;}.review-stats", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 1px;margin: 0.75rem 0;border: 1px solid #dddbda;border-radius: 0.25rem;overflow: hidden;background: #dddbda;}.review-stats", shadowSelector, " div", shadowSelector, " {min-width: 0;padding: 0.625rem;background: #fff;}.review-stats", shadowSelector, " strong", shadowSelector, ",.review-stats", shadowSelector, " span", shadowSelector, " {display: block;}.review-stats", shadowSelector, " span", shadowSelector, " {color: #5c5c5c;font-size: 0.6875rem;text-transform: uppercase;}.governance-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap: 0.5rem;margin: 0.75rem 0;}.governance-card", shadowSelector, " {min-width: 0;padding: 0.625rem;border: 1px solid #dddbda;border-left-width: 0.25rem;border-radius: 0.25rem;background: #fff;}.governance-card.good", shadowSelector, " {border-left-color: #2e844a;}.governance-card.warning", shadowSelector, " {border-left-color: #dd9a1e;}.governance-card.error", shadowSelector, " {border-left-color: #ba0517;}.governance-card.neutral", shadowSelector, " {border-left-color: #747474;}.governance-card", shadowSelector, " span", shadowSelector, ",.governance-card", shadowSelector, " p", shadowSelector, " {color: #706e6b;font-size: 0.6875rem;}.governance-card", shadowSelector, " span", shadowSelector, " {display: block;margin-bottom: 0.125rem;text-transform: uppercase;}.governance-card", shadowSelector, " strong", shadowSelector, " {display: block;overflow-wrap: anywhere;color: #181818;font-size: 0.875rem;}.governance-card", shadowSelector, " p", shadowSelector, " {margin-top: 0.125rem;line-height: 1.35;}.validation-ok", shadowSelector, " {justify-content: flex-start;min-height: auto;padding: 0.5rem 0.75rem;border-radius: 0.25rem;background: #eef8f1;color: #2e844a;}.timeline", shadowSelector, " {display: grid;grid-template-columns: repeat(auto-fit, minmax(18px, 1fr));gap: 0.25rem;margin: 0.75rem 0;}.timeline-dot", shadowSelector, " {height: 0.375rem;border-radius: 999px;background: #c9c9c9;}.timeline-dot.succeeded", shadowSelector, " {background: #2e844a;}.timeline-dot.running", shadowSelector, ",.timeline-dot.waiting-approval", shadowSelector, " {background: #dd9a1e;}.timeline-dot.failed", shadowSelector, ",.timeline-dot.error", shadowSelector, " {background: #ba0517;}.table-wrap", shadowSelector, " {overflow-x: auto;}.plan-view-tabs", shadowSelector, " {display: inline-grid;grid-auto-flow: column;gap: 0.125rem;margin: 0.75rem 0;padding: 0.125rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #f3f2f2;}.view-tab", shadowSelector, " {min-width: 5rem;border: 0;border-radius: 0.1875rem;padding: 0.375rem 0.75rem;background: transparent;color: #3e3e3c;font-weight: 600;}.view-tab.active", shadowSelector, " {background: #fff;color: #032d60;box-shadow: 0 1px 2px rgb(0 0 0 / 12%);}.plan-table", shadowSelector, " th", shadowSelector, ",.plan-table", shadowSelector, " td", shadowSelector, " {vertical-align: middle;}.plan-row", shadowSelector, " {cursor: pointer;}.plan-row.selected", shadowSelector, ",.plan-row:hover", shadowSelector, " {background: #eef4ff;}.plan-row:focus-visible", shadowSelector, " {outline: 2px solid #1b96ff;outline-offset: -2px;}.plan-row", shadowSelector, " th", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.75rem;font-weight: 400;}.status.succeeded", shadowSelector, " {background: #eef8f1;color: #2e844a;}.status.running", shadowSelector, ",.status.waiting-approval", shadowSelector, " {background: #fff7e0;color: #8a5a00;}.status.failed", shadowSelector, ",.status.error", shadowSelector, " {background: #fff1f2;color: #ba0517;}.dag-panel", shadowSelector, " {display: grid;gap: 0.75rem;}.section-header", shadowSelector, " {display: flex;justify-content: space-between;gap: 0.75rem;align-items: baseline;}.section-header", shadowSelector, " h3", shadowSelector, " {margin: 0;color: #181818;font-size: 0.8125rem;font-weight: 700;}.section-header", shadowSelector, " span", shadowSelector, " {color: #706e6b;font-size: 0.6875rem;text-transform: uppercase;}.dag-groups", shadowSelector, " {display: grid;grid-template-columns: repeat(3, minmax(12rem, 1fr));gap: 0.75rem;overflow-x: auto;}.dag-group", shadowSelector, " {min-width: 12rem;padding: 0.75rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fafaf9;}.dag-group", shadowSelector, " h3", shadowSelector, " {margin-bottom: 0.625rem;color: #706e6b;font-size: 0.75rem;font-weight: 700;text-transform: uppercase;}.dag-node", shadowSelector, " {display: grid;width: 100%;gap: 0.375rem;margin-bottom: 0.5rem;padding: 0.625rem;border: 1px solid #c9c9c9;border-left-width: 0.25rem;border-radius: 0.25rem;background: #fff;color: #181818;text-align: left;}.dag-node:hover", shadowSelector, ",.dag-node.selected", shadowSelector, " {border-color: #1b96ff;box-shadow: 0 0 0 1px #1b96ff inset;}.dag-node.write", shadowSelector, ",.dag-node.publish", shadowSelector, ",.dag-node.activate", shadowSelector, ",.dag-node.destructive", shadowSelector, " {border-left-color: #dd9a1e;}.dag-node.read", shadowSelector, " {border-left-color: #0176d3;}.dag-node.succeeded", shadowSelector, " {background: #f3fcf5;}.dag-node.failed", shadowSelector, " {background: #fff1f2;}.dag-node-title", shadowSelector, " {font-weight: 700;}.dag-node-meta", shadowSelector, ",.dag-node-footer", shadowSelector, ",.dag-warning", shadowSelector, " {color: #706e6b;font-size: 0.6875rem;}.dag-node-meta", shadowSelector, " {overflow-wrap: anywhere;}.dag-node-footer", shadowSelector, " {display: flex;flex-wrap: wrap;gap: 0.375rem;}.dag-node-footer", shadowSelector, " span", shadowSelector, " {padding: 0.125rem 0.375rem;border-radius: 999px;background: #f3f2f2;}.dag-warning", shadowSelector, " {color: #8a5a00;}.dag-edge-list", shadowSelector, " {display: grid;gap: 0.375rem;max-height: 12rem;overflow: auto;padding: 0.5rem;border: 1px solid #dddbda;border-radius: 0.25rem;}.dag-edge", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);gap: 0.5rem;align-items: center;color: #3e3e3c;font-size: 0.75rem;}.dag-edge", shadowSelector, " strong", shadowSelector, " {overflow-wrap: anywhere;}.dag-edge", shadowSelector, " span", shadowSelector, " {border-radius: 999px;padding: 0.125rem 0.375rem;background: #eef4ff;color: #032d60;}.dag-edge.data", shadowSelector, " span", shadowSelector, " {background: #eef8f1;color: #2e844a;}.dag-edge", shadowSelector, " small", shadowSelector, " {grid-column: 1 / -1;color: #706e6b;}.visibility-grid", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);gap: 0.75rem;margin-top: 1rem;}.visibility-panel", shadowSelector, " {display: grid;align-content: start;gap: 0.75rem;min-width: 0;padding: 0.75rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fff;}.signal-stack", shadowSelector, " {display: grid;gap: 0.375rem;}.signal-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.25rem 0.5rem;padding: 0.5rem;border: 1px solid #dddbda;border-left-width: 0.25rem;border-radius: 0.25rem;background: #fafaf9;}.signal-row.good", shadowSelector, " {border-left-color: #2e844a;}.signal-row.warning", shadowSelector, " {border-left-color: #dd9a1e;}.signal-row.error", shadowSelector, " {border-left-color: #ba0517;}.signal-row", shadowSelector, " strong", shadowSelector, " {overflow-wrap: anywhere;}.signal-row", shadowSelector, " span", shadowSelector, ",.signal-row", shadowSelector, " p", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.signal-row", shadowSelector, " p", shadowSelector, " {grid-column: 1 / -1;margin: 0;overflow-wrap: anywhere;}.binding-list", shadowSelector, " {display: grid;gap: 0.5rem;max-height: 20rem;overflow: auto;}.binding-row", shadowSelector, " {display: grid;gap: 0.5rem;padding: 0.5rem;border: 1px solid #dddbda;border-left-width: 0.25rem;border-radius: 0.25rem;background: #fafaf9;}.binding-row.frozen", shadowSelector, " {border-left-color: #2e844a;}.binding-row.catalog", shadowSelector, " {border-left-color: #747474;}.binding-row", shadowSelector, " strong", shadowSelector, ",.binding-row", shadowSelector, " span", shadowSelector, ",.binding-row", shadowSelector, " dd", shadowSelector, " {overflow-wrap: anywhere;}.binding-row", shadowSelector, " > div:first-child", shadowSelector, " span", shadowSelector, ",.binding-row", shadowSelector, " > span", shadowSelector, " {display: block;color: #706e6b;font-size: 0.75rem;}.binding-row", shadowSelector, " dl", shadowSelector, " {display: grid;grid-template-columns: repeat(5, minmax(0, 1fr));gap: 0.375rem;margin: 0;}.binding-row", shadowSelector, " dt", shadowSelector, " {color: #706e6b;font-size: 0.6875rem;text-transform: uppercase;}.binding-row", shadowSelector, " dd", shadowSelector, " {margin: 0;color: #032d60;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size: 0.6875rem;}.approval-history", shadowSelector, " {margin-top: 1rem;padding-top: 0.75rem;border-top: 1px solid #dddbda;}.approval-history", shadowSelector, " h3", shadowSelector, " {margin-bottom: 0.5rem;font-size: 0.8125rem;font-weight: 700;}.history-row", shadowSelector, " {display: grid;grid-template-columns: minmax(0, 1fr) auto;gap: 0.5rem;padding: 0.5rem 0;border-bottom: 1px solid #f3f2f2;}.history-row", shadowSelector, " p", shadowSelector, " {grid-column: 1 / -1;color: #706e6b;font-size: 0.75rem;}.history-row.plan-approval", shadowSelector, " {border-left: 0.25rem solid #2e844a;padding-left: 0.5rem;background: #f3fcf5;}.inspector-head", shadowSelector, " {display: flex;justify-content: space-between;gap: 1rem;align-items: flex-start;}.inspector-list", shadowSelector, " {display: grid;gap: 0.5rem;margin-top: 0.75rem;}.inspector-list", shadowSelector, " div", shadowSelector, " {display: grid;grid-template-columns: 5.25rem minmax(0, 1fr);gap: 0.5rem;}.inspector-list", shadowSelector, " dt", shadowSelector, " {color: #706e6b;font-size: 0.75rem;}.json-grid", shadowSelector, " {display: grid;grid-template-columns: repeat(2, minmax(0, 1fr));gap: 0.5rem;margin-top: 0.75rem;}.json-preview", shadowSelector, " {min-width: 0;padding: 0.5rem;border: 1px solid #dddbda;border-radius: 0.25rem;background: #fafaf9;}.json-preview", shadowSelector, " strong", shadowSelector, " {font-size: 0.75rem;}.json-preview", shadowSelector, " pre", shadowSelector, " {max-height: 14rem;margin: 0.375rem 0 0;overflow: auto;color: #032d60;font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;font-size: 0.6875rem;line-height: 1.4;white-space: pre-wrap;}.empty-state", shadowSelector, " {display: grid;min-height: 12rem;place-items: center;border: 1px dashed #dddbda;border-radius: 0.25rem;color: #706e6b;background: #fafaf9;}@media (max-width: 1450px) {.plan-layout", shadowSelector, " {grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);}.inspector-card", shadowSelector, " {grid-column: 1 / -1;}}@media (max-width: 980px) {.plan-layout", shadowSelector, ", .governance-grid", shadowSelector, ", .review-stats", shadowSelector, ", .json-grid", shadowSelector, ", .dag-groups", shadowSelector, ", .visibility-grid", shadowSelector, ", .binding-row", shadowSelector, " dl", shadowSelector, " {grid-template-columns: 1fr;}}"].join('');
   /*LWC compiler v9.2.2*/
 }
 var _implicitStylesheets$2 = [stylesheet$2];
@@ -11973,30 +12138,51 @@ const $fragment1$3 = parseFragment`<div class="slds-card__header slds-grid${0}"$
 const $fragment2$3 = parseFragment`<label class="slds-form-element__label${0}"${"a0:for"}${2}>Scenario</label>`;
 const $fragment3$3 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
 const $fragment4$3 = parseFragment`<div class="slds-form-element${0}"${2}><label class="slds-form-element__label${0}"${"a1:for"}${2}>Goal</label><div class="slds-form-element__control${0}"${2}><textarea${"a4:id"} class="slds-textarea${0}"${2}>${"t5"}</textarea></div></div>`;
-const $fragment5$3 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button></div>`;
+const $fragment5$3 = parseFragment`<div class="request-actions slds-m-top_medium${0}"${2}><button class="slds-button slds-button_brand${0}"${"a1:disabled"}${2}>${"t2"}</button><button class="slds-button slds-button_neutral${0}"${"a3:disabled"}${2}>${"t4"}</button><button class="slds-button slds-button_neutral${0}"${"a5:disabled"}${2}>${"t6"}</button><button class="slds-button slds-button_neutral${0}"${"a7:disabled"}${2}>${"t8"}</button><button class="slds-button slds-button_neutral${0}"${"a9:disabled"}${2}>${"t10"}</button></div>`;
 const $fragment6$3 = parseFragment`<header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>PlanSpec</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Governed ASL profile before any Data 360 mutation</p></div></header>`;
 const $fragment7$3 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
-const $fragment8$2 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
-const $fragment9$2 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
-const $fragment10$2 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment11$2 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
-const $fragment12$2 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
-const $fragment13$2 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
-const $fragment14$2 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
-const $fragment15$2 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
-const $fragment16$1 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment17$1 = parseFragment`<td${3}>${"t1"}</td>`;
-const $fragment18$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment19$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
-const $fragment20$1 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
-const $fragment21$1 = parseFragment`<h3${3}>Approval history</h3>`;
-const $fragment22$1 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
-const $fragment23$1 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
-const $fragment24$1 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
-const $fragment25 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
-const $fragment26 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
-const $fragment27 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
-const $fragment28 = parseFragment`<article class="json-preview${0}"${2}><strong${3}>${"t2"}</strong><pre${3}>${"t4"}</pre></article>`;
+const $fragment8$2 = parseFragment`<span${"c0"}${2}>${"t1"}</span>`;
+const $fragment9$2 = parseFragment`<div class="empty-state${0}"${2}>No plan drafted.</div>`;
+const $fragment10$2 = parseFragment`<div class="plan-head${0}"${2}><div${3}><strong${3}>${"t3"}</strong><p${3}>${"t5"}</p></div><span class="slds-badge${0}"${2}>${"t7"}</span></div>`;
+const $fragment11$2 = parseFragment`<div${3}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment12$2 = parseFragment`<article${"c0"}${2}><span${3}>${"t2"}</span><strong${3}>${"t4"}</strong><p${3}>${"t6"}</p></article>`;
+const $fragment13$2 = parseFragment`<div${"c0"}${2}>${"t1"}</div>`;
+const $fragment14$2 = parseFragment`<div class="slds-notify slds-notify_alert validation-ok${0}" role="status"${2}><span${3}>No blocking issues found.</span></div>`;
+const $fragment15$2 = parseFragment`<span${"c0"}${"a0:title"}${2}></span>`;
+const $fragment16$1 = parseFragment`<button${"c0"}${"a0:data-view"}${2}>${"t1"}</button>`;
+const $fragment17$1 = parseFragment`<thead${3}><tr${3}><th scope="col"${3}>Step</th><th scope="col"${3}>Capability</th><th scope="col"${3}>Phase</th><th scope="col"${3}>Status</th><th scope="col"${3}>Gate</th><th scope="col"${3}></th></tr></thead>`;
+const $fragment18$1 = parseFragment`<th scope="row"${3}><div class="slds-truncate${0}"${"a1:title"}${2}>${"t2"}</div><span${3}>${"t4"}</span></th>`;
+const $fragment19$1 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment20$1 = parseFragment`<td${3}>${"t1"}</td>`;
+const $fragment21$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment22$1 = parseFragment`<td${3}><span${"c1"}${2}>${"t2"}</span></td>`;
+const $fragment23$1 = parseFragment`<button class="slds-button slds-button_brand slds-button_x-small${0}"${"a0:data-step-id"}${2}>Approve</button>`;
+const $fragment24$1 = parseFragment`<div class="empty-state${0}"${2}>No DAG artifact available.</div>`;
+const $fragment25$1 = parseFragment`<div class="section-header${0}"${2}><h3${3}>${"t2"}</h3><span${3}>${"t4"}</span></div>`;
+const $fragment26$1 = parseFragment`<h3${3}>${"t1"}</h3>`;
+const $fragment27$1 = parseFragment`<span class="dag-node-title${0}"${2}>${"t1"}</span>`;
+const $fragment28$1 = parseFragment`<span class="dag-node-meta${0}"${2}>${"t1"}</span>`;
+const $fragment29$1 = parseFragment`<span class="dag-node-footer${0}"${2}><span${3}>${"t2"}</span><span${3}>${"t4"}</span><span${3}>${"t6"}</span></span>`;
+const $fragment30$1 = parseFragment`<span class="dag-warning${0}"${2}>${"t1"}</span>`;
+const $fragment31$1 = parseFragment`<strong${3}>${"t1"}</strong>`;
+const $fragment32$1 = parseFragment`<span${3}>${"t1"}</span>`;
+const $fragment33$1 = parseFragment`<strong${3}>${"t1"}</strong>`;
+const $fragment34$1 = parseFragment`<small${3}>${"t1"}</small>`;
+const $fragment35$1 = parseFragment`<div class="section-header${0}"${2}><h3${3}>Registry drift</h3><span${3}>Frozen bindings</span></div>`;
+const $fragment36$1 = parseFragment`<div${"c0"}${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
+const $fragment37$1 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
+const $fragment38$1 = parseFragment`<article${"c0"}${2}><div${3}><strong${3}>${"t3"}</strong><span${3}>${"t5"}</span></div><dl${3}><div${3}><dt${3}>Effect</dt><dd${3}>${"t11"}</dd></div><div${3}><dt${3}>Gate</dt><dd${3}>${"t16"}</dd></div><div${3}><dt${3}>Schema</dt><dd${3}>${"t21"}</dd></div><div${3}><dt${3}>Registry</dt><dd${3}>${"t26"}</dd></div><div${3}><dt${3}>Tool</dt><dd${3}>${"t31"}</dd></div><div${3}><dt${3}>Connector</dt><dd${3}>${"t36"}</dd></div></dl><span${3}>${"t38"}</span></article>`;
+const $fragment39$1 = parseFragment`<div class="section-header${0}"${2}><h3${3}>Redaction</h3><span${3}>Export and traces</span></div>`;
+const $fragment40$1 = parseFragment`<div${"c0"}${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
+const $fragment41 = parseFragment`<h3${3}>Approvals</h3>`;
+const $fragment42 = parseFragment`<div class="history-row plan-approval${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
+const $fragment43 = parseFragment`<div class="history-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span><p${3}>${"t6"}</p></div>`;
+const $fragment44 = parseFragment`<p class="slds-text-body_small slds-text-color_weak${0}"${2}>${"t1"}</p>`;
+const $fragment45 = parseFragment`<div class="slds-card__header slds-grid${0}"${2}><header class="slds-media slds-media_center slds-has-flexi-truncate${0}"${2}><div class="slds-media__body${0}"${2}><h2 class="slds-card__header-title${0}"${2}>Step Inspector</h2><p class="slds-text-body_small slds-text-color_weak${0}"${2}>Inputs, bindings, outputs</p></div></header></div>`;
+const $fragment46 = parseFragment`<div class="empty-state${0}"${2}>Select a plan step.</div>`;
+const $fragment47 = parseFragment`<div class="inspector-head${0}"${2}><strong${3}>${"t2"}</strong><span class="slds-badge${0}"${2}>${"t4"}</span></div>`;
+const $fragment48 = parseFragment`<dl class="inspector-list${0}"${2}><div${3}><dt${3}>Step</dt><dd${3}>${"t5"}</dd></div><div${3}><dt${3}>Phase</dt><dd${3}>${"t10"}</dd></div><div${3}><dt${3}>Action</dt><dd${3}>${"t15"}</dd></div><div${3}><dt${3}>ResultPath</dt><dd${3}>${"t20"}</dd></div><div${3}><dt${3}>Approval</dt><dd${3}>${"t25"}</dd></div><div${3}><dt${3}>Timing</dt><dd${3}>${"t30"}</dd></div></dl>`;
+const $fragment49 = parseFragment`<article class="json-preview${0}"${2}><strong${3}>${"t2"}</strong><pre${3}>${"t4"}</pre></article>`;
 const stc0$3 = {
   classMap: {
     "plan-layout": true
@@ -12052,81 +12238,170 @@ const stc8$2 = {
     "slds-card__body": true,
     "slds-card__body_inner": true
   },
-  key: 22
+  key: 24
 };
 const stc9$2 = {
   classMap: {
     "review-stats": true
   },
-  key: 27
+  key: 29
 };
 const stc10$1 = {
+  classMap: {
+    "governance-grid": true
+  },
+  attrs: {
+    "aria-label": "Plan governance"
+  },
+  key: 32
+};
+const stc11$1 = {
   classMap: {
     "slds-m-vertical_small": true,
     "issue-stack": true
   },
-  key: 30
+  key: 35
 };
-const stc11$1 = {
+const stc12$1 = {
   classMap: {
     "timeline": true
   },
   attrs: {
     "aria-label": "Run timeline"
   },
-  key: 35
+  key: 40
 };
-const stc12$1 = {
+const stc13$1 = {
+  classMap: {
+    "plan-view-tabs": true
+  },
+  attrs: {
+    "role": "tablist",
+    "aria-label": "Plan views"
+  },
+  key: 43
+};
+const stc14$1 = {
   classMap: {
     "table-wrap": true
   },
-  key: 38
+  key: 46
 };
-const stc13$1 = {
+const stc15$1 = {
   classMap: {
     "slds-table": true,
     "slds-table_cell-buffer": true,
     "slds-table_bordered": true,
     "plan-table": true
   },
-  key: 39
-};
-const stc14$1 = {
-  key: 42
-};
-const stc15$1 = {
-  key: 54
+  key: 47
 };
 const stc16$1 = {
+  key: 50
+};
+const stc17$1 = {
+  key: 62
+};
+const stc18$1 = {
+  classMap: {
+    "dag-panel": true
+  },
+  attrs: {
+    "aria-label": "Plan DAG"
+  },
+  key: 65
+};
+const stc19$1 = {
+  classMap: {
+    "dag-groups": true
+  },
+  key: 70
+};
+const stc20$1 = {
+  "dag-group": true
+};
+const stc21$1 = {
+  classMap: {
+    "dag-edge-list": true
+  },
+  attrs: {
+    "aria-label": "DAG edges"
+  },
+  key: 83
+};
+const stc22$1 = {
+  classMap: {
+    "visibility-grid": true
+  },
+  key: 93
+};
+const stc23$1 = {
+  classMap: {
+    "visibility-panel": true,
+    "registry-panel": true
+  },
+  attrs: {
+    "aria-label": "Registry drift"
+  },
+  key: 94
+};
+const stc24$1 = {
+  classMap: {
+    "signal-stack": true
+  },
+  key: 97
+};
+const stc25$1 = {
+  classMap: {
+    "binding-list": true
+  },
+  key: 102
+};
+const stc26$1 = {
+  classMap: {
+    "visibility-panel": true
+  },
+  attrs: {
+    "aria-label": "Redaction warnings"
+  },
+  key: 105
+};
+const stc27$1 = {
+  classMap: {
+    "signal-stack": true
+  },
+  key: 108
+};
+const stc28$1 = {
   classMap: {
     "approval-history": true
   },
-  key: 57
+  key: 111
 };
-const stc17$1 = [];
-const stc18$1 = {
+const stc29$1 = [];
+const stc30$1 = {
   classMap: {
     "slds-card": true,
     "inspector-card": true
   },
-  key: 64
+  key: 120
 };
-const stc19$1 = {
+const stc31$1 = {
   classMap: {
     "slds-card__body": true,
     "slds-card__body_inner": true
   },
-  key: 67
+  key: 123
 };
-const stc20$1 = {
+const stc32$1 = {
   classMap: {
     "json-grid": true
   },
-  key: 74
+  key: 130
 };
 function tmpl$3($api, $cmp, $slotset, $ctx) {
   const {d: api_dynamic_text, sp: api_static_part, st: api_static_fragment, gid: api_scoped_id, b: api_bind, k: api_key, i: api_iterator, h: api_element, ncls: api_normalize_class_name, f: api_flatten} = $api;
-  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7} = $ctx;
+  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12} = $ctx;
   return [api_element("div", stc0$3, [api_element("section", stc1$3, [api_static_fragment($fragment1$3, 3, [api_static_part(8, null, api_dynamic_text($cmp.plannerStatus))]), api_element("div", stc2$3, [api_element("div", stc3$3, [api_static_fragment($fragment2$3, 7, [api_static_part(0, {
     attrs: {
       "for": api_scoped_id("scenario")
@@ -12167,65 +12442,130 @@ function tmpl$3($api, $cmp, $slotset, $ctx) {
     }
   }, null), api_static_part(2, null, api_dynamic_text($cmp.draftLabel)), api_static_part(3, {
     on: _m3 || ($ctx._m3 = {
+      "click": api_bind($cmp.handleApprovePlan)
+    }),
+    attrs: {
+      "disabled": $cmp.approveDisabled ? "" : null
+    }
+  }, null), api_static_part(4, null, api_dynamic_text($cmp.approveLabel)), api_static_part(5, {
+    on: _m4 || ($ctx._m4 = {
       "click": api_bind($cmp.handleStart)
     }),
     attrs: {
       "disabled": $cmp.startDisabled ? "" : null
     }
-  }, null), api_static_part(4, null, api_dynamic_text($cmp.startLabel)), api_static_part(5, {
-    on: _m4 || ($ctx._m4 = {
+  }, null), api_static_part(6, null, api_dynamic_text($cmp.startLabel)), api_static_part(7, {
+    on: _m5 || ($ctx._m5 = {
+      "click": api_bind($cmp.handleExportPlanSpec)
+    }),
+    attrs: {
+      "disabled": $cmp.exportDisabled ? "" : null
+    }
+  }, null), api_static_part(8, null, api_dynamic_text($cmp.exportLabel)), api_static_part(9, {
+    on: _m6 || ($ctx._m6 = {
       "click": api_bind($cmp.handleSmoke)
     }),
     attrs: {
       "disabled": $cmp.busy.smokeData360 ? "" : null
     }
-  }, null), api_static_part(6, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$2, [api_element("div", stc7$2, [api_static_fragment($fragment6$3, 19), $cmp.hasDraft ? api_static_fragment($fragment7$3, 21, [api_static_part(0, {
+  }, null), api_static_part(10, null, api_dynamic_text($cmp.smokeLabel))])])]), api_element("section", stc6$2, [api_element("div", stc7$2, [api_static_fragment($fragment6$3, 19), $cmp.hasDraft ? api_static_fragment($fragment7$3, 21, [api_static_part(0, {
     className: api_normalize_class_name($cmp.validationClass)
-  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null]), api_element("div", stc8$2, [!$cmp.hasDraft ? api_static_fragment($fragment8$2, 24) : null, $cmp.hasDraft ? api_static_fragment($fragment9$2, 26, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$2, api_iterator($cmp.reviewStats, function (stat) {
-    return api_static_fragment($fragment10$2, api_key(29, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
-  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc10$1, api_iterator($cmp.issues, function (issue) {
-    return api_static_fragment($fragment11$2, api_key(32, issue.key), [api_static_part(0, {
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.validationLabel))]) : null, $cmp.hasDraft ? api_static_fragment($fragment8$2, 23, [api_static_part(0, {
+    className: api_normalize_class_name($cmp.approvalClass)
+  }, null), api_static_part(1, null, api_dynamic_text($cmp.approvalLabel))]) : null]), api_element("div", stc8$2, [!$cmp.hasDraft ? api_static_fragment($fragment9$2, 26) : null, $cmp.hasDraft ? api_static_fragment($fragment10$2, 28, [api_static_part(3, null, api_dynamic_text($cmp.plan.goal)), api_static_part(5, null, api_dynamic_text($cmp.planContext)), api_static_part(7, null, api_dynamic_text($cmp.plan.scenarioId))]) : null, $cmp.hasDraft ? api_element("div", stc9$2, api_iterator($cmp.reviewStats, function (stat) {
+    return api_static_fragment($fragment11$2, api_key(31, stat.label), [api_static_part(2, null, api_dynamic_text(stat.value)), api_static_part(4, null, api_dynamic_text(stat.label))]);
+  })) : null, $cmp.hasDraft ? api_element("div", stc10$1, api_iterator($cmp.governanceCards, function (card) {
+    return api_static_fragment($fragment12$2, api_key(34, card.label), [api_static_part(0, {
+      className: api_normalize_class_name(card.className)
+    }, null), api_static_part(2, null, api_dynamic_text(card.label)), api_static_part(4, null, api_dynamic_text(card.value)), api_static_part(6, null, api_dynamic_text(card.detail))]);
+  })) : null, $cmp.hasDraft ? $cmp.hasIssues ? api_element("div", stc11$1, api_iterator($cmp.issues, function (issue) {
+    return api_static_fragment($fragment13$2, api_key(37, issue.key), [api_static_part(0, {
       className: api_normalize_class_name(issue.className)
     }, null), api_static_part(1, null, api_dynamic_text(issue.severity) + " • " + api_dynamic_text(issue.stepId) + " • " + api_dynamic_text(issue.message))]);
-  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment12$2, 34) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc11$1, api_iterator($cmp.timelineSteps, function (step) {
-    return api_static_fragment($fragment13$2, api_key(37, step.key), [api_static_part(0, {
+  })) : null : null, $cmp.hasDraft ? !$cmp.hasIssues ? api_static_fragment($fragment14$2, 39) : null : null, $cmp.hasDraft ? $cmp.hasRun ? api_element("div", stc12$1, api_iterator($cmp.timelineSteps, function (step) {
+    return api_static_fragment($fragment15$2, api_key(42, step.key), [api_static_part(0, {
       className: api_normalize_class_name(step.className),
       attrs: {
         "title": step.status
       }
     }, null)]);
-  })) : null : null, $cmp.hasDraft ? api_element("div", stc12$1, [api_element("table", stc13$1, [api_static_fragment($fragment14$2, 41), api_element("tbody", stc14$1, api_iterator($cmp.planRows, function (row) {
+  })) : null : null, $cmp.hasDraft ? api_element("div", stc13$1, api_iterator($cmp.planViewOptions, function (option) {
+    return api_static_fragment($fragment16$1, api_key(45, option.key), [api_static_part(0, {
+      on: _m8 || ($ctx._m8 = {
+        "click": api_bind($cmp.handlePlanView)
+      }),
+      className: api_normalize_class_name(option.className),
+      attrs: {
+        "data-view": option.key
+      }
+    }, null), api_static_part(1, null, api_dynamic_text(option.label))]);
+  })) : null, $cmp.hasDraft ? $cmp.showStepsView ? api_element("div", stc14$1, [api_element("table", stc15$1, [api_static_fragment($fragment17$1, 49), api_element("tbody", stc16$1, api_iterator($cmp.planRows, function (row) {
     return api_element("tr", {
       className: api_normalize_class_name(row.rowClass),
       attrs: {
         "tabindex": "0",
         "data-step-id": row.id
       },
-      key: api_key(43, row.key),
-      on: _m5 || ($ctx._m5 = {
+      key: api_key(51, row.key),
+      on: _m9 || ($ctx._m9 = {
         "click": api_bind($cmp.handleSelectStep),
         "keydown": api_bind($cmp.handleStepKeydown)
       })
-    }, [api_static_fragment($fragment15$2, 45, [api_static_part(1, {
+    }, [api_static_fragment($fragment18$1, 53, [api_static_part(1, {
       attrs: {
         "title": row.title
       }
-    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment16$1, 47, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment17$1, 49, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment18$1, 51, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.title)), api_static_part(4, null, api_dynamic_text(row.id))]), api_static_fragment($fragment19$1, 55, [api_static_part(1, null, api_dynamic_text(row.resource))]), api_static_fragment($fragment20$1, 57, [api_static_part(1, null, api_dynamic_text(row.phase))]), api_static_fragment($fragment21$1, 59, [api_static_part(1, {
       className: api_normalize_class_name(row.statusClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment19$1, 53, [api_static_part(1, {
+    }, null), api_static_part(2, null, api_dynamic_text(row.status))]), api_static_fragment($fragment22$1, 61, [api_static_part(1, {
       className: api_normalize_class_name(row.approvalClass)
-    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc15$1, [row.canApprove ? api_static_fragment($fragment20$1, 56, [api_static_part(0, {
-      on: _m7 || ($ctx._m7 = {
+    }, null), api_static_part(2, null, api_dynamic_text(row.approvalLabel))]), api_element("td", stc17$1, [row.canApprove ? api_static_fragment($fragment23$1, 64, [api_static_part(0, {
+      on: _m11 || ($ctx._m11 = {
         "click": api_bind($cmp.handleApproveStep)
       }),
       attrs: {
         "data-step-id": row.id
       }
     }, null)]) : null])]);
-  }))])]) : null, $cmp.hasDraft ? api_element("section", stc16$1, api_flatten([api_static_fragment($fragment21$1, 59), $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
-    return api_static_fragment($fragment22$1, api_key(61, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
-  }) : stc17$1, !$cmp.hasApprovalRows ? api_static_fragment($fragment23$1, 63, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc18$1, [api_static_fragment($fragment24$1, 66), api_element("div", stc19$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment25, 69) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment26, 71, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment27, 73, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc20$1, api_iterator($cmp.selectedPreviews, function (preview) {
-    return api_static_fragment($fragment28, api_key(76, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
+  }))])]) : null : null, $cmp.hasDraft ? $cmp.showDagView ? api_element("section", stc18$1, [!$cmp.hasDag ? api_static_fragment($fragment24$1, 67) : null, $cmp.hasDag ? api_static_fragment($fragment25$1, 69, [api_static_part(2, null, api_dynamic_text($cmp.dagSourceLabel)), api_static_part(4, null, api_dynamic_text($cmp.dagOrderCount) + " nodes ordered")]) : null, $cmp.hasDag ? api_element("div", stc19$1, api_iterator($cmp.dagRows, function (group) {
+    return api_element("section", {
+      classMap: stc20$1,
+      key: api_key(71, group.id)
+    }, api_flatten([api_static_fragment($fragment26$1, 73, [api_static_part(1, null, api_dynamic_text(group.label))]), api_iterator(group.nodes, function (node) {
+      return api_element("button", {
+        className: api_normalize_class_name(node.className),
+        attrs: {
+          "data-step-id": node.id
+        },
+        key: api_key(74, node.id),
+        on: _m12 || ($ctx._m12 = {
+          "click": api_bind($cmp.handleDagNode)
+        })
+      }, [api_static_fragment($fragment27$1, 76, [api_static_part(1, null, api_dynamic_text(node.label))]), api_static_fragment($fragment28$1, 78, [api_static_part(1, null, api_dynamic_text(node.action))]), api_static_fragment($fragment29$1, 80, [api_static_part(2, null, api_dynamic_text(node.effectLabel)), api_static_part(4, null, api_dynamic_text(node.gateLabel)), api_static_part(6, null, api_dynamic_text(node.status))]), node.hasWarnings ? api_static_fragment($fragment30$1, 82, [api_static_part(1, null, api_dynamic_text(node.warningText))]) : null]);
+    })]));
+  })) : null, $cmp.hasDag ? api_element("div", stc21$1, api_iterator($cmp.dagEdges, function (edge) {
+    return api_element("div", {
+      className: api_normalize_class_name(edge.className),
+      key: api_key(84, edge.key)
+    }, [api_static_fragment($fragment31$1, 86, [api_static_part(1, null, api_dynamic_text(edge.from))]), api_static_fragment($fragment32$1, 88, [api_static_part(1, null, api_dynamic_text(edge.type))]), api_static_fragment($fragment33$1, 90, [api_static_part(1, null, api_dynamic_text(edge.to))]), edge.label ? api_static_fragment($fragment34$1, 92, [api_static_part(1, null, api_dynamic_text(edge.label))]) : null]);
+  })) : null]) : null : null, $cmp.hasDraft ? api_element("div", stc22$1, [api_element("section", stc23$1, [api_static_fragment($fragment35$1, 96), $cmp.hasRegistryDriftSignals ? api_element("div", stc24$1, api_iterator($cmp.registryDriftSignals, function (signal) {
+    return api_static_fragment($fragment36$1, api_key(99, signal.key), [api_static_part(0, {
+      className: api_normalize_class_name(signal.className)
+    }, null), api_static_part(2, null, api_dynamic_text(signal.source)), api_static_part(4, null, api_dynamic_text(signal.status)), api_static_part(6, null, api_dynamic_text(signal.detail))]);
+  })) : null, !$cmp.hasRegistryDriftSignals ? api_static_fragment($fragment37$1, 101, [api_static_part(1, null, api_dynamic_text($cmp.registryFallback))]) : null, $cmp.hasBindingRows ? api_element("div", stc25$1, api_iterator($cmp.bindingRows, function (binding) {
+    return api_static_fragment($fragment38$1, api_key(104, binding.key), [api_static_part(0, {
+      className: api_normalize_class_name(binding.className)
+    }, null), api_static_part(3, null, api_dynamic_text(binding.resource)), api_static_part(5, null, api_dynamic_text(binding.tool)), api_static_part(11, null, api_dynamic_text(binding.effect)), api_static_part(16, null, api_dynamic_text(binding.approval)), api_static_part(21, null, api_dynamic_text(binding.schemaHash)), api_static_part(26, null, api_dynamic_text(binding.registryHash)), api_static_part(31, null, api_dynamic_text(binding.toolSchemaHash)), api_static_part(36, null, api_dynamic_text(binding.connectorDefinitionHash)), api_static_part(38, null, api_dynamic_text(binding.statusLabel))]);
+  })) : null]), api_element("section", stc26$1, [api_static_fragment($fragment39$1, 107), $cmp.hasRedactionRows ? api_element("div", stc27$1, api_iterator($cmp.redactionRows, function (row) {
+    return api_static_fragment($fragment40$1, api_key(110, row.key), [api_static_part(0, {
+      className: api_normalize_class_name(row.className)
+    }, null), api_static_part(2, null, api_dynamic_text(row.scope)), api_static_part(4, null, api_dynamic_text(row.status)), api_static_part(6, null, api_dynamic_text(row.detail))]);
+  })) : null])]) : null, $cmp.hasDraft ? api_element("section", stc28$1, api_flatten([api_static_fragment($fragment41, 113), $cmp.hasApprovedArtifactRows ? api_iterator($cmp.approvedArtifactRows, function (item) {
+    return api_static_fragment($fragment42, api_key(115, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
+  }) : stc29$1, $cmp.hasApprovalRows ? api_iterator($cmp.approvalRows, function (item) {
+    return api_static_fragment($fragment43, api_key(117, item.key), [api_static_part(2, null, api_dynamic_text(item.step)), api_static_part(4, null, api_dynamic_text(item.status)), api_static_part(6, null, api_dynamic_text(item.detail))]);
+  }) : stc29$1, $cmp.showApprovalFallback ? api_static_fragment($fragment44, 119, [api_static_part(1, null, api_dynamic_text($cmp.approvalFallback))]) : null])) : null])]), api_element("aside", stc30$1, [api_static_fragment($fragment45, 122), api_element("div", stc31$1, [!$cmp.hasSelectedStep ? api_static_fragment($fragment46, 125) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment47, 127, [api_static_part(2, null, api_dynamic_text($cmp.selectedStep.title)), api_static_part(4, null, api_dynamic_text($cmp.selectedStatus))]) : null, $cmp.hasSelectedStep ? api_static_fragment($fragment48, 129, [api_static_part(5, null, api_dynamic_text($cmp.selectedStep.id)), api_static_part(10, null, api_dynamic_text($cmp.selectedStep.phase)), api_static_part(15, null, api_dynamic_text($cmp.selectedStep.action)), api_static_part(20, null, api_dynamic_text($cmp.selectedStep.resultPath)), api_static_part(25, null, api_dynamic_text($cmp.selectedApproval)), api_static_part(30, null, api_dynamic_text($cmp.selectedTiming))]) : null, $cmp.hasSelectedStep ? api_element("div", stc32$1, api_iterator($cmp.selectedPreviews, function (preview) {
+    return api_static_fragment($fragment49, api_key(132, preview.label), [api_static_part(2, null, api_dynamic_text(preview.label)), api_static_part(4, null, api_dynamic_text(preview.value))]);
   })) : null])])])];
   /*LWC compiler v9.2.2*/
 }
@@ -12247,11 +12587,13 @@ class PlanWorkspace extends LightningElement {
     this.diagnostics = void 0;
     this.plannerStatus = "Ready";
     this.currentDraft = void 0;
+    this.approvedPlan = void 0;
     this.currentRun = void 0;
     this.approvalHistory = [];
     this.approvalHistoryUnavailable = void 0;
     this.selectedStepId = void 0;
     this.busy = {};
+    this.activePlanView = "steps";
   }
   get hasDraft() {
     return Boolean(this.currentDraft?.plan);
@@ -12263,13 +12605,26 @@ class PlanWorkspace extends LightningElement {
     }));
   }
   get startDisabled() {
-    return !this.currentDraft?.validation?.ok || this.busy.startPlan;
+    return !this.approvedPlan || this.busy.startPlan || this.busy.approvePlan;
+  }
+  get exportDisabled() {
+    return !this.currentDraft?.plan?.id || this.busy.exportPlanSpec;
+  }
+  get approveDisabled() {
+    return !this.currentDraft?.validation?.ok || this.busy.approvePlan || Boolean(this.approvedPlan);
   }
   get draftLabel() {
     return this.busy.draftPlan ? "Drafting..." : "Draft plan";
   }
   get startLabel() {
     return this.busy.startPlan ? "Starting..." : "Start run";
+  }
+  get exportLabel() {
+    return this.busy.exportPlanSpec ? "Exporting..." : "Export PlanSpec";
+  }
+  get approveLabel() {
+    if (this.busy.approvePlan) return "Approving...";
+    return this.approvedPlan ? "Approved" : "Approve plan";
   }
   get smokeLabel() {
     return this.busy.smokeData360 ? "Testing..." : "Test connection";
@@ -12286,6 +12641,91 @@ class PlanWorkspace extends LightningElement {
   }
   get validationLabel() {
     return this.currentDraft?.validation?.ok ? "Validated" : "Needs review";
+  }
+  get approvalClass() {
+    return this.approvedPlan ? "slds-badge slds-theme_success" : "slds-badge";
+  }
+  get approvalLabel() {
+    return this.approvedPlan ? "Executable artifact approved" : "Awaiting plan approval";
+  }
+  get activeArtifacts() {
+    return this.approvedPlan?.artifacts?.length ? this.approvedPlan.artifacts : this.currentDraft?.artifacts || [];
+  }
+  get activeOperationBindings() {
+    if (this.approvedPlan?.operationBindings?.length) return this.approvedPlan.operationBindings;
+    if (this.currentRun?.operationBindings?.length) return this.currentRun.operationBindings;
+    return this.currentDraft?.operationBindings || [];
+  }
+  get artifactSummary() {
+    if (this.approvedPlan) {
+      const detail = [this.approvedPlan.approvedBy ? `by ${this.approvedPlan.approvedBy}` : null, this.approvedPlan.approvedAt ? dateTime(this.approvedPlan.approvedAt) : null, shortHash(this.approvedPlan.planHash)].filter(Boolean).join(" • ");
+      return {
+        label: "Approved",
+        value: this.approvedPlan.artifactId || "approved artifact",
+        detail: detail || "Executable artifact frozen",
+        className: "governance-card good"
+      };
+    }
+    return {
+      label: "Draft",
+      value: this.currentDraft?.plan?.id || "No plan",
+      detail: "Approve to freeze executable metadata",
+      className: "governance-card neutral"
+    };
+  }
+  get approvalSummary() {
+    const required = this.activeOperationBindings.filter(binding => binding.requiresApproval).length || (this.plan?.steps || []).filter(step => step.needsApproval).length;
+    if (this.approvedPlan) {
+      return {
+        label: "Approval",
+        value: "Approved",
+        detail: `${number(required)} gated ${required === 1 ? "operation" : "operations"}`,
+        className: "governance-card good"
+      };
+    }
+    return {
+      label: "Approval",
+      value: "Pending",
+      detail: `${number(required)} gated ${required === 1 ? "operation" : "operations"}`,
+      className: "governance-card warning"
+    };
+  }
+  get registrySummary() {
+    if (this.hasRegistryDriftSignals) {
+      return {
+        label: "Registry",
+        value: "Review drift",
+        detail: `${number(this.registryDriftSignals.length)} registry ${this.registryDriftSignals.length === 1 ? "signal" : "signals"}`,
+        className: "governance-card error"
+      };
+    }
+    const frozen = this.activeOperationBindings.filter(binding => binding.registryHash || binding.toolSchemaHash).length;
+    if (frozen > 0) {
+      return {
+        label: "Registry",
+        value: "Frozen",
+        detail: `${number(frozen)} MCP ${frozen === 1 ? "binding" : "bindings"} with hashes`,
+        className: "governance-card good"
+      };
+    }
+    return {
+      label: "Registry",
+      value: "Catalog only",
+      detail: "No live MCP registry hash in this artifact",
+      className: "governance-card neutral"
+    };
+  }
+  get redactionSummary() {
+    const detected = this.redactionRows.filter(row => row.detected).length;
+    return {
+      label: "Redaction",
+      value: detected ? `${number(detected)} detected` : "Export guarded",
+      detail: detected ? "Sensitive or truncated values are hidden" : "Exports use the redacted archive payload",
+      className: detected ? "governance-card warning" : "governance-card good"
+    };
+  }
+  get governanceCards() {
+    return [this.artifactSummary, this.approvalSummary, this.registrySummary, this.redactionSummary];
   }
   get reviewStats() {
     const steps = this.plan?.steps || [];
@@ -12337,6 +12777,113 @@ class PlanWorkspace extends LightningElement {
       };
     });
   }
+  get planViewOptions() {
+    return [{
+      key: "steps",
+      label: "Steps",
+      className: this.activePlanView === "steps" ? "view-tab active" : "view-tab"
+    }, {
+      key: "dag",
+      label: "DAG",
+      className: this.activePlanView === "dag" ? "view-tab active" : "view-tab"
+    }];
+  }
+  get showStepsView() {
+    return this.activePlanView === "steps";
+  }
+  get showDagView() {
+    return this.activePlanView === "dag";
+  }
+  get planDag() {
+    return this.activeArtifacts.find(artifact => artifact.type === "plan_dag")?.data || {};
+  }
+  get dagRows() {
+    const nodes = this.planDag.nodes || [];
+    const groups = this.planDag.groups?.length ? this.planDag.groups : [{
+      id: "discover",
+      label: "Discover",
+      nodeIds: nodes.filter(node => slug(node.phase) === "discover").map(node => node.id)
+    }, {
+      id: "setup",
+      label: "Setup",
+      nodeIds: nodes.filter(node => slug(node.phase) === "setup").map(node => node.id)
+    }, {
+      id: "monitor",
+      label: "Monitor",
+      nodeIds: nodes.filter(node => slug(node.phase) === "monitor").map(node => node.id)
+    }];
+    const nodeMap = new Map(nodes.map(node => [node.id, node]));
+    const warningsByNode = new Map();
+    (this.planDag.warnings || []).forEach(warning => {
+      const nodeId = warning.nodeId || "plan";
+      warningsByNode.set(nodeId, [...(warningsByNode.get(nodeId) || []), warning.message]);
+    });
+    return groups.map(group => ({
+      ...group,
+      nodes: (group.nodeIds || []).map(nodeId => this.decorateDagNode(nodeMap.get(nodeId), warningsByNode)).filter(Boolean)
+    })).filter(group => group.nodes.length);
+  }
+  get dagEdges() {
+    return (this.planDag.edges || []).map((edge, index) => ({
+      ...edge,
+      key: `${edge.from}-${edge.to}-${edge.type}-${index}`,
+      className: `dag-edge ${slug(edge.type)}`
+    }));
+  }
+  get hasDag() {
+    return this.dagRows.length > 0;
+  }
+  get dagSourceLabel() {
+    return this.approvedPlan ? "Approved artifact DAG" : "Draft DAG";
+  }
+  get dagOrderCount() {
+    return number((this.planDag.topologicalOrder || []).length);
+  }
+  get bindingRows() {
+    return this.activeOperationBindings.map((binding, index) => {
+      const hasRegistry = Boolean(binding.registryHash || binding.toolSchemaHash || binding.connectorDefinitionHash);
+      const tool = [binding.mcpServerId, binding.underlyingTool || binding.facadeTool].filter(Boolean).join(" / ");
+      return {
+        key: `${binding.resource}-${index}`,
+        resource: binding.resource,
+        tool: tool || binding.transport || "internal",
+        effect: (binding.effect || "READ").toLowerCase(),
+        approval: binding.requiresApproval ? "Approval" : "Auto",
+        schemaHash: shortHash(binding.schemaHash) || "n/a",
+        registryHash: shortHash(binding.registryHash) || "not frozen",
+        toolSchemaHash: shortHash(binding.toolSchemaHash) || "not frozen",
+        connectorDefinitionHash: shortHash(binding.connectorDefinitionHash) || "not frozen",
+        statusLabel: hasRegistry ? "Frozen MCP" : "Local catalog",
+        className: `binding-row ${hasRegistry ? "frozen" : "catalog"}`
+      };
+    });
+  }
+  get hasBindingRows() {
+    return this.bindingRows.length > 0;
+  }
+  get registryDriftSignals() {
+    const issues = (this.currentDraft?.validation?.issues || []).filter(issue => containsRegistryDrift(issue.message)).map((issue, index) => ({
+      key: `issue-${issue.stepId || "plan"}-${index}`,
+      source: issue.stepId || "plan",
+      status: issue.severity || "warning",
+      detail: issue.message,
+      className: `signal-row ${slug(issue.severity || "warning")}`
+    }));
+    const runErrors = (this.currentRun?.steps || []).filter(step => containsRegistryDrift(step.error)).map(step => ({
+      key: `run-${step.stepId}`,
+      source: step.stepId,
+      status: step.status || "FAILED",
+      detail: step.error,
+      className: "signal-row error"
+    }));
+    return [...issues, ...runErrors];
+  }
+  get hasRegistryDriftSignals() {
+    return this.registryDriftSignals.length > 0;
+  }
+  get registryFallback() {
+    return this.approvedPlan ? "No registry drift reported for this approved artifact. Runtime execution still checks frozen hashes." : "Approve the plan to freeze live MCP registry and tool schema hashes when available.";
+  }
   get hasRun() {
     return Boolean(this.currentRun?.steps?.length);
   }
@@ -12386,12 +12933,58 @@ class PlanWorkspace extends LightningElement {
       label: "Bindings",
       value: toJson(this.selectedStep?.inputBindings || {})
     }, {
+      label: "Resolved Input",
+      value: toJson(this.selectedRunStep?.resolvedInput || {})
+    }, {
       label: "Output",
       value: toJson(this.selectedRunStep?.output || {})
     }, {
       label: "Raw",
       value: toJson(this.selectedRunStep?.raw || {})
     }];
+  }
+  get redactionRows() {
+    const rows = [{
+      key: "export",
+      scope: "PlanSpec export",
+      status: "Redacted",
+      detail: "Export uses the server archive payload with redacted plan artifacts.",
+      detected: false,
+      className: "signal-row good"
+    }];
+    const selectedStepPayload = {
+      resolvedInput: this.selectedRunStep?.resolvedInput,
+      output: this.selectedRunStep?.output,
+      raw: this.selectedRunStep?.raw,
+      error: this.selectedRunStep?.error
+    };
+    if (containsRedactionMarker(selectedStepPayload)) {
+      rows.push({
+        key: `selected-${this.selectedStep?.id || "step"}`,
+        scope: this.selectedStep?.id || "Selected step",
+        status: "Masked",
+        detail: "Selected step data contains redacted or truncated values.",
+        detected: true,
+        className: "signal-row warning"
+      });
+    }
+    const runMatches = (this.currentRun?.steps || []).filter(step => step.stepId !== this.selectedStep?.id).filter(step => containsRedactionMarker({
+      resolvedInput: step.resolvedInput,
+      output: step.output,
+      raw: step.raw,
+      error: step.error
+    })).map(step => ({
+      key: `run-redaction-${step.stepId}`,
+      scope: step.stepId,
+      status: "Masked",
+      detail: "Run data contains redacted or truncated values.",
+      detected: true,
+      className: "signal-row warning"
+    }));
+    return [...rows, ...runMatches];
+  }
+  get hasRedactionRows() {
+    return this.redactionRows.length > 0;
   }
   get approvalRows() {
     const history = this.approvalHistory?.length ? this.approvalHistory : this.currentRun?.approvalHistory || this.currentRun?.approvals || [];
@@ -12407,6 +13000,21 @@ class PlanWorkspace extends LightningElement {
   }
   get approvalFallback() {
     return this.approvalHistoryUnavailable ? `Approval API unavailable: ${this.approvalHistoryUnavailable}` : "No approval records available yet.";
+  }
+  get showApprovalFallback() {
+    return !this.hasApprovalRows && !this.hasApprovedArtifactRows;
+  }
+  get approvedArtifactRows() {
+    if (!this.approvedPlan) return [];
+    return [{
+      key: this.approvedPlan.artifactId || "approved-plan",
+      step: "plan",
+      status: "APPROVED",
+      detail: [this.approvedPlan.artifactId, this.approvedPlan.approvedBy ? `by ${this.approvedPlan.approvedBy}` : null, this.approvedPlan.approvedAt ? dateTime(this.approvedPlan.approvedAt) : null, shortHash(this.approvedPlan.planHash)].filter(Boolean).join(" • ")
+    }];
+  }
+  get hasApprovedArtifactRows() {
+    return this.approvedArtifactRows.length > 0;
   }
   handleScenarioChange(event) {
     this.dispatchEvent(new CustomEvent("scenariochange", {
@@ -12428,6 +13036,12 @@ class PlanWorkspace extends LightningElement {
   handleStart() {
     this.dispatchEvent(new CustomEvent("startplan"));
   }
+  handleExportPlanSpec() {
+    this.dispatchEvent(new CustomEvent("exportplanspec"));
+  }
+  handleApprovePlan() {
+    this.dispatchEvent(new CustomEvent("approveplan"));
+  }
   handleSmoke() {
     this.dispatchEvent(new CustomEvent("smokedata360"));
   }
@@ -12436,6 +13050,16 @@ class PlanWorkspace extends LightningElement {
     this.dispatchEvent(new CustomEvent("selectstep", {
       detail: {
         stepId
+      }
+    }));
+  }
+  handlePlanView(event) {
+    this.activePlanView = event.currentTarget.dataset.view;
+  }
+  handleDagNode(event) {
+    this.dispatchEvent(new CustomEvent("selectstep", {
+      detail: {
+        stepId: event.currentTarget.dataset.stepId
       }
     }));
   }
@@ -12451,6 +13075,22 @@ class PlanWorkspace extends LightningElement {
         stepId: event.currentTarget.dataset.stepId
       }
     }));
+  }
+  decorateDagNode(node, warningsByNode) {
+    if (!node) return null;
+    const runStep = this.runStepMap.get(node.id);
+    const status = runStep?.status || "DRAFT";
+    const warnings = warningsByNode.get(node.id) || [];
+    return {
+      ...node,
+      status,
+      warnings,
+      warningText: warnings.join(" • "),
+      hasWarnings: warnings.length > 0,
+      className: `dag-node ${slug(node.effect)} ${slug(status)} ${this.selectedStepId === node.id ? "selected" : ""}`,
+      effectLabel: node.effect || "read",
+      gateLabel: node.approvalRequired ? "Approval" : "Auto"
+    };
   }
   /*LWC compiler v9.2.2*/
 }
@@ -12474,6 +13114,9 @@ registerDecorators(PlanWorkspace, {
     currentDraft: {
       config: 0
     },
+    approvedPlan: {
+      config: 0
+    },
     currentRun: {
       config: 0
     },
@@ -12489,13 +13132,36 @@ registerDecorators(PlanWorkspace, {
     busy: {
       config: 0
     }
-  }
+  },
+  fields: ["activePlanView"]
 });
 const __lwc_component_class_internal$3 = registerComponent(PlanWorkspace, {
   tmpl: _tmpl$3,
   sel: "c-plan-workspace",
   apiVersion: 66
 });
+function shortHash(value) {
+  if (!value) return "";
+  const text = String(value);
+  return text.startsWith("sha256:") ? `sha256:${text.slice(7, 15)}` : text.slice(0, 12);
+}
+function containsRegistryDrift(value) {
+  const text = String(value || "").toLowerCase();
+  return text.includes("registry drift") || text.includes("registry validation failed") || text.includes("schema drift") || text.includes("tool schema") || text.includes("mcp registry validation");
+}
+function containsRedactionMarker(value) {
+  if (value == null) return false;
+  if (typeof value === "string") {
+    return value.includes("***") || value.includes("[truncated]") || value.includes("_truncated");
+  }
+  if (Array.isArray(value)) {
+    return value.some(item => containsRedactionMarker(item));
+  }
+  if (typeof value === "object") {
+    return Object.entries(value).some(([key, item]) => key === "_truncated" || containsRedactionMarker(item));
+  }
+  return false;
+}
 
 function stylesheet$1(token, useActualHostSelector, useNativeDirPseudoclass) {
   var shadowSelector = token ? ("[" + token + "]") : "";
@@ -12846,23 +13512,39 @@ const $fragment4 = parseFragment`<div class="slds-notify slds-notify_alert slds-
 const $fragment5 = parseFragment`<div class="brand${0}"${2}><span class="brand-mark${0}"${2}>D360</span><strong${3}>Agent Console</strong></div>`;
 const $fragment6 = parseFragment`<a${"c0"}${"a0:href"}${"a0:data-tab"}${2}>${"t1"}</a>`;
 const $fragment7 = parseFragment`<div class="side-footer${0}"${2}><span class="footer-user${0}"${2}>${"t2"}</span><span class="footer-model${0}"${2}>${"t4"}</span><button class="slds-button slds-button_neutral${0}"${2}>Log out</button></div>`;
-const $fragment8 = parseFragment`<header class="workspace-header${0}"${2}><div${3}><h1${3}>Admin</h1><p${3}>Configure model access, MCP servers, organizations, and users.</p></div></header>`;
-const $fragment9 = parseFragment`<h2${3}>Model</h2>`;
-const $fragment10 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
-const $fragment11 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
-const $fragment12 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
-const $fragment13 = parseFragment`<h2${3}>MCP Servers</h2>`;
-const $fragment14 = parseFragment`<span${3}><strong${3}>${"t2"}</strong><small${3}>${"t4"}</small></span>`;
-const $fragment15 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save MCP selection</button>`;
-const $fragment16 = parseFragment`<h2${3}>Organizations</h2>`;
-const $fragment17 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
-const $fragment18 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
-const $fragment19 = parseFragment`<h2${3}>Users</h2>`;
-const $fragment20 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
-const $fragment21 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
-const $fragment22 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
-const $fragment23 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
-const $fragment24 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}>${"t1"}</div>`;
+const $fragment8 = parseFragment`<div class="settings-title${0}"${2}>Settings</div>`;
+const $fragment9 = parseFragment`<button${"c0"}${"a0:data-section"}${2}>${"t1"}</button>`;
+const $fragment10 = parseFragment`<header class="settings-header${0}"${2}><div${3}><p${3}>MCP servers</p><h1${3}>Connect to custom MCP servers</h1></div><button class="slds-button slds-button_brand${0}"${"a6:disabled"}${2}>Save and validate</button></header>`;
+const $fragment11 = parseFragment`<div class="settings-feedback passed${0}" role="status"${2}>${"t1"}</div>`;
+const $fragment12 = parseFragment`<strong${3}>${"t1"}</strong>`;
+const $fragment13 = parseFragment`<span${3}>${"t1"}</span>`;
+const $fragment14 = parseFragment`<small${3}>${"t1"}</small>`;
+const $fragment15 = parseFragment`<code${3}>${"t1"}</code>`;
+const $fragment16 = parseFragment`<button${"c0"}${"a0:data-server-id"}${2}><span${3}>${"t2"}</span><small${3}>${"t4"}</small></button>`;
+const $fragment17 = parseFragment`<span${3}>Enabled</span>`;
+const $fragment18 = parseFragment`<div class="field-group${0}"${2}><span class="field-label${0}"${2}>Transport</span><div class="transport-picker${0}" role="group" aria-label="Transport"${2}><button type="button"${"c4"}${"a4:data-server-id"} data-transport="stdio"${2}>STDIO</button><button type="button"${"c6"}${"a6:data-server-id"} data-transport="streamable-http"${2}>Streamable HTTP</button></div></div>`;
+const $fragment19 = parseFragment`<span class="field-label${0}"${2}>Arguments</span>`;
+const $fragment20 = parseFragment`<button type="button" class="icon-button${0}" title="Remove argument"${"a0:data-server-id"}${"a0:data-item-id"}${2}>×</button>`;
+const $fragment21 = parseFragment`<button type="button" class="text-action${0}"${"a0:data-server-id"}${2}>+ Add argument</button>`;
+const $fragment22 = parseFragment`<span class="field-label${0}"${2}>Environment variables</span>`;
+const $fragment23 = parseFragment`<button type="button" class="icon-button${0}" title="Remove environment variable"${"a0:data-server-id"}${"a0:data-item-id"}${2}>×</button>`;
+const $fragment24 = parseFragment`<button type="button" class="text-action${0}"${"a0:data-server-id"}${2}>+ Add environment variable</button>`;
+const $fragment25 = parseFragment`<span class="field-label${0}"${2}>Environment variable passthrough</span>`;
+const $fragment26 = parseFragment`<button type="button" class="icon-button${0}" title="Remove passthrough variable"${"a0:data-server-id"}${"a0:data-item-id"}${2}>×</button>`;
+const $fragment27 = parseFragment`<button type="button" class="text-action${0}"${"a0:data-server-id"}${2}>+ Add variable</button>`;
+const $fragment28 = parseFragment`<h1${3}>Model</h1>`;
+const $fragment29 = parseFragment`<label${3}>Provider<select class="slds-select${0}" data-field="settingsProvider"${2}><option value="anthropic"${"a3:selected"}${3}>Anthropic</option><option value="openrouter"${"a5:selected"}${3}>OpenRouter</option></select></label>`;
+const $fragment30 = parseFragment`<option${"a0:value"}${"a0:selected"}${3}>${"t1"}</option>`;
+const $fragment31 = parseFragment`<button class="slds-button slds-button_brand${0}"${"a0:disabled"}${2}>Save model settings</button>`;
+const $fragment32 = parseFragment`<h1${3}>Organizations</h1>`;
+const $fragment33 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create</button>`;
+const $fragment34 = parseFragment`<button${"c0"}${"a0:data-organization-id"}${2}>${"t1"}</button>`;
+const $fragment35 = parseFragment`<h1${3}>Users</h1>`;
+const $fragment36 = parseFragment`<select class="slds-select${0}" data-field="newUserRole"${2}><option value="MEMBER"${"a1:selected"}${3}>Member</option><option value="ADMIN"${"a3:selected"}${3}>Admin</option><option value="VIEWER"${"a5:selected"}${3}>Viewer</option></select>`;
+const $fragment37 = parseFragment`<button class="slds-button slds-button_neutral${0}"${"a0:disabled"}${2}>Create user</button>`;
+const $fragment38 = parseFragment`<div class="user-row${0}"${2}><strong${3}>${"t2"}</strong><span${3}>${"t4"}</span></div>`;
+const $fragment39 = parseFragment`<div class="slds-notify slds-notify_alert slds-alert_error floating-alert${0}" role="alert"${2}>${"t1"}</div>`;
+const $fragment40 = parseFragment`<div class="slds-notify slds-notify_alert export-toast${0}" role="status"${2}><span${3}>${"t2"}</span><button class="toast-dismiss${0}" type="button" title="Dismiss export notification" aria-label="Dismiss export notification"${2}>×</button></div>`;
 const stc0 = {
   classMap: {
     "app-frame": true
@@ -12956,89 +13638,165 @@ const stc20 = {
 };
 const stc21 = {
   classMap: {
-    "admin-grid": true
+    "settings-shell": true
   },
-  key: 41
+  attrs: {
+    "aria-label": "Admin settings"
+  },
+  key: 39
 };
 const stc22 = {
   classMap: {
-    "admin-panel": true
+    "settings-sidebar": true
   },
-  key: 42
+  key: 40
 };
 const stc23 = {
-  key: 47
+  classMap: {
+    "settings-main": true
+  },
+  key: 45
 };
 const stc24 = {
-  "slds-select": true
+  "aria-label": "MCP validation result"
 };
 const stc25 = {
-  "data-field": "settingsModel"
+  classMap: {
+    "validation-list": true
+  },
+  key: 53
 };
 const stc26 = {
-  key: 51
+  classMap: {
+    "mcp-settings-layout": true
+  },
+  key: 61
 };
 const stc27 = {
   classMap: {
-    "admin-panel": true,
-    "mcp-panel": true
+    "mcp-server-list": true
   },
-  key: 55
+  attrs: {
+    "aria-label": "MCP server list"
+  },
+  key: 62
 };
 const stc28 = {
-  "mcp-row": true
+  classMap: {
+    "mcp-editor": true
+  },
+  key: 65
 };
 const stc29 = {
-  classMap: {
-    "mcp-toggle": true
-  },
-  key: 59
+  key: 66
 };
 const stc30 = {
   classMap: {
-    "admin-panel": true
+    "toggle-label": true
   },
-  key: 66
+  key: 68
 };
 const stc31 = {
-  classMap: {
-    "inline-form": true
-  },
-  key: 69
+  key: 74
 };
 const stc32 = {
-  "data-field": "newOrganizationName",
-  "placeholder": "Organization name"
+  "slds-input": true,
+  "monospace-input": true
 };
 const stc33 = {
   classMap: {
-    "admin-panel": true
+    "field-group": true
   },
-  key: 75
+  key: 76
 };
 const stc34 = {
+  "repeat-row": true
+};
+const stc35 = {
+  classMap: {
+    "field-group": true
+  },
+  key: 85
+};
+const stc36 = {
+  "repeat-row": true,
+  "two-col": true
+};
+const stc37 = {
+  classMap: {
+    "field-group": true
+  },
+  key: 95
+};
+const stc38 = {
+  key: 104
+};
+const stc39 = {
+  key: 106
+};
+const stc40 = {
+  classMap: {
+    "settings-card": true
+  },
+  key: 108
+};
+const stc41 = {
+  key: 113
+};
+const stc42 = {
+  "slds-select": true
+};
+const stc43 = {
+  "data-field": "settingsModel"
+};
+const stc44 = {
+  key: 118
+};
+const stc45 = {
+  classMap: {
+    "settings-card": true
+  },
+  key: 122
+};
+const stc46 = {
+  classMap: {
+    "inline-form": true
+  },
+  key: 125
+};
+const stc47 = {
+  "data-field": "newOrganizationName",
+  "placeholder": "Organization name"
+};
+const stc48 = {
+  classMap: {
+    "settings-card": true
+  },
+  key: 131
+};
+const stc49 = {
   classMap: {
     "user-form": true
   },
-  key: 78
+  key: 134
 };
-const stc35 = {
+const stc50 = {
   "data-field": "newUserName",
   "placeholder": "Name"
 };
-const stc36 = {
+const stc51 = {
   "type": "email",
   "data-field": "newUserEmail",
   "placeholder": "Email"
 };
-const stc37 = {
+const stc52 = {
   "type": "password",
   "data-field": "newUserPassword",
   "placeholder": "Temporary password"
 };
 function tmpl($api, $cmp, $slotset, $ctx) {
   const {d: api_dynamic_text, sp: api_static_part, st: api_static_fragment, t: api_text, b: api_bind, h: api_element, ncls: api_normalize_class_name, k: api_key, i: api_iterator, c: api_custom_element, f: api_flatten} = $api;
-  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18, _m19, _m20, _m21, _m22, _m23, _m24, _m25, _m26, _m27, _m28, _m29, _m30, _m31, _m32, _m33, _m34, _m35, _m36, _m37} = $ctx;
+  const {_m0, _m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18, _m19, _m20, _m21, _m22, _m23, _m24, _m25, _m26, _m27, _m28, _m29, _m30, _m31, _m32, _m33, _m34, _m35, _m36, _m37, _m38, _m39, _m40, _m41, _m42, _m43, _m44, _m45, _m46, _m47, _m48, _m49, _m50, _m51, _m52, _m53, _m54, _m55, _m56, _m57, _m58, _m59, _m60, _m61, _m62, _m63} = $ctx;
   return [api_element("div", stc0, [$cmp.showAuthScreen ? api_element("main", stc1, [api_element("section", stc2, [api_static_fragment($fragment1, 4, [api_static_part(7, null, api_dynamic_text($cmp.authSubtitle))]), $cmp.setupRequired ? api_element("div", stc3, [api_element("label", stc4, [api_text("Organization"), api_element("input", {
     classMap: stc5,
     attrs: stc6,
@@ -13136,12 +13894,16 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "modelLabel": $cmp.modelLabel,
       "userLabel": $cmp.userLabel,
       "currentDraft": $cmp.currentDraft,
+      "approvedPlan": $cmp.currentApprovedPlan,
       "currentRun": $cmp.currentRun,
-      "busy": $cmp.busy
+      "busy": $cmp.busy,
+      "chatMode": $cmp.chatMode
     },
     key: 34,
     on: _m13 || ($ctx._m13 = {
       "sendmessage": api_bind($cmp.handleChatMessage),
+      "chatmodechange": api_bind($cmp.handleChatModeChange),
+      "approveplan": api_bind($cmp.handleApprovePlan),
       "startplan": api_bind($cmp.handleStartPlan),
       "exportplanspec": api_bind($cmp.handleExportPlanSpec)
     })
@@ -13168,6 +13930,7 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "diagnostics": $cmp.diagnostics,
       "plannerStatus": $cmp.plannerStatus,
       "currentDraft": $cmp.currentDraft,
+      "approvedPlan": $cmp.currentApprovedPlan,
       "currentRun": $cmp.currentRun,
       "approvalHistory": $cmp.approvalHistory,
       "approvalHistoryUnavailable": $cmp.approvalHistoryUnavailable,
@@ -13179,7 +13942,9 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "scenariochange": api_bind($cmp.handleScenarioChange),
       "goalchange": api_bind($cmp.handleGoalChange),
       "draftplan": api_bind($cmp.handleDraftPlan),
+      "approveplan": api_bind($cmp.handleApprovePlan),
       "startplan": api_bind($cmp.handleStartPlan),
+      "exportplanspec": api_bind($cmp.handleExportPlanSpec),
       "smokedata360": api_bind($cmp.handleSmokeData360),
       "selectstep": api_bind($cmp.handleSelectStep),
       "approvestep": api_bind($cmp.handleApproveStep)
@@ -13205,8 +13970,245 @@ function tmpl($api, $cmp, $slotset, $ctx) {
       "diagnostics": $cmp.diagnostics
     },
     key: 38
-  }) : null, $cmp.isAdmin ? api_static_fragment($fragment8, 40) : null, $cmp.isAdmin ? api_element("section", stc21, [api_element("article", stc22, [api_static_fragment($fragment9, 44), api_static_fragment($fragment10, 46, [api_static_part(2, {
-    on: _m17 || ($ctx._m17 = {
+  }) : null, $cmp.isAdmin ? api_element("section", stc21, [api_element("aside", stc22, api_flatten([api_static_fragment($fragment8, 42), api_iterator($cmp.adminSections, function (section) {
+    return api_static_fragment($fragment9, api_key(44, section.id), [api_static_part(0, {
+      on: _m18 || ($ctx._m18 = {
+        "click": api_bind($cmp.handleAdminSection)
+      }),
+      className: api_normalize_class_name(section.className),
+      attrs: {
+        "data-section": section.id
+      }
+    }, null), api_static_part(1, null, api_dynamic_text(section.label))]);
+  })])), api_element("section", stc23, [$cmp.isAdminMcp ? api_static_fragment($fragment10, 47, [api_static_part(6, {
+    on: _m19 || ($ctx._m19 = {
+      "click": api_bind($cmp.handleSaveMcpSettings)
+    }),
+    attrs: {
+      "disabled": $cmp.busy.saveMcpSettings ? "" : null
+    }
+  }, null)]) : null, $cmp.isAdminMcp ? $cmp.mcpSaveMessage ? api_static_fragment($fragment11, 49, [api_static_part(1, null, api_dynamic_text($cmp.mcpSaveMessage))]) : null : null, $cmp.isAdminMcp ? $cmp.mcpValidation ? api_element("section", {
+    className: api_normalize_class_name($cmp.mcpValidationClass),
+    attrs: stc24,
+    key: 50
+  }, [api_static_fragment($fragment12, 52, [api_static_part(1, null, api_dynamic_text($cmp.mcpValidation.message))]), api_element("div", stc25, api_iterator($cmp.mcpValidationRows, function (server) {
+    return api_element("div", {
+      className: api_normalize_class_name(server.className),
+      key: api_key(54, server.id)
+    }, [api_static_fragment($fragment13, 56, [api_static_part(1, null, api_dynamic_text(server.name))]), api_static_fragment($fragment14, 58, [api_static_part(1, null, api_dynamic_text(server.message))]), server.toolSummary ? api_static_fragment($fragment15, 60, [api_static_part(1, null, api_dynamic_text(server.toolSummary))]) : null]);
+  }))]) : null : null, $cmp.isAdminMcp ? api_element("div", stc26, [api_element("nav", stc27, api_iterator($cmp.selectedMcpServerRows, function (server) {
+    return api_static_fragment($fragment16, api_key(64, server.id), [api_static_part(0, {
+      on: _m21 || ($ctx._m21 = {
+        "click": api_bind($cmp.handleSelectMcpServer)
+      }),
+      className: api_normalize_class_name(server.className),
+      attrs: {
+        "data-server-id": server.id
+      }
+    }, null), api_static_part(2, null, api_dynamic_text(server.name)), api_static_part(4, null, api_dynamic_text(server.statusLabel))]);
+  })), $cmp.selectedMcpServer ? api_element("form", stc28, [api_element("label", stc29, [api_text("Name"), api_element("input", {
+    classMap: stc5,
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id,
+      "data-field": "name"
+    },
+    props: {
+      "value": $cmp.selectedMcpServer.name
+    },
+    key: 67,
+    on: _m22 || ($ctx._m22 = {
+      "input": api_bind($cmp.handleMcpFieldChange)
+    })
+  })]), api_element("label", stc30, [api_element("input", {
+    attrs: {
+      "type": "checkbox",
+      "data-server-id": $cmp.selectedMcpServer.id
+    },
+    props: {
+      "checked": $cmp.selectedMcpServer.enabled
+    },
+    key: 69,
+    on: _m23 || ($ctx._m23 = {
+      "change": api_bind($cmp.handleMcpEnabledChange)
+    })
+  }), api_static_fragment($fragment17, 71)]), api_static_fragment($fragment18, 73, [api_static_part(4, {
+    on: _m24 || ($ctx._m24 = {
+      "click": api_bind($cmp.handleMcpTransportSelect)
+    }),
+    className: api_normalize_class_name($cmp.mcpStdioButtonClass),
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id
+    }
+  }, null), api_static_part(6, {
+    on: _m25 || ($ctx._m25 = {
+      "click": api_bind($cmp.handleMcpTransportSelect)
+    }),
+    className: api_normalize_class_name($cmp.mcpHttpButtonClass),
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id
+    }
+  }, null)]), $cmp.selectedMcpIsStdio ? api_element("label", stc31, [api_text("Command to launch"), api_element("input", {
+    classMap: stc32,
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id,
+      "data-field": "command",
+      "placeholder": "npx -y @salesforce/data360-mcp-server"
+    },
+    props: {
+      "value": $cmp.selectedMcpServer.command
+    },
+    key: 75,
+    on: _m26 || ($ctx._m26 = {
+      "input": api_bind($cmp.handleMcpFieldChange)
+    })
+  })]) : null, $cmp.selectedMcpIsStdio ? api_element("div", stc33, api_flatten([api_static_fragment($fragment19, 78), api_iterator($cmp.selectedMcpServer.arguments, function (argument) {
+    return api_element("div", {
+      classMap: stc34,
+      key: api_key(79, argument.id)
+    }, [api_element("input", {
+      classMap: stc32,
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": argument.id,
+        "placeholder": "--flag=value"
+      },
+      props: {
+        "value": argument.value
+      },
+      key: 80,
+      on: _m27 || ($ctx._m27 = {
+        "input": api_bind($cmp.handleMcpArgumentChange)
+      })
+    }), api_static_fragment($fragment20, 82, [api_static_part(0, {
+      on: _m29 || ($ctx._m29 = {
+        "click": api_bind($cmp.handleRemoveMcpArgument)
+      }),
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": argument.id
+      }
+    }, null)])]);
+  }), api_static_fragment($fragment21, 84, [api_static_part(0, {
+    on: _m31 || ($ctx._m31 = {
+      "click": api_bind($cmp.handleAddMcpArgument)
+    }),
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id
+    }
+  }, null)])])) : null, $cmp.selectedMcpIsStdio ? api_element("div", stc35, api_flatten([api_static_fragment($fragment22, 87), api_iterator($cmp.selectedMcpServer.environment, function (variable) {
+    return api_element("div", {
+      classMap: stc36,
+      key: api_key(88, variable.id)
+    }, [api_element("input", {
+      classMap: stc32,
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": variable.id,
+        "data-field": "key",
+        "placeholder": "KEY"
+      },
+      props: {
+        "value": variable.key
+      },
+      key: 89,
+      on: _m32 || ($ctx._m32 = {
+        "input": api_bind($cmp.handleMcpEnvironmentChange)
+      })
+    }), api_element("input", {
+      classMap: stc32,
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": variable.id,
+        "data-field": "value",
+        "placeholder": "value"
+      },
+      props: {
+        "value": variable.value
+      },
+      key: 90,
+      on: _m33 || ($ctx._m33 = {
+        "input": api_bind($cmp.handleMcpEnvironmentChange)
+      })
+    }), api_static_fragment($fragment23, 92, [api_static_part(0, {
+      on: _m35 || ($ctx._m35 = {
+        "click": api_bind($cmp.handleRemoveMcpEnvironment)
+      }),
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": variable.id
+      }
+    }, null)])]);
+  }), api_static_fragment($fragment24, 94, [api_static_part(0, {
+    on: _m37 || ($ctx._m37 = {
+      "click": api_bind($cmp.handleAddMcpEnvironment)
+    }),
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id
+    }
+  }, null)])])) : null, $cmp.selectedMcpIsStdio ? api_element("div", stc37, api_flatten([api_static_fragment($fragment25, 97), api_iterator($cmp.selectedMcpServer.environmentPassthrough, function (variable) {
+    return api_element("div", {
+      classMap: stc34,
+      key: api_key(98, variable.id)
+    }, [api_element("input", {
+      classMap: stc32,
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": variable.id,
+        "placeholder": "SALESFORCE_ACCESS_TOKEN"
+      },
+      props: {
+        "value": variable.value
+      },
+      key: 99,
+      on: _m38 || ($ctx._m38 = {
+        "input": api_bind($cmp.handleMcpPassthroughChange)
+      })
+    }), api_static_fragment($fragment26, 101, [api_static_part(0, {
+      on: _m40 || ($ctx._m40 = {
+        "click": api_bind($cmp.handleRemoveMcpPassthrough)
+      }),
+      attrs: {
+        "data-server-id": $cmp.selectedMcpServer.id,
+        "data-item-id": variable.id
+      }
+    }, null)])]);
+  }), api_static_fragment($fragment27, 103, [api_static_part(0, {
+    on: _m42 || ($ctx._m42 = {
+      "click": api_bind($cmp.handleAddMcpPassthrough)
+    }),
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id
+    }
+  }, null)])])) : null, $cmp.selectedMcpIsStdio ? api_element("label", stc38, [api_text("Working directory"), api_element("input", {
+    classMap: stc32,
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id,
+      "data-field": "workingDirectory",
+      "placeholder": "/Users/me/project"
+    },
+    props: {
+      "value": $cmp.selectedMcpServer.workingDirectory
+    },
+    key: 105,
+    on: _m43 || ($ctx._m43 = {
+      "input": api_bind($cmp.handleMcpFieldChange)
+    })
+  })]) : null, $cmp.selectedMcpIsHttp ? api_element("label", stc39, [api_text("Endpoint"), api_element("input", {
+    classMap: stc32,
+    attrs: {
+      "data-server-id": $cmp.selectedMcpServer.id,
+      "data-field": "endpoint",
+      "placeholder": "https://example.com/mcp"
+    },
+    props: {
+      "value": $cmp.selectedMcpServer.endpoint
+    },
+    key: 107,
+    on: _m44 || ($ctx._m44 = {
+      "input": api_bind($cmp.handleMcpFieldChange)
+    })
+  })]) : null]) : null]) : null, $cmp.isAdminModel ? api_element("section", stc40, [api_static_fragment($fragment28, 110), api_static_fragment($fragment29, 112, [api_static_part(2, {
+    on: _m45 || ($ctx._m45 = {
       "change": api_bind($cmp.handleFieldChange)
     })
   }, null), api_static_part(3, {
@@ -13217,21 +14219,34 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     attrs: {
       "selected": $cmp.settingsProviderIsOpenRouter ? "" : null
     }
-  }, null)]), api_element("label", stc23, [api_text("Model"), api_element("select", {
-    classMap: stc24,
-    attrs: stc25,
-    key: 48,
-    on: _m18 || ($ctx._m18 = {
+  }, null)]), api_element("label", stc41, [api_text("Model"), api_element("input", {
+    classMap: stc5,
+    attrs: {
+      "data-field": "settingsModelSearch",
+      "placeholder": $cmp.modelCatalogCountLabel
+    },
+    props: {
+      "value": $cmp.settingsModelSearch
+    },
+    key: 114,
+    on: _m46 || ($ctx._m46 = {
+      "input": api_bind($cmp.handleFieldChange)
+    })
+  }), api_element("select", {
+    classMap: stc42,
+    attrs: stc43,
+    key: 115,
+    on: _m47 || ($ctx._m47 = {
       "change": api_bind($cmp.handleFieldChange)
     })
   }, api_iterator($cmp.settingsModelOptions, function (option) {
-    return api_static_fragment($fragment11, api_key(50, option.value), [api_static_part(0, {
+    return api_static_fragment($fragment30, api_key(117, option.value), [api_static_part(0, {
       attrs: {
         "value": option.value,
         "selected": option.selected ? "" : null
       }
     }, null), api_static_part(1, null, api_dynamic_text(option.label))]);
-  }))]), api_element("label", stc26, [api_text("API token"), api_element("input", {
+  }))]), api_element("label", stc44, [api_text("API token"), api_element("input", {
     classMap: stc5,
     attrs: {
       "type": "password",
@@ -13241,74 +14256,37 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     props: {
       "value": $cmp.settingsApiKey
     },
-    key: 52,
-    on: _m19 || ($ctx._m19 = {
+    key: 119,
+    on: _m48 || ($ctx._m48 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  })]), api_static_fragment($fragment12, 54, [api_static_part(0, {
-    on: _m21 || ($ctx._m21 = {
+  })]), api_static_fragment($fragment31, 121, [api_static_part(0, {
+    on: _m50 || ($ctx._m50 = {
       "click": api_bind($cmp.handleSaveLlmSettings)
     }),
     attrs: {
       "disabled": $cmp.busy.saveSettings ? "" : null
     }
-  }, null)])]), api_element("article", stc27, api_flatten([api_static_fragment($fragment13, 57), api_iterator($cmp.mcpServers, function (server) {
-    return api_element("div", {
-      classMap: stc28,
-      key: api_key(58, server.id)
-    }, [api_element("label", stc29, [api_element("input", {
-      attrs: {
-        "type": "checkbox",
-        "data-server-id": server.id
-      },
-      props: {
-        "checked": server.enabled
-      },
-      key: 60,
-      on: _m22 || ($ctx._m22 = {
-        "change": api_bind($cmp.handleMcpEnabledChange)
-      })
-    }), api_static_fragment($fragment14, 62, [api_static_part(2, null, api_dynamic_text(server.label)), api_static_part(4, null, api_dynamic_text(server.description))])]), api_element("input", {
-      classMap: stc5,
-      attrs: {
-        "data-server-id": server.id,
-        "placeholder": "stdio command"
-      },
-      props: {
-        "value": server.command
-      },
-      key: 63,
-      on: _m23 || ($ctx._m23 = {
-        "input": api_bind($cmp.handleMcpCommandChange)
-      })
-    })]);
-  }), api_static_fragment($fragment15, 65, [api_static_part(0, {
-    on: _m25 || ($ctx._m25 = {
-      "click": api_bind($cmp.handleSaveMcpSettings)
-    }),
-    attrs: {
-      "disabled": $cmp.busy.saveMcpSettings ? "" : null
-    }
-  }, null)])])), api_element("article", stc30, api_flatten([api_static_fragment($fragment16, 68), api_element("div", stc31, [api_element("input", {
+  }, null)])]) : null, $cmp.isAdminOrganizations ? api_element("section", stc45, api_flatten([api_static_fragment($fragment32, 124), api_element("div", stc46, [api_element("input", {
     classMap: stc5,
-    attrs: stc32,
+    attrs: stc47,
     props: {
       "value": $cmp.newOrganizationName
     },
-    key: 70,
-    on: _m26 || ($ctx._m26 = {
+    key: 126,
+    on: _m51 || ($ctx._m51 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment17, 72, [api_static_part(0, {
-    on: _m28 || ($ctx._m28 = {
+  }), api_static_fragment($fragment33, 128, [api_static_part(0, {
+    on: _m53 || ($ctx._m53 = {
       "click": api_bind($cmp.handleCreateOrganization)
     }),
     attrs: {
       "disabled": $cmp.busy.createOrganization ? "" : null
     }
   }, null)])]), api_iterator($cmp.organizationRows, function (org) {
-    return api_static_fragment($fragment18, api_key(74, org.id), [api_static_part(0, {
-      on: _m30 || ($ctx._m30 = {
+    return api_static_fragment($fragment34, api_key(130, org.id), [api_static_part(0, {
+      on: _m55 || ($ctx._m55 = {
         "click": api_bind($cmp.handleSelectOrganization)
       }),
       className: api_normalize_class_name(org.className),
@@ -13316,38 +14294,38 @@ function tmpl($api, $cmp, $slotset, $ctx) {
         "data-organization-id": org.id
       }
     }, null), api_static_part(1, null, api_dynamic_text(org.name))]);
-  })])), api_element("article", stc33, api_flatten([api_static_fragment($fragment19, 77), api_element("div", stc34, [api_element("input", {
+  })])) : null, $cmp.isAdminUsers ? api_element("section", stc48, api_flatten([api_static_fragment($fragment35, 133), api_element("div", stc49, [api_element("input", {
     classMap: stc5,
-    attrs: stc35,
+    attrs: stc50,
     props: {
       "value": $cmp.newUserName
     },
-    key: 79,
-    on: _m31 || ($ctx._m31 = {
+    key: 135,
+    on: _m56 || ($ctx._m56 = {
       "input": api_bind($cmp.handleFieldChange)
     })
   }), api_element("input", {
     classMap: stc5,
-    attrs: stc36,
+    attrs: stc51,
     props: {
       "value": $cmp.newUserEmail
     },
-    key: 80,
-    on: _m32 || ($ctx._m32 = {
+    key: 136,
+    on: _m57 || ($ctx._m57 = {
       "input": api_bind($cmp.handleFieldChange)
     })
   }), api_element("input", {
     classMap: stc5,
-    attrs: stc37,
+    attrs: stc52,
     props: {
       "value": $cmp.newUserPassword
     },
-    key: 81,
-    on: _m33 || ($ctx._m33 = {
+    key: 137,
+    on: _m58 || ($ctx._m58 = {
       "input": api_bind($cmp.handleFieldChange)
     })
-  }), api_static_fragment($fragment20, 83, [api_static_part(0, {
-    on: _m35 || ($ctx._m35 = {
+  }), api_static_fragment($fragment36, 139, [api_static_part(0, {
+    on: _m60 || ($ctx._m60 = {
       "change": api_bind($cmp.handleFieldChange)
     })
   }, null), api_static_part(1, {
@@ -13362,16 +14340,20 @@ function tmpl($api, $cmp, $slotset, $ctx) {
     attrs: {
       "selected": $cmp.newUserRoleIsViewer ? "" : null
     }
-  }, null)]), api_static_fragment($fragment21, 85, [api_static_part(0, {
-    on: _m37 || ($ctx._m37 = {
+  }, null)]), api_static_fragment($fragment37, 141, [api_static_part(0, {
+    on: _m62 || ($ctx._m62 = {
       "click": api_bind($cmp.handleCreateUser)
     }),
     attrs: {
       "disabled": $cmp.busy.createUser ? "" : null
     }
   }, null)])]), api_iterator($cmp.userRows, function (item) {
-    return api_static_fragment($fragment22, api_key(87, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
-  })]))]) : null, $cmp.error ? api_static_fragment($fragment23, 89, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment24, 91, [api_static_part(1, null, api_dynamic_text($cmp.exportMessage))]) : null]) : null])];
+    return api_static_fragment($fragment38, api_key(143, item.id), [api_static_part(2, null, api_dynamic_text(item.displayName)), api_static_part(4, null, api_dynamic_text(item.email) + " • " + api_dynamic_text(item.role))]);
+  })])) : null])]) : null, $cmp.error ? api_static_fragment($fragment39, 145, [api_static_part(1, null, api_dynamic_text($cmp.error))]) : null, $cmp.exportMessage ? api_static_fragment($fragment40, 147, [api_static_part(2, null, api_dynamic_text($cmp.exportMessage)), api_static_part(3, {
+    on: _m63 || ($ctx._m63 = {
+      "click": api_bind($cmp.handleDismissExportMessage)
+    })
+  }, null)]) : null]) : null])];
   /*LWC compiler v9.2.2*/
 }
 var _tmpl = registerTemplate(tmpl);
@@ -13481,7 +14463,9 @@ class Data360Console extends LightningElement {
     this.selectedScenarioId = "";
     this.goal = "";
     this.messages = [];
+    this.chatMode = "auto";
     this.currentDraft = null;
+    this.currentApprovedPlan = null;
     this.currentRun = null;
     this.plannerStatus = "Ready";
     this.selectedStepId = null;
@@ -13498,8 +14482,14 @@ class Data360Console extends LightningElement {
     this.settingsProvider = "anthropic";
     this.settingsModel = "claude-sonnet-4-6";
     this.settingsApiKey = "";
+    this.settingsModelSearch = "";
+    this.providerModelOptions = MODEL_OPTIONS;
     this.mcpSettings = null;
     this.mcpServers = [];
+    this.mcpValidation = null;
+    this.mcpSaveMessage = "";
+    this.selectedMcpServerId = "data360";
+    this.activeAdminSection = "mcp";
     this.organizations = [];
     this.selectedAdminOrgId = "";
     this.organizationUsers = [];
@@ -13580,17 +14570,26 @@ class Data360Console extends LightningElement {
     return this.settingsProvider === "openrouter";
   }
   get settingsModelOptions() {
-    const options = MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+    const allOptions = this.providerModelOptions[this.settingsProvider] || MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+    const query = this.settingsModelSearch.trim().toLowerCase();
+    const options = query ? allOptions.filter(option => `${option.label} ${option.value}`.toLowerCase().includes(query)) : allOptions;
     const selectedModel = this.settingsModel || options[0]?.value || "";
-    const hasSelected = options.some(option => option.value === selectedModel);
+    const hasSelected = allOptions.some(option => option.value === selectedModel);
+    const selectedOption = allOptions.find(option => option.value === selectedModel);
     const visibleOptions = hasSelected || !selectedModel ? options : [{
       value: selectedModel,
       label: `Current: ${modelLabel(selectedModel)}`
     }, ...options];
-    return visibleOptions.map(option => ({
+    const withSelected = selectedOption && !visibleOptions.some(option => option.value === selectedOption.value) ? [selectedOption, ...visibleOptions] : visibleOptions;
+    return withSelected.map(option => ({
       ...option,
       selected: option.value === selectedModel
     }));
+  }
+  get modelCatalogCountLabel() {
+    const count = (this.providerModelOptions[this.settingsProvider] || []).length;
+    if (!count) return "Loading models";
+    return `${count} available models`;
   }
   get settingsKeyStatus() {
     if (!this.llmSettings?.apiKeyConfigured) return "No token saved";
@@ -13604,6 +14603,76 @@ class Data360Console extends LightningElement {
   }
   get userRows() {
     return this.organizationUsers || [];
+  }
+  get adminSections() {
+    return [{
+      id: "mcp",
+      label: "MCP servers"
+    }, {
+      id: "model",
+      label: "Models"
+    }, {
+      id: "organizations",
+      label: "Organizations"
+    }, {
+      id: "users",
+      label: "Users"
+    }].map(section => ({
+      ...section,
+      className: `settings-nav-item ${this.activeAdminSection === section.id ? "active" : ""}`
+    }));
+  }
+  get isAdminMcp() {
+    return this.activeAdminSection === "mcp";
+  }
+  get isAdminModel() {
+    return this.activeAdminSection === "model";
+  }
+  get isAdminOrganizations() {
+    return this.activeAdminSection === "organizations";
+  }
+  get isAdminUsers() {
+    return this.activeAdminSection === "users";
+  }
+  get selectedMcpServer() {
+    return this.mcpServers.find(server => server.id === this.selectedMcpServerId) || this.mcpServers[0] || null;
+  }
+  get selectedMcpServerRows() {
+    return (this.mcpServers || []).map(server => ({
+      ...server,
+      className: `mcp-server-option ${server.id === this.selectedMcpServerId ? "active" : ""}`,
+      statusLabel: this.mcpServerStatusLabel(server)
+    }));
+  }
+  get mcpValidationClass() {
+    const status = this.mcpValidation?.status || "passed";
+    return `settings-feedback ${status === "failed" ? "failed" : status === "skipped" ? "neutral" : "passed"}`;
+  }
+  get mcpValidationRows() {
+    return (this.mcpValidation?.servers || []).map(server => ({
+      ...server,
+      className: `validation-row ${server.status}`,
+      toolSummary: server.tools?.length ? server.tools.join(", ") : ""
+    }));
+  }
+  get selectedMcpIsStdio() {
+    return this.selectedMcpServer?.transport !== "streamable-http";
+  }
+  get selectedMcpIsHttp() {
+    return this.selectedMcpServer?.transport === "streamable-http";
+  }
+  get mcpStdioButtonClass() {
+    return `transport-option ${this.selectedMcpIsStdio ? "active" : ""}`;
+  }
+  get mcpHttpButtonClass() {
+    return `transport-option ${this.selectedMcpIsHttp ? "active" : ""}`;
+  }
+  mcpServerStatusLabel(server) {
+    const validation = (this.mcpValidation?.servers || []).find(result => result.id === server.id);
+    if (validation) {
+      return validation.status === "passed" ? `Validated (${validation.toolCount} tools)` : validation.status === "failed" ? "Validation failed" : "Skipped";
+    }
+    return server.enabled ? "Enabled" : "Disabled";
   }
   get newUserRoleIsMember() {
     return this.newUserRole === "MEMBER";
@@ -13690,14 +14759,38 @@ class Data360Console extends LightningElement {
       this.llmSettings = await request("/api/llm-settings");
       this.settingsProvider = this.llmSettings.provider || "anthropic";
       this.settingsModel = this.llmSettings.model || this.settingsModel;
+      await this.loadModelCatalog(this.settingsProvider);
     } catch (error) {
       this.error = error.message;
+    }
+  }
+  async loadModelCatalog(provider) {
+    try {
+      const models = await request(`/api/llm-settings/models?provider=${encodeURIComponent(provider)}`);
+      const options = (models || []).map(model => ({
+        value: model.id,
+        label: model.label || model.id
+      }));
+      if (options.length) {
+        this.providerModelOptions = {
+          ...this.providerModelOptions,
+          [provider]: options
+        };
+      }
+    } catch {
+      this.providerModelOptions = {
+        ...this.providerModelOptions,
+        [provider]: MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic
+      };
     }
   }
   async loadMcpSettings() {
     try {
       this.mcpSettings = await request("/api/mcp-settings");
-      this.mcpServers = this.mcpSettings.servers || [];
+      this.mcpServers = (this.mcpSettings.servers || []).map(prepareMcpServer);
+      if (!this.mcpServers.some(server => server.id === this.selectedMcpServerId)) {
+        this.selectedMcpServerId = this.mcpServers[0]?.id || "";
+      }
     } catch (error) {
       this.error = error.message;
     }
@@ -13731,7 +14824,12 @@ class Data360Console extends LightningElement {
     this[field] = event.target.value;
     if (field === "settingsProvider") {
       this.settingsModel = defaultModelForProvider(this.settingsProvider);
+      this.settingsModelSearch = "";
+      this.loadModelCatalog(this.settingsProvider);
     }
+  }
+  handleAdminSection(event) {
+    this.activeAdminSection = event.currentTarget.dataset.section;
   }
   handleLoginKeydown(event) {
     if (event.key !== "Enter") return;
@@ -13798,25 +14896,72 @@ class Data360Console extends LightningElement {
       authorities: []
     };
     this.currentDraft = null;
+    this.currentApprovedPlan = null;
     this.currentRun = null;
     this.messages = [];
     await this.loadAuthStatus();
   }
   async handleChatMessage(event) {
     const text = event.detail.text;
+    const mode = event.detail.mode || this.chatMode || "auto";
     this.messages = [...this.messages, {
       role: "user",
       text
     }];
     this.goal = text;
-    await this.handleDraftPlan();
-    if (this.currentDraft?.plan) {
-      const count = this.currentDraft.plan.steps?.length || 0;
+    if (mode !== "plan" && (mode === "execute" || !shouldDraftPlan(text))) {
+      await this.handleConversationalChat(text);
+      return;
+    }
+    this.messages = [...this.messages, {
+      role: "assistant",
+      text: "I am drafting a governed PlanSpec for that goal.",
+      meta: mode === "plan" ? "Plan mode" : "Planning"
+    }];
+    const draft = await this.handleDraftPlan();
+    if (draft?.plan) {
+      const count = draft.plan.steps?.length || 0;
       this.messages = [...this.messages, {
         role: "assistant",
         text: `I drafted a PlanSpec with ${count} ${count === 1 ? "step" : "steps"}. Review it before running.`,
-        meta: this.currentDraft.validation?.ok ? "Validation passed." : "Validation needs attention."
+        meta: draft.validation?.ok ? "Validation passed." : "Validation needs attention."
       }];
+    }
+  }
+  handleChatModeChange(event) {
+    const mode = event.detail.mode;
+    if (!["auto", "plan", "execute"].includes(mode)) return;
+    this.chatMode = mode;
+  }
+  async handleConversationalChat(text) {
+    this.setBusy("chat", true);
+    this.plannerStatus = "Thinking";
+    this.error = null;
+    try {
+      const response = await request("/api/chat", {
+        method: "POST",
+        body: {
+          message: text,
+          mode: this.chatMode
+        }
+      });
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: response.text || "I am the Data 360 Agent Console assistant.",
+        meta: response.model ? `${providerLabel(response.provider)} / ${modelLabel(response.model)}` : "Chat",
+        trace: response.trace || []
+      }];
+      this.plannerStatus = "Ready";
+    } catch (error) {
+      this.error = error.message;
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: "I could not get a response from the configured model.",
+        meta: error.message
+      }];
+      this.plannerStatus = "Error";
+    } finally {
+      this.setBusy("chat", false);
     }
   }
   handleScenarioChange(event) {
@@ -13854,6 +14999,7 @@ class Data360Console extends LightningElement {
           }
         }
       });
+      this.currentApprovedPlan = null;
       this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
       this.activeTab = "review";
     } catch (error) {
@@ -13864,6 +15010,7 @@ class Data360Console extends LightningElement {
   }
   resetCurrentDraft() {
     this.currentDraft = null;
+    this.currentApprovedPlan = null;
     this.currentRun = null;
     this.selectedStepId = null;
     this.approvalHistory = [];
@@ -13888,6 +15035,7 @@ class Data360Console extends LightningElement {
           }
         }
       });
+      this.currentApprovedPlan = null;
       this.currentRun = null;
       this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
       this.approvalHistory = [];
@@ -13908,15 +15056,20 @@ class Data360Console extends LightningElement {
     }
   }
   async handleStartPlan() {
-    if (!this.currentDraft) return;
+    if (!this.currentDraft || !this.currentApprovedPlan) return;
     this.setBusy("startPlan", true);
     this.plannerStatus = "Running";
     try {
       const response = await request(`/api/plans/${this.currentDraft.plan.id}/runs`, {
-        method: "POST"
+        method: "POST",
+        body: {
+          artifactId: this.currentApprovedPlan.artifactId,
+          planHash: this.currentApprovedPlan.planHash
+        }
       });
       if (!response.id) {
         this.currentDraft = response;
+        this.currentApprovedPlan = null;
         this.currentRun = null;
         this.plannerStatus = "Review";
         return;
@@ -13934,6 +15087,35 @@ class Data360Console extends LightningElement {
       this.plannerStatus = "Error";
     } finally {
       this.setBusy("startPlan", false);
+    }
+  }
+  async handleApprovePlan() {
+    if (!this.currentDraft) return;
+    this.setBusy("approvePlan", true);
+    this.plannerStatus = "Approving";
+    try {
+      const response = await request(`/api/plans/${this.currentDraft.plan.id}/approve`, {
+        method: "POST"
+      });
+      if (response.artifactType !== "approved-executable-plan") {
+        this.currentDraft = response;
+        this.currentApprovedPlan = null;
+        this.currentRun = null;
+        this.plannerStatus = "Review";
+        return;
+      }
+      this.currentApprovedPlan = response;
+      this.plannerStatus = "Approved";
+      this.messages = [...this.messages, {
+        role: "assistant",
+        text: "PlanSpec approved as an executable artifact.",
+        meta: response.artifactId || response.planHash
+      }];
+    } catch (error) {
+      this.error = error.message;
+      this.plannerStatus = "Error";
+    } finally {
+      this.setBusy("approvePlan", false);
     }
   }
   async handleApproveStep(event) {
@@ -14032,40 +15214,140 @@ class Data360Console extends LightningElement {
   }
   handleMcpEnabledChange(event) {
     const serverId = event.target.dataset.serverId;
+    this.mcpSaveMessage = "";
+    this.mcpValidation = null;
     this.mcpServers = this.mcpServers.map(server => server.id === serverId ? {
       ...server,
       enabled: event.target.checked
     } : server);
   }
-  handleMcpCommandChange(event) {
+  handleSelectMcpServer(event) {
+    this.selectedMcpServerId = event.currentTarget.dataset.serverId;
+  }
+  handleMcpFieldChange(event) {
     const serverId = event.target.dataset.serverId;
+    const field = event.target.dataset.field;
+    this.mcpSaveMessage = "";
+    this.mcpValidation = null;
     this.mcpServers = this.mcpServers.map(server => server.id === serverId ? {
       ...server,
-      command: event.target.value,
-      commandConfigured: Boolean(event.target.value?.trim())
+      [field]: event.target.value,
+      commandConfigured: field === "command" ? Boolean(event.target.value?.trim()) : server.commandConfigured
     } : server);
+  }
+  handleMcpTransportSelect(event) {
+    const serverId = event.currentTarget.dataset.serverId;
+    const transport = event.currentTarget.dataset.transport;
+    this.mcpSaveMessage = "";
+    this.mcpValidation = null;
+    this.mcpServers = this.mcpServers.map(server => server.id === serverId ? {
+      ...server,
+      transport
+    } : server);
+  }
+  handleAddMcpArgument(event) {
+    const serverId = event.currentTarget.dataset.serverId;
+    this.updateMcpServer(serverId, server => ({
+      ...server,
+      arguments: [...server.arguments, keyedValue("")]
+    }));
+  }
+  handleMcpArgumentChange(event) {
+    this.updateMcpListValue(event, "arguments", "value");
+  }
+  handleRemoveMcpArgument(event) {
+    this.removeMcpListItem(event, "arguments");
+  }
+  handleAddMcpEnvironment(event) {
+    const serverId = event.currentTarget.dataset.serverId;
+    this.updateMcpServer(serverId, server => ({
+      ...server,
+      environment: [...server.environment, keyedPair("", "")]
+    }));
+  }
+  handleMcpEnvironmentChange(event) {
+    this.updateMcpListValue(event, "environment", event.target.dataset.field);
+  }
+  handleRemoveMcpEnvironment(event) {
+    this.removeMcpListItem(event, "environment");
+  }
+  handleAddMcpPassthrough(event) {
+    const serverId = event.currentTarget.dataset.serverId;
+    this.updateMcpServer(serverId, server => ({
+      ...server,
+      environmentPassthrough: [...server.environmentPassthrough, keyedValue("")]
+    }));
+  }
+  handleMcpPassthroughChange(event) {
+    this.updateMcpListValue(event, "environmentPassthrough", "value");
+  }
+  handleRemoveMcpPassthrough(event) {
+    this.removeMcpListItem(event, "environmentPassthrough");
+  }
+  updateMcpListValue(event, listName, fieldName) {
+    const serverId = event.target.dataset.serverId;
+    const itemId = event.target.dataset.itemId;
+    this.updateMcpServer(serverId, server => ({
+      ...server,
+      [listName]: server[listName].map(item => item.id === itemId ? {
+        ...item,
+        [fieldName]: event.target.value
+      } : item)
+    }));
+  }
+  removeMcpListItem(event, listName) {
+    const serverId = event.currentTarget.dataset.serverId;
+    const itemId = event.currentTarget.dataset.itemId;
+    this.updateMcpServer(serverId, server => ({
+      ...server,
+      [listName]: server[listName].filter(item => item.id !== itemId)
+    }));
+  }
+  updateMcpServer(serverId, updater) {
+    this.mcpSaveMessage = "";
+    this.mcpValidation = null;
+    this.mcpServers = this.mcpServers.map(server => server.id === serverId ? updater(server) : server);
   }
   async handleSaveMcpSettings() {
     this.setBusy("saveMcpSettings", true);
     this.error = null;
+    this.mcpSaveMessage = "";
+    this.mcpValidation = null;
     try {
-      const body = {
-        servers: this.mcpServers.map(server => ({
-          id: server.id,
-          enabled: server.enabled,
-          command: server.command
-        }))
-      };
       this.mcpSettings = await request("/api/mcp-settings", {
         method: "PUT",
-        body
+        body: this.mcpSettingsRequestBody()
       });
-      this.mcpServers = this.mcpSettings.servers || [];
+      this.mcpServers = (this.mcpSettings.servers || []).map(prepareMcpServer);
+      this.mcpSaveMessage = "MCP settings saved. Validating launch configuration...";
+      this.mcpValidation = await request("/api/mcp-settings/validate", {
+        method: "POST"
+      });
+      this.mcpSaveMessage = "MCP settings saved.";
     } catch (error) {
       this.error = error.message;
     } finally {
       this.setBusy("saveMcpSettings", false);
     }
+  }
+  mcpSettingsRequestBody() {
+    return {
+      servers: this.mcpServers.map(server => ({
+        id: server.id,
+        name: server.name,
+        enabled: server.enabled,
+        transport: server.transport,
+        command: server.command,
+        endpoint: server.endpoint,
+        arguments: server.arguments.map(item => item.value).filter(Boolean),
+        environment: server.environment.filter(item => item.key?.trim()).map(item => ({
+          key: item.key,
+          value: item.value
+        })),
+        environmentPassthrough: server.environmentPassthrough.map(item => item.value).filter(Boolean),
+        workingDirectory: server.workingDirectory
+      }))
+    };
   }
   async handleCreateOrganization() {
     if (!this.newOrganizationName.trim()) return;
@@ -14126,6 +15408,9 @@ class Data360Console extends LightningElement {
       this.setBusy("exportPlanSpec", false);
     }
   }
+  handleDismissExportMessage() {
+    this.exportMessage = "";
+  }
   setBusy(key, value) {
     this.busy = {
       ...this.busy,
@@ -14135,13 +15420,18 @@ class Data360Console extends LightningElement {
   /*LWC compiler v9.2.2*/
 }
 registerDecorators(Data360Console, {
-  fields: ["activeTab", "authReady", "setupRequired", "user", "setupOrganizationName", "setupDisplayName", "setupEmail", "setupPassword", "loginEmail", "loginPassword", "scenarios", "templates", "selectedScenarioId", "goal", "messages", "currentDraft", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "demo", "selectedAccountId", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "llmSettings", "settingsProvider", "settingsModel", "settingsApiKey", "mcpSettings", "mcpServers", "organizations", "selectedAdminOrgId", "organizationUsers", "newOrganizationName", "newUserName", "newUserEmail", "newUserPassword", "newUserRole", "busy", "error", "exportMessage", "handleHashChange"]
+  fields: ["activeTab", "authReady", "setupRequired", "user", "setupOrganizationName", "setupDisplayName", "setupEmail", "setupPassword", "loginEmail", "loginPassword", "scenarios", "templates", "selectedScenarioId", "goal", "messages", "chatMode", "currentDraft", "currentApprovedPlan", "currentRun", "plannerStatus", "selectedStepId", "diagnostics", "demo", "selectedAccountId", "monitors", "lastMonitorRun", "recommendations", "recommendationUnavailable", "approvalHistory", "approvalHistoryUnavailable", "llmSettings", "settingsProvider", "settingsModel", "settingsApiKey", "settingsModelSearch", "providerModelOptions", "mcpSettings", "mcpServers", "mcpValidation", "mcpSaveMessage", "selectedMcpServerId", "activeAdminSection", "organizations", "selectedAdminOrgId", "organizationUsers", "newOrganizationName", "newUserName", "newUserEmail", "newUserPassword", "newUserRole", "busy", "error", "exportMessage", "handleHashChange"]
 });
 const __lwc_component_class_internal = registerComponent(Data360Console, {
   tmpl: _tmpl,
   sel: "c-data360console",
   apiVersion: 66
 });
+function shouldDraftPlan(text) {
+  const value = (text || "").toLowerCase();
+  const planSignals = ["planspec", "plan spec", "draft a plan", "make a plan", "set up", "setup", "configure", "create", "build", "deploy", "run", "execute", "activate", "delete", "update", "change", "monitor", "ingest", "unify", "segment customers", "identity resolution", "calculated insight"];
+  return planSignals.some(signal => value.includes(signal));
+}
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -14169,10 +15459,42 @@ function defaultModelForProvider(provider) {
   return (MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic)[0]?.value || "";
 }
 function providerLabel(provider) {
+  if (provider === "mcp") return "Data 360 MCP";
   return provider === "openrouter" ? "OpenRouter" : "Anthropic";
 }
 function modelLabel(model) {
   return MODEL_LABELS.get(model) || model || "Model not configured";
+}
+let rowId = 0;
+function nextRowId() {
+  rowId += 1;
+  return `row-${rowId}`;
+}
+function keyedValue(value) {
+  return {
+    id: nextRowId(),
+    value: value || ""
+  };
+}
+function keyedPair(key, value) {
+  return {
+    id: nextRowId(),
+    key: key || "",
+    value: value || ""
+  };
+}
+function prepareMcpServer(server) {
+  return {
+    ...server,
+    name: server.name || server.label || server.id,
+    transport: server.transport || "stdio",
+    endpoint: server.endpoint || "",
+    command: server.command || "",
+    arguments: (server.arguments || []).map(keyedValue),
+    environment: (server.environment || []).map(item => keyedPair(item.key, item.value)),
+    environmentPassthrough: (server.environmentPassthrough || []).map(keyedValue),
+    workingDirectory: server.workingDirectory || ""
+  };
 }
 
 const mount = document.getElementById("app");

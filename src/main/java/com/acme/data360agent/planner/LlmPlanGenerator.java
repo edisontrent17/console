@@ -4,6 +4,7 @@ import com.acme.data360agent.llm.LlmGateway;
 import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.Data360Action;
+import com.acme.data360agent.plan.InputBinding;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Map.entry;
 
 @Component
 public class LlmPlanGenerator {
@@ -193,17 +196,21 @@ public class LlmPlanGenerator {
                 Map.of(),
                 false
         ));
+        var previewDependency = "inspect_model";
+        if ("travel_ltv_snowflake_crm".equals(scenario.id())) {
+            previewDependency = addTravelLtvSetupSteps(steps, request, scenario);
+        }
         steps.add(new PlanStep(
                 "preview_audience",
                 "Preview the candidate audience",
                 PlanPhase.DISCOVER,
                 Data360Action.QUERY,
                 Map.of("sql", scenario.previewSql(), "limit", 100),
-                List.of("inspect_model"),
+                List.of(previewDependency),
                 Map.of(),
                 false
         ));
-        if (scenario.requiredActions().contains(Data360Action.CREATE_CALCULATED_INSIGHT)) {
+        if (scenario.requiredActions().contains(Data360Action.CREATE_CALCULATED_INSIGHT) && !stepsContain(steps, "create_ltv_insight")) {
             steps.add(new PlanStep(
                     "create_goal_insight",
                     "Create goal scoring calculated insight",
@@ -284,6 +291,265 @@ public class LlmPlanGenerator {
                 false
         ));
         return new PlanSpec(Ids.prefixed("plan"), scenario.id(), request.goal(), request.context(), steps);
+    }
+
+    private String addTravelLtvSetupSteps(ArrayList<PlanStep> steps, PlanRequest request, CustomerScenario scenario) {
+        var dataspace = request.context() == null || request.context().dataspace() == null || request.context().dataspace().isBlank()
+                ? "default"
+                : request.context().dataspace();
+        steps.add(snowflakeStreamStep(
+                "create_customer_stream",
+                "Create Snowflake CUSTOMER data stream",
+                "CUSTOMER",
+                "TravelCustomerDLO",
+                "Travel Customer DLO",
+                dataspace,
+                List.of(
+                        field("CUSTOMER_ID", "text"),
+                        field("CUSTOMER_FIRST_NAME", "text"),
+                        field("CUSTOMER_LAST_NAME", "text"),
+                        field("CUSTOMER_EMAIL_ADDRESS", "email"),
+                        field("CUSTOMER_CHILDREN_COUNT", "number"),
+                        field("CUSTOMER_COUNTRY", "text")
+                ),
+                "inspect_model"
+        ));
+        steps.add(snowflakeStreamStep(
+                "create_itinerary_stream",
+                "Create Snowflake ITINERARY data stream",
+                "ITINERARY",
+                "TravelItineraryDLO",
+                "Travel Itinerary DLO",
+                dataspace,
+                List.of(
+                        field("ITINERARY_ID", "text"),
+                        field("CUSTOMER_ID", "text"),
+                        field("ITINERARY_START_DATE", "date"),
+                        field("ITINERARY_END_DATE", "date"),
+                        field("DURATION_IN_DAYS", "number"),
+                        field("BUDGET", "number"),
+                        field("ITINERARY_SOURCE_LOCATION", "text"),
+                        field("ITINERARY_DESTINATION", "text")
+                ),
+                "create_customer_stream"
+        ));
+        steps.add(snowflakeStreamStep(
+                "create_itinerary_order_stream",
+                "Create Snowflake ITINERARY_ORDER data stream",
+                "ITINERARY_ORDER",
+                "TravelItineraryOrderDLO",
+                "Travel Itinerary Order DLO",
+                dataspace,
+                List.of(
+                        field("ORDER_ID", "text"),
+                        field("ITINERARY_ID", "text"),
+                        field("ORDER_TYPE", "text"),
+                        field("DESCRIPTION", "text"),
+                        field("ORDER_COST", "number"),
+                        field("ORDER_DATE", "date")
+                ),
+                "create_itinerary_stream"
+        ));
+        steps.add(new PlanStep(
+                "create_crm_contact_stream",
+                "Create CRM Contact data stream",
+                PlanPhase.SETUP,
+                Data360Action.CREATE_CRM_DATA_STREAM,
+                Map.of(
+                        "streamName", "CRM_Contact_Profile_Stream",
+                        "label", "CRM Contact Profile Stream",
+                        "sourceObject", "Contact",
+                        "dataSpaceName", dataspace,
+                        "dloName", "CrmContactDLO",
+                        "dloLabel", "CRM Contact DLO",
+                        "category", "Profile",
+                        "fields", List.of(
+                                field("Id", "text"),
+                                field("FirstName", "text"),
+                                field("LastName", "text"),
+                                field("Email", "email")
+                        )
+                ),
+                List.of("create_itinerary_order_stream"),
+                Map.of(),
+                true
+        ));
+        steps.add(mappingStep(
+                "map_customer_to_individual",
+                "Map Snowflake CUSTOMER to Individual",
+                "TravelCustomerDLO",
+                "Individual",
+                Map.of(
+                        "CUSTOMER_ID", "externalCustomerId",
+                        "CUSTOMER_FIRST_NAME", "firstName",
+                        "CUSTOMER_LAST_NAME", "lastName",
+                        "CUSTOMER_EMAIL_ADDRESS", "email",
+                        "CUSTOMER_COUNTRY", "country"
+                ),
+                "create_crm_contact_stream",
+                dataspace
+        ));
+        steps.add(mappingStep(
+                "map_contact_to_individual",
+                "Map CRM Contact to Individual",
+                "CrmContactDLO",
+                "Individual",
+                Map.of(
+                        "Id", "crmContactId",
+                        "FirstName", "firstName",
+                        "LastName", "lastName",
+                        "Email", "email"
+                ),
+                "map_customer_to_individual",
+                dataspace
+        ));
+        steps.add(mappingStep(
+                "map_itinerary_to_travel_itinerary",
+                "Map Snowflake ITINERARY to TravelItinerary",
+                "TravelItineraryDLO",
+                "TravelItinerary",
+                Map.of(
+                        "ITINERARY_ID", "itineraryId",
+                        "CUSTOMER_ID", "externalCustomerId",
+                        "ITINERARY_START_DATE", "itineraryStartDate",
+                        "ITINERARY_END_DATE", "itineraryEndDate",
+                        "DURATION_IN_DAYS", "durationInDays",
+                        "BUDGET", "budget",
+                        "ITINERARY_DESTINATION", "destination"
+                ),
+                "map_contact_to_individual",
+                dataspace
+        ));
+        steps.add(mappingStep(
+                "map_order_to_travel_itinerary",
+                "Map Snowflake ITINERARY_ORDER spend to TravelItinerary",
+                "TravelItineraryOrderDLO",
+                "TravelItinerary",
+                Map.of(
+                        "ORDER_ID", "orderId",
+                        "ITINERARY_ID", "itineraryId",
+                        "ORDER_TYPE", "orderType",
+                        "ORDER_COST", "transactionAmount",
+                        "ORDER_DATE", "transactionDate"
+                ),
+                "map_itinerary_to_travel_itinerary",
+                dataspace
+        ));
+        steps.add(new PlanStep(
+                "create_identity_ruleset",
+                "Create identity ruleset for CRM Contact and Snowflake customer",
+                PlanPhase.SETUP,
+                Data360Action.CREATE_IDENTITY_RULESET,
+                Map.of(
+                        "name", "Travel Contact Customer Identity",
+                        "description", "Unify CRM Contact profiles with Snowflake CUSTOMER records using email and external customer id.",
+                        "profileObject", "Individual",
+                        "rules", List.of(
+                                Map.of("sourceField", "email", "matchMethod", "exact", "confidence", "high"),
+                                Map.of("sourceField", "externalCustomerId", "matchMethod", "exact", "confidence", "high")
+                        )
+                ),
+                List.of("map_order_to_travel_itinerary"),
+                Map.of(),
+                true
+        ));
+        steps.add(new PlanStep(
+                "run_identity_resolution",
+                "Run identity resolution",
+                PlanPhase.SETUP,
+                Data360Action.RUN_IDENTITY_RESOLUTION,
+                Map.of("rulesetIdFromStep", "create_identity_ruleset"),
+                List.of("create_identity_ruleset"),
+                Map.of(),
+                true
+        ));
+        steps.add(new PlanStep(
+                "create_ltv_insight",
+                "Create lifetime value calculated insight",
+                PlanPhase.SETUP,
+                Data360Action.CREATE_CALCULATED_INSIGHT,
+                Map.of(
+                        "name", scenario.calculatedInsight().name(),
+                        "apiName", "Travel_Customer_Lifetime_Value",
+                        "description", scenario.calculatedInsight().description(),
+                        "transactionObjectApiName", scenario.calculatedInsight().transactionObjectApiName(),
+                        "transactionCustomerKeyField", "externalCustomerId",
+                        "measure", Map.of(
+                                "alias", scenario.calculatedInsight().measureAlias(),
+                                "expression", "SUM(transactionAmount)"
+                        ),
+                        "groupBy", List.of("unifiedProfileId")
+                ),
+                List.of("run_identity_resolution", "map_order_to_travel_itinerary"),
+                Map.of(
+                        "unifiedProfileObjectApiName", new InputBinding("run_identity_resolution", "$.unifiedProfileObjectApiName"),
+                        "unifiedProfileIdField", new InputBinding("run_identity_resolution", "$.unifiedProfileIdField")
+                ),
+                true
+        ));
+        steps.add(new PlanStep(
+                "run_ltv_insight",
+                "Run lifetime value calculated insight",
+                PlanPhase.SETUP,
+                Data360Action.RUN_CALCULATED_INSIGHT,
+                Map.of("insightIdFromStep", "create_ltv_insight"),
+                List.of("create_ltv_insight"),
+                Map.of(),
+                true
+        ));
+        return "run_ltv_insight";
+    }
+
+    private PlanStep snowflakeStreamStep(String id, String title, String objectName, String dloName, String dloLabel, String dataspace, List<Map<String, String>> fields, String dependsOn) {
+        return new PlanStep(
+                id,
+                title,
+                PlanPhase.SETUP,
+                Data360Action.CREATE_SNOWFLAKE_DATA_STREAM,
+                Map.ofEntries(
+                        entry("streamName", objectName + "_Snowflake_Stream"),
+                        entry("label", title.replace("Create ", "")),
+                        entry("connectionName", "Snowflake Data 360 Connection"),
+                        entry("warehouse", "dcdemo"),
+                        entry("database", "dcbootcamp"),
+                        entry("schema", "PUBLIC"),
+                        entry("objectName", objectName),
+                        entry("dataSpaceName", dataspace),
+                        entry("dloName", dloName),
+                        entry("dloLabel", dloLabel),
+                        entry("category", "Engagement"),
+                        entry("fields", fields)
+                ),
+                List.of(dependsOn),
+                Map.of(),
+                true
+        );
+    }
+
+    private PlanStep mappingStep(String id, String title, String sourceDloName, String targetDmoName, Map<String, String> fieldMappings, String dependsOn, String dataspace) {
+        return new PlanStep(
+                id,
+                title,
+                PlanPhase.SETUP,
+                Data360Action.CREATE_MAPPING,
+                Map.of(
+                        "sourceDloName", sourceDloName,
+                        "targetDmoName", targetDmoName,
+                        "fieldMappings", fieldMappings,
+                        "dataspace", dataspace
+                ),
+                List.of(dependsOn),
+                Map.of(),
+                true
+        );
+    }
+
+    private Map<String, String> field(String name, String type) {
+        return Map.of("name", name, "type", type);
+    }
+
+    private boolean stepsContain(List<PlanStep> steps, String id) {
+        return steps.stream().anyMatch(step -> step.id().equals(id));
     }
 
     private List<String> allowedResources() {

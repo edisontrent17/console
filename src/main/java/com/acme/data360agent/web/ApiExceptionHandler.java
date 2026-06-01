@@ -1,6 +1,7 @@
 package com.acme.data360agent.web;
 
 import com.acme.data360agent.data360.ConnectApiException;
+import com.acme.data360agent.support.SensitiveData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,12 +17,12 @@ import java.util.concurrent.ExecutionException;
 public class ApiExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<Map<String, Object>> badRequest(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        return ResponseEntity.badRequest().body(Map.of("error", SensitiveData.redactText(e.getMessage())));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<Map<String, Object>> validation(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        return ResponseEntity.badRequest().body(Map.of("error", SensitiveData.redactText(e.getMessage())));
     }
 
     @ExceptionHandler({CompletionException.class, ExecutionException.class})
@@ -36,7 +37,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ConnectApiException.class)
     ResponseEntity<Map<String, Object>> connectApi(ConnectApiException e) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(Map.of(
-                "error", e.getMessage(),
+                "error", SensitiveData.redactText(e.getMessage()),
                 "statusCode", e.statusCode(),
                 "correlationId", UUID.randomUUID().toString()
         ));

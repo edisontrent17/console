@@ -35,6 +35,7 @@ public class MockData360Client implements Data360Client {
             case CREATE_IDENTITY_RULESET -> createIdentityRuleset(resolvedInput);
             case RUN_IDENTITY_RESOLUTION -> runIdentityResolution(resolvedInput);
             case MONITOR_METRIC -> monitorMetric(resolvedInput);
+            case MCP_EXECUTE -> mcpExecute(resolvedInput);
         };
         var raw = Map.<String, Object>of(
                 "mode", "mock",
@@ -190,6 +191,20 @@ public class MockData360Client implements Data360Client {
                 "threshold", input.get("threshold"),
                 "status", "attention_required",
                 "checkedAt", Instant.now().toString()
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> mcpExecute(Map<String, Object> input) {
+        var params = input.get("params") instanceof Map<?, ?> map ? (Map<String, Object>) map : Map.<String, Object>of();
+        return Map.of(
+                "output", Map.of(
+                        "serverId", input.getOrDefault("serverId", "data360"),
+                        "toolName", input.get("toolName"),
+                        "params", params
+                ),
+                "raw", Map.of("mock", true),
+                "text", "{}"
         );
     }
 

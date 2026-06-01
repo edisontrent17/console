@@ -13,6 +13,7 @@ import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
 import com.acme.data360agent.support.Ids;
+import com.acme.data360agent.support.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +44,13 @@ public class MonitorService {
     }
 
     public List<MonitorDefinition> registerFromPlan(String runId, PlanSpec plan) {
+        return registerFromPlan(PlanStore.DEFAULT_ORGANIZATION_ID, runId, plan);
+    }
+
+    public List<MonitorDefinition> registerFromPlan(String organizationId, String runId, PlanSpec plan) {
         return plan.steps().stream()
                 .filter(step -> step.phase() == PlanPhase.MONITOR)
-                .map(step -> register(runId, plan, step))
+                .map(step -> register(organizationId, runId, plan, step))
                 .toList();
     }
 
@@ -55,7 +60,7 @@ public class MonitorService {
         }
         return run.getPlan().steps().stream()
                 .filter(step -> step.phase() == PlanPhase.MONITOR)
-                .map(step -> store.definitionFor(run.getId(), step.id()).orElseGet(() -> register(run.getId(), run.getPlan(), step)))
+                .map(step -> store.definitionFor(run.getOrganizationId(), run.getId(), step.id()).orElseGet(() -> register(run.getOrganizationId(), run.getId(), run.getPlan(), step)))
                 .toList();
     }
 
@@ -65,8 +70,18 @@ public class MonitorService {
                 .toList();
     }
 
+    public List<MonitorDefinition> all(String organizationId) {
+        return store.definitions(organizationId).stream()
+                .sorted((left, right) -> right.createdAt().compareTo(left.createdAt()))
+                .toList();
+    }
+
     public MonitorDefinition definition(String monitorId) {
         return store.definition(monitorId).orElseThrow(() -> new IllegalArgumentException("Monitor not found: " + monitorId));
+    }
+
+    public MonitorDefinition definition(String organizationId, String monitorId) {
+        return store.definition(organizationId, monitorId).orElseThrow(() -> new IllegalArgumentException("Monitor not found: " + monitorId));
     }
 
     public List<MonitorRun> runsFor(String monitorId) {
@@ -74,17 +89,26 @@ public class MonitorService {
         return store.runsFor(monitorId);
     }
 
+    public List<MonitorRun> runsFor(String organizationId, String monitorId) {
+        definition(organizationId, monitorId);
+        return store.runsFor(organizationId, monitorId);
+    }
+
     public List<MonitorRun> runScheduled() {
         var now = Instant.now();
         var leaseUntil = now.plus(MonitorCadence.leaseDuration());
         return store.claimDue(now, leaseUntil, 25).stream()
-                .map(definition -> runNow(definition.id()))
+                .map(definition -> runNow(definition.organizationId(), definition.id()))
                 .toList();
     }
 
     public MonitorRun runNow(String monitorId) {
-        var definition = definition(monitorId);
-        var run = planStore.run(definition.runId()).orElseThrow(() -> new IllegalArgumentException("Run not found: " + definition.runId()));
+        return runNow(PlanStore.DEFAULT_ORGANIZATION_ID, monitorId);
+    }
+
+    public MonitorRun runNow(String organizationId, String monitorId) {
+        var definition = definition(organizationId, monitorId);
+        var run = planStore.run(definition.organizationId(), definition.runId()).orElseThrow(() -> new IllegalArgumentException("Run not found: " + definition.runId()));
         if (run.getStatus() != RunStatus.SUCCEEDED) {
             throw new IllegalStateException("Monitor cannot run until setup run has succeeded: " + definition.runId());
         }
@@ -96,13 +120,14 @@ public class MonitorService {
         var operation = operations.require(step.action());
         var resolvedInput = resolveInput(step, run);
         try {
-            var result = data360Client.call(operation, step, resolvedInput, new RunContext(run.getId(), run.getPlan().id(), run.getPlan().context()));
+            var result = data360Client.call(operation, step, resolvedInput, new RunContext(definition.organizationId(), run.getId(), run.getPlan().id(), run.getPlan().context()));
             var observed = observedValue(result.output());
             var breached = MonitorThreshold.require(definition.threshold()).isBreached(observed);
             var status = breached ? MonitorStatus.ATTENTION_REQUIRED : MonitorStatus.ACTIVE;
             var checkedAt = Instant.now();
             var monitorRun = new MonitorRun(
                     Ids.prefixed("monrun"),
+                    definition.organizationId(),
                     monitorId,
                     observed,
                     breached,
@@ -113,19 +138,21 @@ public class MonitorService {
             );
             store.save(definition.withStatus(status, monitorRun.createdAt(), MonitorCadence.nextRunAt(definition.cadence(), checkedAt)));
             var saved = store.saveRun(monitorRun);
-            if (breached && store.pendingRecommendationFor(definition.id()).isEmpty()) {
+            if (breached && store.pendingRecommendationFor(definition.organizationId(), definition.id()).isEmpty()) {
                 store.saveRecommendation(recommendation(definition, saved));
             }
             return saved;
         } catch (Exception e) {
+            var error = SensitiveData.redactText(e.getMessage());
             var monitorRun = new MonitorRun(
                     Ids.prefixed("monrun"),
+                    definition.organizationId(),
                     monitorId,
                     0,
                     true,
                     MonitorStatus.ERROR,
-                    "Monitor failed: " + e.getMessage(),
-                    Map.of("error", e.getMessage()),
+                    "Monitor failed: " + error,
+                    Map.of("error", error),
                     Instant.now()
             );
             store.save(definition.withStatus(MonitorStatus.ERROR, monitorRun.createdAt(), MonitorCadence.nextRunAt(definition.cadence(), monitorRun.createdAt())));
@@ -137,8 +164,17 @@ public class MonitorService {
         return store.recommendations();
     }
 
+    public List<MonitorRecommendation> recommendations(String organizationId) {
+        return store.recommendations(organizationId);
+    }
+
     public MonitorRecommendation recommendation(String recommendationId) {
         return store.recommendation(recommendationId)
+                .orElseThrow(() -> new IllegalArgumentException("Recommendation not found: " + recommendationId));
+    }
+
+    public MonitorRecommendation recommendation(String organizationId, String recommendationId) {
+        return store.recommendation(organizationId, recommendationId)
                 .orElseThrow(() -> new IllegalArgumentException("Recommendation not found: " + recommendationId));
     }
 
@@ -158,6 +194,14 @@ public class MonitorService {
         return reviewRecommendation(recommendationId, MonitorRecommendationStatus.REJECTED, actor);
     }
 
+    public MonitorRecommendation approveRecommendation(String organizationId, String recommendationId, String actor) {
+        return reviewRecommendation(organizationId, recommendationId, MonitorRecommendationStatus.APPROVED, actor);
+    }
+
+    public MonitorRecommendation rejectRecommendation(String organizationId, String recommendationId, String actor) {
+        return reviewRecommendation(organizationId, recommendationId, MonitorRecommendationStatus.REJECTED, actor);
+    }
+
     private MonitorRecommendation reviewRecommendation(String recommendationId, MonitorRecommendationStatus status, String actor) {
         var recommendation = recommendation(recommendationId);
         if (recommendation.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
@@ -171,12 +215,25 @@ public class MonitorService {
         return reviewed;
     }
 
+    private MonitorRecommendation reviewRecommendation(String organizationId, String recommendationId, MonitorRecommendationStatus status, String actor) {
+        var recommendation = recommendation(organizationId, recommendationId);
+        if (recommendation.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
+            throw new IllegalStateException("Recommendation has already been reviewed: " + recommendationId);
+        }
+        if (!store.reviewRecommendation(organizationId, recommendationId, status, Instant.now())) {
+            throw new IllegalStateException("Recommendation has already been reviewed: " + recommendationId);
+        }
+        var reviewed = recommendation(organizationId, recommendationId);
+        auditRecommendation(reviewed, actor);
+        return reviewed;
+    }
+
     private void auditRecommendation(MonitorRecommendation recommendation, String actor) {
         if (audit == null) {
             return;
         }
-        var definition = definition(recommendation.monitorId());
-        audit.event(definition.runId(), definition.planId(), definition.stepId(), "monitor_recommendation_reviewed", Map.of(
+        var definition = definition(recommendation.organizationId(), recommendation.monitorId());
+        audit.event(definition.organizationId(), definition.runId(), definition.planId(), definition.stepId(), "monitor_recommendation_reviewed", Map.of(
                 "recommendationId", recommendation.id(),
                 "decision", recommendation.status().name(),
                 "actor", actor == null || actor.isBlank() ? "system" : actor
@@ -186,6 +243,7 @@ public class MonitorService {
     private MonitorRecommendation recommendation(MonitorDefinition definition, MonitorRun run) {
         return new MonitorRecommendation(
                 Ids.prefixed("monrec"),
+                definition.organizationId(),
                 definition.id(),
                 run.id(),
                 definition.metric(),
@@ -198,13 +256,14 @@ public class MonitorService {
         );
     }
 
-    private MonitorDefinition register(String runId, PlanSpec plan, PlanStep step) {
+    private MonitorDefinition register(String organizationId, String runId, PlanSpec plan, PlanStep step) {
         if (step.action() != Data360Action.MONITOR_METRIC) {
             throw new IllegalArgumentException("Only data360.monitor.metric can be registered as a monitor: " + step.id());
         }
         var input = step.input();
         var definition = new MonitorDefinition(
                 Ids.prefixed("mon"),
+                organizationId,
                 plan.id(),
                 runId,
                 step.id(),

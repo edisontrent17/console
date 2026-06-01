@@ -226,12 +226,14 @@ POST /api/plans
 GET  /api/plans
 GET  /api/plans/{planId}
 GET  /api/plans/{planId}/export
-POST /api/plans/{planId}/runs
+POST /api/plans/{planId}/approve
+POST /api/plans/{planId}/runs        # body: { "artifactId": "...", "planHash": "sha256:..." }
 GET  /api/runs/{runId}
 GET  /api/runs/{runId}/approvals
 GET  /api/runs/{runId}/audit
 GET  /api/runs/{runId}/export
 POST /api/runs/{runId}/steps/{stepId}/approve
+POST /api/runs/{runId}/cancel
 GET  /api/monitors
 GET  /api/monitors/recommendations
 POST /api/monitors/recommendations/{recommendationId}/approve
@@ -253,13 +255,14 @@ export OAUTH2_ISSUER_URI="https://issuer.example.com"
 export OAUTH2_JWK_SET_URI="https://issuer.example.com/.well-known/jwks.json"
 export APP_SECURITY_REQUIRED_AUDIENCE="data360-agent-console"
 export APP_SECURITY_ALLOWED_ORIGINS="https://console.example.com"
+export APP_SECURITY_ALLOWED_ORGANIZATIONS="org_prod,org_sandbox"
 ```
 
 The API is split by scope:
 
 - `data360.read`: read scenarios, templates, plans, runs, monitors, and demo state
 - `data360.plan`: create PlanSpec drafts
-- `data360.execute`: start setup runs
+- `data360.execute`: start or cancel setup runs
 - `data360.approve`: approve setup steps and monitor recommendations
 - `data360.monitor`: run monitors on demand
 - `data360.demo`: mutate the demo action state
@@ -267,6 +270,27 @@ The API is split by scope:
 
 `GET /api/me` returns the effective actor and authorities. Approval and monitor
 recommendation reviews persist that actor into the audit trail.
+
+## Security Model
+
+The implementation threat model lives in
+`docs/security-threat-model.md`. The short version:
+
+- PlanSpec import creates a draft only. Imported plans must be revalidated and
+  approved in the target tenant before execution.
+- Replacing a draft invalidates the previous approved artifact for that tenant
+  and plan ID.
+- Runs start from the stored ApprovedExecutablePlan artifact, not the mutable
+  draft, and the caller must provide the exact approved `artifactId` and
+  `planHash`.
+- MCP execution is safe for local desktop and single-tenant developer use when
+  admins own the machine. A shared hosted deployment must move to server-owned
+  allowlisted connector definitions so tenant admins cannot supply process
+  commands, arguments, working directories, transports, or arbitrary environment
+  passthrough.
+- Execution archives are support artifacts, not replay authority. They must use
+  redacted DTOs and must not carry credentials, unredacted MCP frames, approval
+  authority, idempotency records, or monitor leases.
 
 ## State And Scheduling
 
@@ -342,8 +366,10 @@ data360-plan-{runId}
 The workflow owns the ordered execution loop, approval waits, cancellation signal,
 read-activity retries, and monitor-step skipping. Mutating Data 360 activities run
 with a single Temporal attempt; Connect calls also receive a stable
-`Idempotency-Key` header where upstream services honor it. Activities own the side
-effects:
+`Idempotency-Key` header where upstream services honor it. MCP calls receive the
+same deterministic key in trace metadata and pass it into tool params only when
+the approved tool schema declares an idempotency/request field. Activities own the
+side effects:
 
 - `Data360Activities` executes Data 360/MCP/Connect calls through the configured `Data360Client`.
 - `PlanRunActivities` persists step/run state, approval records, audit events, and monitor registration.
@@ -382,6 +408,16 @@ servers are selectable there too, using `SNOWFLAKE_MCP_COMMAND` and
 `SALESFORCE_CRM_MCP_COMMAND` as optional defaults. PlanSpec continues to use
 capability URIs, not raw MCP tool names; MCP selection is outside the approved
 PlanSpec and is resolved through org settings at execution time.
+
+For shared hosted deployments, enable managed connector mode:
+
+```properties
+app.mcp.managed-connectors.enabled=true
+```
+
+In managed mode tenant requests can enable a connector and provide declared
+credential environment values, but cannot save launch commands, arguments,
+working directories, endpoints, transports, or environment passthrough.
 
 The MCP adapter compiles MVP actions to the server's facade tools:
 

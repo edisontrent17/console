@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +45,10 @@ public class AnthropicClient implements LlmClient {
         return new LlmCompletion(provider(), model, completeJson(prompt.system(), prompt.user(), model, settings.apiKey()));
     }
 
+    public LlmCompletion completeText(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        return completeJson(prompt, settings);
+    }
+
     public String completeJson(String system, String user) {
         return completeJson(system, user, properties.model());
     }
@@ -75,7 +78,7 @@ public class AnthropicClient implements LlmClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block(Duration.ofSeconds(45));
+                .block();
 
         try {
             var response = objectMapper.readValue(raw, MAP);

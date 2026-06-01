@@ -4,6 +4,7 @@ import com.acme.data360agent.data360.MockData360Client;
 import com.acme.data360agent.execution.InMemoryPlanStore;
 import com.acme.data360agent.execution.LocalPlanExecutor;
 import com.acme.data360agent.execution.PlanRun;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.execution.RunStatus;
 import com.acme.data360agent.execution.StepStatus;
 import com.acme.data360agent.operation.OperationRegistry;
@@ -12,6 +13,7 @@ import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.planner.ApprovedExecutablePlan;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MonitorServiceTest {
     @Test
@@ -76,6 +79,85 @@ class MonitorServiceTest {
         assertThat(fixture.monitors().runsFor(fixture.definition().id())).hasSize(1);
     }
 
+    @Test
+    void isolatesMonitorDefinitionsAndRecommendationsByOrganization() throws Exception {
+        var planStore = new InMemoryPlanStore();
+        var operations = new OperationRegistry();
+        var data360 = new MockData360Client();
+        var executor = new LocalPlanExecutor(planStore, operations, data360);
+        var monitors = new MonitorService(new InMemoryMonitorStore(), planStore, operations, data360);
+        var runA = executor.start("org_a", ApprovedExecutablePlan.legacy(monitorPlan("plan_monitor_tenant_a"), List.of()));
+        var runB = executor.start("org_b", ApprovedExecutablePlan.legacy(monitorPlan("plan_monitor_tenant_b"), List.of()));
+
+        waitFor(() -> runA.getStatus() == RunStatus.SUCCEEDED && runB.getStatus() == RunStatus.SUCCEEDED, Duration.ofSeconds(3));
+        var definitionA = monitors.registerReadyFromRun(runA).getFirst();
+        var definitionB = monitors.registerReadyFromRun(runB).getFirst();
+        monitors.runNow("org_a", definitionA.id());
+
+        assertThat(definitionA.organizationId()).isEqualTo("org_a");
+        assertThat(definitionB.organizationId()).isEqualTo("org_b");
+        assertThat(monitors.all("org_a")).extracting(MonitorDefinition::id).containsExactly(definitionA.id());
+        assertThat(monitors.all("org_b")).extracting(MonitorDefinition::id).containsExactly(definitionB.id());
+        assertThat(monitors.recommendations("org_a")).singleElement()
+                .extracting(MonitorRecommendation::organizationId)
+                .isEqualTo("org_a");
+        assertThat(monitors.recommendations("org_b")).isEmpty();
+        assertThatThrownBy(() -> monitors.runNow("org_b", definitionA.id()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(definitionA.id());
+    }
+
+    @Test
+    void registersAndListsMonitorsByOrganization() throws Exception {
+        var harness = monitorHarness();
+        var orgA = registeredMonitor(harness, "org_a", "plan_monitor_org_a");
+        var orgB = registeredMonitor(harness, "org_b", "plan_monitor_org_b");
+
+        assertThat(orgA.definition().organizationId()).isEqualTo("org_a");
+        assertThat(orgB.definition().organizationId()).isEqualTo("org_b");
+        assertThat(harness.monitors().all("org_a"))
+                .extracting(MonitorDefinition::id)
+                .containsExactly(orgA.definition().id());
+        assertThat(harness.monitors().all("org_b"))
+                .extracting(MonitorDefinition::id)
+                .containsExactly(orgB.definition().id());
+        assertThatThrownBy(() -> harness.monitors().definition("org_b", orgA.definition().id()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Monitor not found");
+    }
+
+    @Test
+    void recommendationsAreScopedByOrganization() throws Exception {
+        var harness = monitorHarness();
+        var orgA = registeredMonitor(harness, "org_a", "plan_monitor_recommendation_org_a");
+        var orgB = registeredMonitor(harness, "org_b", "plan_monitor_recommendation_org_b");
+
+        var runA = harness.monitors().runNow("org_a", orgA.definition().id());
+        var runB = harness.monitors().runNow("org_b", orgB.definition().id());
+        var recommendationA = harness.monitors().recommendations("org_a").getFirst();
+
+        assertThat(harness.monitors().recommendations("org_a"))
+                .singleElement()
+                .satisfies(recommendation -> {
+                    assertThat(recommendation.organizationId()).isEqualTo("org_a");
+                    assertThat(recommendation.monitorRunId()).isEqualTo(runA.id());
+                });
+        assertThat(harness.monitors().recommendations("org_b"))
+                .singleElement()
+                .satisfies(recommendation -> {
+                    assertThat(recommendation.organizationId()).isEqualTo("org_b");
+                    assertThat(recommendation.monitorRunId()).isEqualTo(runB.id());
+                });
+        assertThatThrownBy(() -> harness.monitors().approveRecommendation("org_b", recommendationA.id(), "reviewer"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Recommendation not found");
+
+        var approved = harness.monitors().approveRecommendation("org_a", recommendationA.id(), "reviewer");
+
+        assertThat(approved.status()).isEqualTo(MonitorRecommendationStatus.APPROVED);
+        assertThat(harness.monitors().recommendations("org_b").getFirst().status()).isEqualTo(MonitorRecommendationStatus.PENDING_APPROVAL);
+    }
+
     private MonitorService monitorWithBreachingRecommendation() throws Exception {
         var fixture = registeredMonitor("plan_monitor_review");
         fixture.monitors().runNow(fixture.definition().id());
@@ -83,18 +165,26 @@ class MonitorServiceTest {
     }
 
     private MonitorFixture registeredMonitor(String planId) throws Exception {
+        return registeredMonitor(monitorHarness(), PlanStore.DEFAULT_ORGANIZATION_ID, planId);
+    }
+
+    private MonitorFixture registeredMonitor(MonitorHarness harness, String organizationId, String planId) throws Exception {
+        var plan = monitorPlan(planId);
+
+        var run = harness.executor().start(organizationId, ApprovedExecutablePlan.legacy(plan, null));
+        waitFor(() -> run.getStatus() == RunStatus.SUCCEEDED, Duration.ofSeconds(3));
+        var definitions = harness.monitors().registerReadyFromRun(run);
+        assertThat(definitions).hasSize(1);
+        return new MonitorFixture(harness.monitors(), run, definitions.getFirst());
+    }
+
+    private MonitorHarness monitorHarness() {
         var planStore = new InMemoryPlanStore();
         var operations = new OperationRegistry();
         var data360 = new MockData360Client();
         var executor = new LocalPlanExecutor(planStore, operations, data360);
         var monitors = new MonitorService(new InMemoryMonitorStore(), planStore, operations, data360);
-        var plan = monitorPlan(planId);
-
-        var run = executor.start(plan);
-        waitFor(() -> run.getStatus() == RunStatus.SUCCEEDED, Duration.ofSeconds(3));
-        var definitions = monitors.registerReadyFromRun(run);
-        assertThat(definitions).hasSize(1);
-        return new MonitorFixture(monitors, run, definitions.getFirst());
+        return new MonitorHarness(monitors, executor);
     }
 
     private PlanSpec monitorPlan(String planId) {
@@ -153,5 +243,8 @@ class MonitorServiceTest {
     }
 
     private record MonitorFixture(MonitorService monitors, PlanRun run, MonitorDefinition definition) {
+    }
+
+    private record MonitorHarness(MonitorService monitors, LocalPlanExecutor executor) {
     }
 }

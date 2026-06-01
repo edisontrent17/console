@@ -83,13 +83,32 @@ does not name `search`, `execute`, `d360_segment_create`, or an HTTP endpoint.
 When a draft is created, the app resolves each capability URI into an immutable
 `OperationBindingSnapshot` with transport, facade tool, underlying tool, effect,
 approval requirement, input schema, output schema, schema hash, and binding
-version. That binding list is saved with the draft, copied onto the run at
-approval/start time, and persisted in `plan_runs.operation_bindings_json` so
+version. When a live Data 360 MCP registry descriptor is available, typed Data
+360 actions freeze its registry hash, tool schema hash, examples, and output
+contracts too; the static catalog is only a fallback shape. That binding list is
+saved with the draft for review. Plan-level
+approval freezes the current binding list into a tenant-scoped
+`ApprovedExecutablePlan` stored in `approved_plans`; run start consumes that
+stored artifact and also snapshots it onto `plan_runs.approved_plan_json` so
 Temporal replay and local execution use the same frozen call boundary.
+For generic MCP tools, the frozen registry descriptor also carries curated
+payload examples and selector contracts from `payload_examples`; those are review
+and planning hints, while schema drift checks use the executable schema and
+selector contract hash.
 
 Dynamic ASL parameters are allowed only when the source step's capability
 contract declares the referenced output and the target step's contract declares
 the input. For example, identity resolution can feed calculated insight setup:
+
+Runtime output selectors are deliberately narrow. They may expose stable IDs,
+API names, and other small non-sensitive values needed by later steps. Selector
+evaluation fails if the selected path is missing, resolves to sensitive data, or
+exceeds the bounded output size limit. Generic MCP execution must declare
+selectors, may not persist `$.raw`, `$.text`, or whole `$.output`, and must match
+the frozen tool selector contract whenever the registry provides one. Persisted
+selected output includes `selectorMetadata` for each alias: selector path, JSON
+type, estimated size, contract enforcement state, and the redaction policy used
+to reject sensitive or oversized values.
 
 ```json
 {

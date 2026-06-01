@@ -9,8 +9,10 @@ public record SecurityProperties(
         Boolean enabled,
         String mode,
         String authorityClaim,
+        String organizationClaim,
         String requiredAudience,
-        List<String> allowedOrigins
+        List<String> allowedOrigins,
+        List<String> allowedOrganizations
 ) {
     public boolean resolvedEnabled() {
         return enabled == null || enabled;
@@ -18,6 +20,10 @@ public record SecurityProperties(
 
     public String resolvedAuthorityClaim() {
         return authorityClaim == null || authorityClaim.isBlank() ? "scope" : authorityClaim;
+    }
+
+    public String resolvedOrganizationClaim() {
+        return organizationClaim == null || organizationClaim.isBlank() ? "organization_id" : organizationClaim;
     }
 
     public String resolvedMode() {
@@ -32,5 +38,12 @@ public record SecurityProperties(
             return List.of("http://localhost:8080");
         }
         return List.copyOf(allowedOrigins);
+    }
+
+    public List<String> resolvedAllowedOrganizations() {
+        if (allowedOrganizations == null || allowedOrganizations.isEmpty()) {
+            return List.of();
+        }
+        return List.copyOf(allowedOrganizations);
     }
 }

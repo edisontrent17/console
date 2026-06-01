@@ -18,23 +18,33 @@ public class ArchiveService {
     }
 
     public PlanSpecArchive planSpec(String planId) {
-        var draft = store.draft(planId)
+        return planSpec(com.acme.data360agent.execution.PlanStore.DEFAULT_ORGANIZATION_ID, planId);
+    }
+
+    public PlanSpecArchive planSpec(String organizationId, String planId) {
+        var draft = store.draft(organizationId, planId)
                 .orElseThrow(() -> new IllegalArgumentException("Plan not found: " + planId));
         return PlanSpecArchive.from(draft);
     }
 
     public ExecutionLogArchive executionLog(String runId) {
-        var run = store.run(runId)
+        return executionLog(com.acme.data360agent.execution.PlanStore.DEFAULT_ORGANIZATION_ID, runId);
+    }
+
+    public ExecutionLogArchive executionLog(String organizationId, String runId) {
+        var run = store.run(organizationId, runId)
                 .orElseThrow(() -> new IllegalArgumentException("Run not found: " + runId));
         var toolCalls = run.getPlan().steps().stream()
                 .map(step -> ToolCallArchive.from(run, step, PlanRunSupport.stepRun(run, step.id())))
                 .toList();
         return new ExecutionLogArchive(
                 "execution-log",
+                ArchiveVersions.SCHEMA_VERSION,
+                ArchiveVersions.REDACTION_VERSION,
                 Instant.now(),
-                run,
-                audit.events(runId),
-                audit.approvals(runId),
+                ExecutionRunArchive.from(run),
+                audit.events(organizationId, runId),
+                audit.approvals(organizationId, runId),
                 toolCalls
         );
     }

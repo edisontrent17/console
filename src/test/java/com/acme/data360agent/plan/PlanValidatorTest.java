@@ -1,10 +1,14 @@
 package com.acme.data360agent.plan;
 
+import com.acme.data360agent.mcp.McpToolDescriptor;
+import com.acme.data360agent.mcp.McpToolRegistryService;
+import com.acme.data360agent.mcp.McpToolRegistrySnapshot;
 import com.acme.data360agent.operation.OperationRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -101,6 +105,389 @@ class PlanValidatorTest {
 
         assertThat(result.ok()).isFalse();
         assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Task Resource must be a Data 360 capability URI"));
+    }
+
+    @Test
+    void acceptsGovernedMcpExecuteTaskWithSelectors() {
+        var plan = new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_mcp_execute",
+                null,
+                "List dataspaces",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "list_dataspaces",
+                        Map.of("list_dataspaces", AslState.task(
+                                "List dataspaces",
+                                Data360Action.MCP_EXECUTE.resource(),
+                                Map.of(
+                                        "serverId", "data360",
+                                        "toolName", "d360_dataspace_list",
+                                        "effect", "read",
+                                        "params", Map.of(),
+                                        "outputSelectors", Map.of("dataspaces", "$.output.items")
+                                ),
+                                "$.list_dataspaces",
+                                null,
+                                true
+                        ))
+                ),
+                List.of()
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).as(result.issues().toString()).isTrue();
+    }
+
+    @Test
+    void rejectsRawMcpResource() {
+        var plan = new PlanSpec(
+                PlanSpec.CURRENT_SCHEMA_VERSION,
+                "plan_raw_mcp",
+                null,
+                "Bad MCP resource",
+                new PlanContext("org", "default", "sandbox"),
+                new AslStateMachine(
+                        "1.0",
+                        "JSONPath",
+                        "raw_mcp",
+                        Map.of("raw_mcp", AslState.task(
+                                "Raw MCP",
+                                "mcp://data360/execute",
+                                Map.of("toolName", "d360_dataspace_list"),
+                                "$.raw_mcp",
+                                null,
+                                true
+                        ))
+                ),
+                List.of()
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("not raw mcp://"));
+    }
+
+    @Test
+    void requiresApprovalForMutatingMcpExecuteTask() {
+        var plan = new PlanSpec(
+                "plan_mcp_write",
+                "Create segment via MCP",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_segment",
+                        "Create segment",
+                        PlanPhase.SETUP,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_segment_create",
+                                "effect", "write",
+                                "params", Map.of("displayName", "High LTV Travelers")
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("require needsApproval=true"));
+    }
+
+    @Test
+    void rejectsMcpExecuteToolMissingFromRegistry() {
+        var validator = validatorWithRegistry(new McpToolDescriptor(
+                "data360",
+                "d360_dataspace_list",
+                "List dataspaces",
+                "read",
+                Map.of("type", "object", "properties", Map.of())
+        ));
+        var plan = new PlanSpec(
+                "plan_mcp_unknown",
+                "Unknown MCP tool",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "unknown_tool",
+                        "Unknown tool",
+                        PlanPhase.DISCOVER,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_not_real",
+                                "effect", "read",
+                                "params", Map.of()
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("MCP tool is not available"));
+    }
+
+    @Test
+    void validatesMcpExecuteEffectAndRequiredParamsAgainstRegistry() {
+        var validator = validatorWithRegistry(new McpToolDescriptor(
+                "data360",
+                "d360_segment_create",
+                "Create segment",
+                "write",
+                Map.of(
+                        "type", "object",
+                        "required", List.of("displayName"),
+                        "properties", Map.of("displayName", Map.of("type", "string"))
+                )
+        ));
+        var plan = new PlanSpec(
+                "plan_mcp_registry",
+                "Create segment via registry",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_segment",
+                        "Create segment",
+                        PlanPhase.SETUP,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_segment_create",
+                                "effect", "read",
+                                "params", Map.of()
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("effect understates registry effect"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("missing required tool field"));
+    }
+
+    @Test
+    void pureValidationSkipsLiveRegistryChecksButKeepsPlanSpecRules() {
+        var validator = validatorWithRegistry(new McpToolDescriptor(
+                "data360",
+                "d360_segment_create",
+                "Create segment",
+                "write",
+                Map.of(
+                        "type", "object",
+                        "required", List.of("displayName"),
+                        "properties", Map.of("displayName", Map.of("type", "string"))
+                )
+        ));
+        var plan = new PlanSpec(
+                "plan_mcp_pure",
+                "Create segment via registry",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_segment",
+                        "Create segment",
+                        PlanPhase.SETUP,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_segment_create",
+                                "effect", "read",
+                                "params", Map.of(),
+                                "outputSelectors", Map.of("segmentId", "$.output.id")
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var pure = validator.validatePure(plan);
+        var registryBacked = validator.validate(plan);
+
+        assertThat(pure.issues()).noneMatch(issue -> issue.message().contains("registry effect"));
+        assertThat(pure.issues()).noneMatch(issue -> issue.message().contains("missing required tool field"));
+        assertThat(registryBacked.issues()).anyMatch(issue -> issue.message().contains("registry effect"));
+        assertThat(registryBacked.issues()).anyMatch(issue -> issue.message().contains("missing required tool field"));
+    }
+
+    @Test
+    void rejectsGenericMcpFacadeOverridesAndMutatingSql() {
+        var plan = new PlanSpec(
+                "plan_mcp_sql",
+                "Bad generic SQL",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "query_sql",
+                        "Query through MCP",
+                        PlanPhase.DISCOVER,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_query_sql",
+                                "facadeTool", "search",
+                                "effect", "read",
+                                "params", Map.of("sql", "SELECT Id FROM UnifiedIndividual UNION DROP TABLE UnifiedIndividual")
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("facadeTool must be execute"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("read-only"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("LIMIT"));
+    }
+
+    @Test
+    void rejectsMcpExecuteAgainstDiscoveryOnlyServer() {
+        var validator = validatorWithRegistryStatus(
+                new McpToolRegistrySnapshot.McpServerRegistryStatus("snowflake", "passed", "ok", 1, false),
+                new McpToolDescriptor(
+                        "snowflake",
+                        "run_snowflake_query",
+                        "Run Snowflake query",
+                        "read",
+                        Map.of("type", "object", "properties", Map.of())
+                )
+        );
+        var plan = new PlanSpec(
+                "plan_mcp_discovery_only",
+                "Use discovery-only server",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "list_tables",
+                        "List tables",
+                        PlanPhase.DISCOVER,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "snowflake",
+                                "toolName", "run_snowflake_query",
+                                "effect", "read",
+                                "params", Map.of("query", "SELECT table_name FROM information_schema.tables LIMIT 10")
+                        ),
+                        List.of(),
+                        Map.of(),
+                        false
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("discovery-only"));
+    }
+
+    @Test
+    void rejectsMcpExecutePlaceholdersAndBadSelectors() {
+        var plan = new PlanSpec(
+                "plan_mcp_bad",
+                "Bad MCP",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_ci",
+                        "Create CI",
+                        PlanPhase.SETUP,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_ci_create",
+                                "effect", "write",
+                                "params", Map.of("expression", "${approvedSql}"),
+                                "outputSelectors", Map.of("bad/selector", "id")
+                        ),
+                        List.of(),
+                        Map.of(),
+                        true
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Unresolved placeholder"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Output selector names"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Output selector path must start with $."));
+    }
+
+    @Test
+    void rejectsMcpSelectorsOutsideDeclaredToolContract() {
+        var validator = validatorWithRegistry(new McpToolDescriptor(
+                "data360",
+                "d360_segment_create",
+                "Create segment",
+                "write",
+                Map.of("type", "object", "properties", Map.of("displayName", Map.of("type", "string"))),
+                Map.of("type", "object", "properties", Map.of("segmentId", "string")),
+                List.of(),
+                Map.of("segmentId", "$.output.id")
+        ));
+        var plan = new PlanSpec(
+                "plan_mcp_bad_selector_contract",
+                "Create segment",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(new PlanStep(
+                        "create_segment",
+                        "Create segment",
+                        PlanPhase.SETUP,
+                        Data360Action.MCP_EXECUTE,
+                        Map.of(
+                                "serverId", "data360",
+                                "toolName", "d360_segment_create",
+                                "effect", "write",
+                                "params", Map.of("displayName", "High LTV Travelers"),
+                                "outputSelectors", Map.of(
+                                        "segmentId", "$.output.segmentId",
+                                        "rawPayload", "$.raw"
+                                )
+                        ),
+                        List.of(),
+                        Map.of(),
+                        true
+                ))
+        );
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("too broad or unsafe"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("must match the MCP tool contract"));
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("not declared by the MCP tool contract"));
+    }
+
+    @Test
+    void allowsMcpInputBindingsOnlyThroughDeclaredSelectors() {
+        var plan = mcpSelectorBindingPlan("$.selected.segmentId");
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).as(result.issues().toString()).isTrue();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"$.raw", "$.raw.id", "$.text", "$.output.id", "$.selected.segmentId.id"})
+    void rejectsMcpInputBindingsToRawTextOutputOrNestedSelectorPaths(String path) {
+        var plan = mcpSelectorBindingPlan(path);
+
+        var result = validator.validate(plan);
+
+        assertThat(result.ok()).isFalse();
+        assertThat(result.issues()).anyMatch(issue -> issue.message().contains("Input binding references output not produced"));
     }
 
     @Test
@@ -537,5 +924,61 @@ class PlanValidatorTest {
                 ),
                 List.of()
         );
+    }
+
+    private PlanSpec mcpSelectorBindingPlan(String bindingPath) {
+        return new PlanSpec(
+                "plan_mcp_selector_binding",
+                "Publish selected MCP segment",
+                new PlanContext("org", "default", "sandbox"),
+                List.of(
+                        new PlanStep(
+                                "create_segment",
+                                "Create segment",
+                                PlanPhase.SETUP,
+                                Data360Action.MCP_EXECUTE,
+                                Map.of(
+                                        "serverId", "data360",
+                                        "toolName", "d360_segment_create",
+                                        "effect", "write",
+                                        "params", Map.of("displayName", "High LTV Travelers"),
+                                        "outputSelectors", Map.of("segmentId", "$.output.id")
+                                ),
+                                List.of(),
+                                Map.of(),
+                                true
+                        ),
+                        new PlanStep(
+                                "publish_segment",
+                                "Publish segment",
+                                PlanPhase.SETUP,
+                                Data360Action.PUBLISH_SEGMENT,
+                                Map.of(),
+                                List.of("create_segment"),
+                                Map.of("segmentId", new InputBinding("create_segment", bindingPath)),
+                                true
+                        )
+                )
+        );
+    }
+
+    private PlanValidator validatorWithRegistry(McpToolDescriptor... tools) {
+        return validatorWithRegistryStatus(
+                new McpToolRegistrySnapshot.McpServerRegistryStatus("data360", "passed", "ok", tools.length, true),
+                tools
+        );
+    }
+
+    private PlanValidator validatorWithRegistryStatus(McpToolRegistrySnapshot.McpServerRegistryStatus status, McpToolDescriptor... tools) {
+        return new PlanValidator(new OperationRegistry(), new McpToolRegistryService(null, null) {
+            @Override
+            public McpToolRegistrySnapshot current() {
+                return new McpToolRegistrySnapshot(
+                        Instant.parse("2026-06-01T00:00:00Z"),
+                        List.of(tools),
+                        List.of(status)
+                );
+            }
+        });
     }
 }

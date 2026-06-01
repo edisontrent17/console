@@ -6,4 +6,8 @@ public interface LlmClient {
     boolean configured();
 
     LlmCompletion completeJson(LlmPrompt prompt);
+
+    default LlmCompletion completeText(LlmPrompt prompt) {
+        return completeJson(prompt);
+    }
 }

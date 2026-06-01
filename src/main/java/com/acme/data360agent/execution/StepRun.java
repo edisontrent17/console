@@ -70,7 +70,7 @@ public class StepRun {
     }
 
     public void setError(String error) {
-        this.error = error;
+        this.error = SensitiveData.redactText(error);
     }
 
     public Instant getStartedAt() {

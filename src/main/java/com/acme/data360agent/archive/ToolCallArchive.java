@@ -3,6 +3,7 @@ package com.acme.data360agent.archive;
 import com.acme.data360agent.execution.PlanRun;
 import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.support.SensitiveData;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -27,11 +28,12 @@ public record ToolCallArchive(
         String error
 ) implements Serializable {
     public ToolCallArchive {
-        declaredInput = declaredInput == null ? Map.of() : Map.copyOf(declaredInput);
-        inputBindings = inputBindings == null ? Map.of() : Map.copyOf(inputBindings);
-        resolvedInput = resolvedInput == null ? Map.of() : Map.copyOf(resolvedInput);
-        output = output == null ? Map.of() : Map.copyOf(output);
-        raw = raw == null ? Map.of() : Map.copyOf(raw);
+        declaredInput = declaredInput == null ? Map.of() : SensitiveData.redactMap(declaredInput);
+        inputBindings = inputBindings == null ? Map.of() : SensitiveData.redactMap(inputBindings);
+        resolvedInput = resolvedInput == null ? Map.of() : SensitiveData.redactMap(resolvedInput);
+        output = output == null ? Map.of() : SensitiveData.redactMap(output);
+        raw = raw == null ? Map.of() : SensitiveData.redactMap(raw);
+        error = SensitiveData.redactText(error);
     }
 
     public static ToolCallArchive from(PlanRun run, PlanStep planStep, com.acme.data360agent.execution.StepRun stepRun) {

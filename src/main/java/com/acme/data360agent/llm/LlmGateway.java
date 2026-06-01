@@ -29,6 +29,14 @@ public class LlmGateway {
     }
 
     public LlmCompletion completeJson(String system, String user) {
+        return complete(system, user, true);
+    }
+
+    public LlmCompletion completeText(String system, String user) {
+        return complete(system, user, false);
+    }
+
+    private LlmCompletion complete(String system, String user, boolean json) {
         var effective = settings.effective();
         var selected = selected(effective.provider());
         if (selected == null) {
@@ -39,9 +47,9 @@ public class LlmGateway {
         }
         var prompt = new LlmPrompt(system, user, effective.model());
         return switch (effective.provider().toLowerCase(Locale.ROOT)) {
-            case "anthropic" -> anthropic.completeJson(prompt, effective);
-            case "openrouter" -> openRouter.completeJson(prompt, effective);
-            default -> selected.completeJson(prompt);
+            case "anthropic" -> json ? anthropic.completeJson(prompt, effective) : anthropic.completeText(prompt, effective);
+            case "openrouter" -> json ? openRouter.completeJson(prompt, effective) : openRouter.completeText(prompt, effective);
+            default -> json ? selected.completeJson(prompt) : selected.completeText(prompt);
         };
     }
 

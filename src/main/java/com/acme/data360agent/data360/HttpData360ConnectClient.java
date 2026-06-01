@@ -97,6 +97,7 @@ public class HttpData360ConnectClient implements Data360Client {
             case CREATE_IDENTITY_RULESET -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/identity-resolutions"), dataspaceParams(context), Map.copyOf(input));
             case RUN_IDENTITY_RESOLUTION -> new ConnectRequest(HttpMethod.POST, servicesPath("/ssot/identity-resolutions/" + encode(required(input, "rulesetId")) + "/actions/run-now"), Map.of(), null);
             case MONITOR_METRIC -> monitorMetricRequest(input, context);
+            case MCP_EXECUTE -> throw new IllegalArgumentException("Generic MCP execute is only supported by the MCP Data 360 client, not Connect API mode.");
         };
     }
 
@@ -226,6 +227,7 @@ public class HttpData360ConnectClient implements Data360Client {
             case CREATE_IDENTITY_RULESET -> withPrimaryId(raw, "rulesetId", "id", "rulesetId", "name", "developerName");
             case RUN_IDENTITY_RESOLUTION -> normalizeIdentityResolutionRun(raw);
             case SEARCH, METADATA_DESCRIBE, GET_IDENTITY_RULESET -> raw;
+            case MCP_EXECUTE -> raw;
         };
     }
 
@@ -320,8 +322,12 @@ public class HttpData360ConnectClient implements Data360Client {
     }
 
     private String idempotencyKey(RunContext context, PlanStep step, Map<String, Object> input) {
+        if (context != null && context.idempotencyKey() != null && !context.idempotencyKey().isBlank()) {
+            return context.idempotencyKey();
+        }
         try {
             var digest = MessageDigest.getInstance("SHA-256");
+            digest.update(context.organizationId().getBytes(StandardCharsets.UTF_8));
             digest.update(context.planId().getBytes(StandardCharsets.UTF_8));
             digest.update(context.runId().getBytes(StandardCharsets.UTF_8));
             digest.update(step.id().getBytes(StandardCharsets.UTF_8));

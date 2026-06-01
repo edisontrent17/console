@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public final class AslPlanCompiler {
@@ -58,12 +59,12 @@ public final class AslPlanCompiler {
             steps.add(new PlanStep(
                     current,
                     state.comment() == null || state.comment().isBlank() ? current : state.comment(),
-                    action.defaultPhase(),
+                    phaseFor(action, parameters.input()),
                     action,
                     parameters.input(),
                     new ArrayList<>(dependencies),
                     parameters.bindings(),
-                    action.requiresApproval()
+                    needsApprovalFor(action, parameters.input())
             ));
             previous = current;
             current = Boolean.TRUE.equals(state.end()) ? null : state.next();
@@ -113,6 +114,28 @@ public final class AslPlanCompiler {
             throw new IllegalArgumentException("ASL Parameters dynamic values must include a source state and field path: " + path);
         }
         return new InputBinding(parts[0], "$." + parts[1]);
+    }
+
+    private static PlanPhase phaseFor(Data360Action action, Map<String, Object> input) {
+        if (action != Data360Action.MCP_EXECUTE) {
+            return action.defaultPhase();
+        }
+        var effect = String.valueOf(input.getOrDefault("effect", "read")).toLowerCase(Locale.ROOT);
+        if ("read".equals(effect)) {
+            return PlanPhase.DISCOVER;
+        }
+        return PlanPhase.SETUP;
+    }
+
+    private static boolean needsApprovalFor(Data360Action action, Map<String, Object> input) {
+        if (action != Data360Action.MCP_EXECUTE) {
+            return action.requiresApproval();
+        }
+        if (Boolean.TRUE.equals(input.get("approvalRequired"))) {
+            return true;
+        }
+        var effect = String.valueOf(input.getOrDefault("effect", "read")).toLowerCase(Locale.ROOT);
+        return !"read".equals(effect);
     }
 
     private record SplitParameters(Map<String, Object> input, Map<String, InputBinding> bindings) {

@@ -13,7 +13,7 @@ import java.util.Map;
 @WorkflowInterface
 public interface Data360PlanWorkflow {
     @WorkflowMethod
-    String run(String runId, PlanSpec plan, List<OperationBindingSnapshot> operationBindings);
+    String run(String organizationId, String runId, PlanSpec plan, List<OperationBindingSnapshot> operationBindings, List<String> executionOrder);
 
     @SignalMethod
     void approveStep(String stepId, String approvedBy);

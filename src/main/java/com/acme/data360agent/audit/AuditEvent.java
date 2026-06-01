@@ -1,5 +1,7 @@
 package com.acme.data360agent.audit;
 
+import com.acme.data360agent.support.SensitiveData;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
@@ -14,6 +16,6 @@ public record AuditEvent(
         Instant createdAt
 ) implements Serializable {
     public AuditEvent {
-        detail = detail == null ? Map.of() : Map.copyOf(detail);
+        detail = detail == null ? Map.of() : SensitiveData.redactMap(detail);
     }
 }

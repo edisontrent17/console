@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class OpenRouterClient implements LlmClient {
         var raw = spec.bodyValue(request)
                 .retrieve()
                 .bodyToMono(String.class)
-                .block(Duration.ofSeconds(45));
+                .block();
 
         try {
             var response = objectMapper.readValue(raw, MAP);
@@ -99,6 +98,10 @@ public class OpenRouterClient implements LlmClient {
         } catch (Exception e) {
             throw new IllegalStateException("Unable to parse OpenRouter response.", e);
         }
+    }
+
+    public LlmCompletion completeText(LlmPrompt prompt, EffectiveLlmSettings settings) {
+        return completeJson(prompt, settings);
     }
 
     private LlmProperties.OpenRouter openRouter() {

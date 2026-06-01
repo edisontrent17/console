@@ -21,7 +21,7 @@ public class Data360ActivitiesImpl implements Data360Activities {
                 command.binding(),
                 command.step(),
                 command.resolvedInput(),
-                new RunContext(command.runId(), command.planId(), command.context())
+                new RunContext(command.organizationId(), command.runId(), command.planId(), command.context(), command.idempotencyKey())
         );
         return new ActivityResult(result.output(), result.raw());
     }

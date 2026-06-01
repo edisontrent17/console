@@ -51,7 +51,9 @@ export default class Data360Console extends LightningElement {
     selectedScenarioId = "";
     goal = "";
     messages = [];
+    chatMode = "auto";
     currentDraft = null;
+    currentApprovedPlan = null;
     currentRun = null;
     plannerStatus = "Ready";
     selectedStepId = null;
@@ -69,8 +71,14 @@ export default class Data360Console extends LightningElement {
     settingsProvider = "anthropic";
     settingsModel = "claude-sonnet-4-6";
     settingsApiKey = "";
+    settingsModelSearch = "";
+    providerModelOptions = MODEL_OPTIONS;
     mcpSettings = null;
     mcpServers = [];
+    mcpValidation = null;
+    mcpSaveMessage = "";
+    selectedMcpServerId = "data360";
+    activeAdminSection = "mcp";
     organizations = [];
     selectedAdminOrgId = "";
     organizationUsers = [];
@@ -169,16 +177,30 @@ export default class Data360Console extends LightningElement {
     }
 
     get settingsModelOptions() {
-        const options = MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+        const allOptions = this.providerModelOptions[this.settingsProvider] || MODEL_OPTIONS[this.settingsProvider] || MODEL_OPTIONS.anthropic;
+        const query = this.settingsModelSearch.trim().toLowerCase();
+        const options = query
+            ? allOptions.filter((option) => `${option.label} ${option.value}`.toLowerCase().includes(query))
+            : allOptions;
         const selectedModel = this.settingsModel || options[0]?.value || "";
-        const hasSelected = options.some((option) => option.value === selectedModel);
+        const hasSelected = allOptions.some((option) => option.value === selectedModel);
+        const selectedOption = allOptions.find((option) => option.value === selectedModel);
         const visibleOptions = hasSelected || !selectedModel
             ? options
             : [{ value: selectedModel, label: `Current: ${modelLabel(selectedModel)}` }, ...options];
-        return visibleOptions.map((option) => ({
+        const withSelected = selectedOption && !visibleOptions.some((option) => option.value === selectedOption.value)
+            ? [selectedOption, ...visibleOptions]
+            : visibleOptions;
+        return withSelected.map((option) => ({
             ...option,
             selected: option.value === selectedModel
         }));
+    }
+
+    get modelCatalogCountLabel() {
+        const count = (this.providerModelOptions[this.settingsProvider] || []).length;
+        if (!count) return "Loading models";
+        return `${count} available models`;
     }
 
     get settingsKeyStatus() {
@@ -195,6 +217,87 @@ export default class Data360Console extends LightningElement {
 
     get userRows() {
         return this.organizationUsers || [];
+    }
+
+    get adminSections() {
+        return [
+            { id: "mcp", label: "MCP servers" },
+            { id: "model", label: "Models" },
+            { id: "organizations", label: "Organizations" },
+            { id: "users", label: "Users" }
+        ].map((section) => ({
+            ...section,
+            className: `settings-nav-item ${this.activeAdminSection === section.id ? "active" : ""}`
+        }));
+    }
+
+    get isAdminMcp() {
+        return this.activeAdminSection === "mcp";
+    }
+
+    get isAdminModel() {
+        return this.activeAdminSection === "model";
+    }
+
+    get isAdminOrganizations() {
+        return this.activeAdminSection === "organizations";
+    }
+
+    get isAdminUsers() {
+        return this.activeAdminSection === "users";
+    }
+
+    get selectedMcpServer() {
+        return this.mcpServers.find((server) => server.id === this.selectedMcpServerId) || this.mcpServers[0] || null;
+    }
+
+    get selectedMcpServerRows() {
+        return (this.mcpServers || []).map((server) => ({
+            ...server,
+            className: `mcp-server-option ${server.id === this.selectedMcpServerId ? "active" : ""}`,
+            statusLabel: this.mcpServerStatusLabel(server)
+        }));
+    }
+
+    get mcpValidationClass() {
+        const status = this.mcpValidation?.status || "passed";
+        return `settings-feedback ${status === "failed" ? "failed" : status === "skipped" ? "neutral" : "passed"}`;
+    }
+
+    get mcpValidationRows() {
+        return (this.mcpValidation?.servers || []).map((server) => ({
+            ...server,
+            className: `validation-row ${server.status}`,
+            toolSummary: server.tools?.length ? server.tools.join(", ") : ""
+        }));
+    }
+
+    get selectedMcpIsStdio() {
+        return this.selectedMcpServer?.transport !== "streamable-http";
+    }
+
+    get selectedMcpIsHttp() {
+        return this.selectedMcpServer?.transport === "streamable-http";
+    }
+
+    get mcpStdioButtonClass() {
+        return `transport-option ${this.selectedMcpIsStdio ? "active" : ""}`;
+    }
+
+    get mcpHttpButtonClass() {
+        return `transport-option ${this.selectedMcpIsHttp ? "active" : ""}`;
+    }
+
+    mcpServerStatusLabel(server) {
+        const validation = (this.mcpValidation?.servers || []).find((result) => result.id === server.id);
+        if (validation) {
+            return validation.status === "passed"
+                ? `Validated (${validation.toolCount} tools)`
+                : validation.status === "failed"
+                    ? "Validation failed"
+                    : "Skipped";
+        }
+        return server.enabled ? "Enabled" : "Disabled";
     }
 
     get newUserRoleIsMember() {
@@ -298,15 +401,34 @@ export default class Data360Console extends LightningElement {
             this.llmSettings = await request("/api/llm-settings");
             this.settingsProvider = this.llmSettings.provider || "anthropic";
             this.settingsModel = this.llmSettings.model || this.settingsModel;
+            await this.loadModelCatalog(this.settingsProvider);
         } catch (error) {
             this.error = error.message;
+        }
+    }
+
+    async loadModelCatalog(provider) {
+        try {
+            const models = await request(`/api/llm-settings/models?provider=${encodeURIComponent(provider)}`);
+            const options = (models || []).map((model) => ({
+                value: model.id,
+                label: model.label || model.id
+            }));
+            if (options.length) {
+                this.providerModelOptions = { ...this.providerModelOptions, [provider]: options };
+            }
+        } catch {
+            this.providerModelOptions = { ...this.providerModelOptions, [provider]: MODEL_OPTIONS[provider] || MODEL_OPTIONS.anthropic };
         }
     }
 
     async loadMcpSettings() {
         try {
             this.mcpSettings = await request("/api/mcp-settings");
-            this.mcpServers = this.mcpSettings.servers || [];
+            this.mcpServers = (this.mcpSettings.servers || []).map(prepareMcpServer);
+            if (!this.mcpServers.some((server) => server.id === this.selectedMcpServerId)) {
+                this.selectedMcpServerId = this.mcpServers[0]?.id || "";
+            }
         } catch (error) {
             this.error = error.message;
         }
@@ -344,7 +466,13 @@ export default class Data360Console extends LightningElement {
         this[field] = event.target.value;
         if (field === "settingsProvider") {
             this.settingsModel = defaultModelForProvider(this.settingsProvider);
+            this.settingsModelSearch = "";
+            this.loadModelCatalog(this.settingsProvider);
         }
+    }
+
+    handleAdminSection(event) {
+        this.activeAdminSection = event.currentTarget.dataset.section;
     }
 
     handleLoginKeydown(event) {
@@ -405,6 +533,7 @@ export default class Data360Console extends LightningElement {
         await request("/api/auth/logout", { method: "POST" });
         this.user = { username: "anonymous", authenticated: false, authorities: [] };
         this.currentDraft = null;
+        this.currentApprovedPlan = null;
         this.currentRun = null;
         this.messages = [];
         await this.loadAuthStatus();
@@ -412,16 +541,57 @@ export default class Data360Console extends LightningElement {
 
     async handleChatMessage(event) {
         const text = event.detail.text;
+        const mode = event.detail.mode || this.chatMode || "auto";
         this.messages = [...this.messages, { role: "user", text }];
         this.goal = text;
-        await this.handleDraftPlan();
-        if (this.currentDraft?.plan) {
-            const count = this.currentDraft.plan.steps?.length || 0;
+        if (mode !== "plan" && (mode === "execute" || !shouldDraftPlan(text))) {
+            await this.handleConversationalChat(text);
+            return;
+        }
+        this.messages = [...this.messages, { role: "assistant", text: "I am drafting a governed PlanSpec for that goal.", meta: mode === "plan" ? "Plan mode" : "Planning" }];
+        const draft = await this.handleDraftPlan();
+        if (draft?.plan) {
+            const count = draft.plan.steps?.length || 0;
             this.messages = [...this.messages, {
                 role: "assistant",
                 text: `I drafted a PlanSpec with ${count} ${count === 1 ? "step" : "steps"}. Review it before running.`,
-                meta: this.currentDraft.validation?.ok ? "Validation passed." : "Validation needs attention."
+                meta: draft.validation?.ok ? "Validation passed." : "Validation needs attention."
             }];
+        }
+    }
+
+    handleChatModeChange(event) {
+        const mode = event.detail.mode;
+        if (!["auto", "plan", "execute"].includes(mode)) return;
+        this.chatMode = mode;
+    }
+
+    async handleConversationalChat(text) {
+        this.setBusy("chat", true);
+        this.plannerStatus = "Thinking";
+        this.error = null;
+        try {
+            const response = await request("/api/chat", {
+                method: "POST",
+                body: { message: text, mode: this.chatMode }
+            });
+            this.messages = [...this.messages, {
+                role: "assistant",
+                text: response.text || "I am the Data 360 Agent Console assistant.",
+                meta: response.model ? `${providerLabel(response.provider)} / ${modelLabel(response.model)}` : "Chat",
+                trace: response.trace || []
+            }];
+            this.plannerStatus = "Ready";
+        } catch (error) {
+            this.error = error.message;
+            this.messages = [...this.messages, {
+                role: "assistant",
+                text: "I could not get a response from the configured model.",
+                meta: error.message
+            }];
+            this.plannerStatus = "Error";
+        } finally {
+            this.setBusy("chat", false);
         }
     }
 
@@ -459,6 +629,7 @@ export default class Data360Console extends LightningElement {
                     }
                 }
             });
+            this.currentApprovedPlan = null;
             this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
             this.activeTab = "review";
         } catch (error) {
@@ -470,6 +641,7 @@ export default class Data360Console extends LightningElement {
 
     resetCurrentDraft() {
         this.currentDraft = null;
+        this.currentApprovedPlan = null;
         this.currentRun = null;
         this.selectedStepId = null;
         this.approvalHistory = [];
@@ -495,6 +667,7 @@ export default class Data360Console extends LightningElement {
                     }
                 }
             });
+            this.currentApprovedPlan = null;
             this.currentRun = null;
             this.selectedStepId = this.currentDraft.plan.steps?.[0]?.id || null;
             this.approvalHistory = [];
@@ -512,13 +685,20 @@ export default class Data360Console extends LightningElement {
     }
 
     async handleStartPlan() {
-        if (!this.currentDraft) return;
+        if (!this.currentDraft || !this.currentApprovedPlan) return;
         this.setBusy("startPlan", true);
         this.plannerStatus = "Running";
         try {
-            const response = await request(`/api/plans/${this.currentDraft.plan.id}/runs`, { method: "POST" });
+            const response = await request(`/api/plans/${this.currentDraft.plan.id}/runs`, {
+                method: "POST",
+                body: {
+                    artifactId: this.currentApprovedPlan.artifactId,
+                    planHash: this.currentApprovedPlan.planHash
+                }
+            });
             if (!response.id) {
                 this.currentDraft = response;
+                this.currentApprovedPlan = null;
                 this.currentRun = null;
                 this.plannerStatus = "Review";
                 return;
@@ -532,6 +712,34 @@ export default class Data360Console extends LightningElement {
             this.plannerStatus = "Error";
         } finally {
             this.setBusy("startPlan", false);
+        }
+    }
+
+    async handleApprovePlan() {
+        if (!this.currentDraft) return;
+        this.setBusy("approvePlan", true);
+        this.plannerStatus = "Approving";
+        try {
+            const response = await request(`/api/plans/${this.currentDraft.plan.id}/approve`, { method: "POST" });
+            if (response.artifactType !== "approved-executable-plan") {
+                this.currentDraft = response;
+                this.currentApprovedPlan = null;
+                this.currentRun = null;
+                this.plannerStatus = "Review";
+                return;
+            }
+            this.currentApprovedPlan = response;
+            this.plannerStatus = "Approved";
+            this.messages = [...this.messages, {
+                role: "assistant",
+                text: "PlanSpec approved as an executable artifact.",
+                meta: response.artifactId || response.planHash
+            }];
+        } catch (error) {
+            this.error = error.message;
+            this.plannerStatus = "Error";
+        } finally {
+            this.setBusy("approvePlan", false);
         }
     }
 
@@ -620,36 +828,150 @@ export default class Data360Console extends LightningElement {
 
     handleMcpEnabledChange(event) {
         const serverId = event.target.dataset.serverId;
+        this.mcpSaveMessage = "";
+        this.mcpValidation = null;
         this.mcpServers = this.mcpServers.map((server) => server.id === serverId
             ? { ...server, enabled: event.target.checked }
             : server);
     }
 
-    handleMcpCommandChange(event) {
+    handleSelectMcpServer(event) {
+        this.selectedMcpServerId = event.currentTarget.dataset.serverId;
+    }
+
+    handleMcpFieldChange(event) {
         const serverId = event.target.dataset.serverId;
+        const field = event.target.dataset.field;
+        this.mcpSaveMessage = "";
+        this.mcpValidation = null;
         this.mcpServers = this.mcpServers.map((server) => server.id === serverId
-            ? { ...server, command: event.target.value, commandConfigured: Boolean(event.target.value?.trim()) }
+            ? {
+                ...server,
+                [field]: event.target.value,
+                commandConfigured: field === "command" ? Boolean(event.target.value?.trim()) : server.commandConfigured
+            }
             : server);
+    }
+
+    handleMcpTransportSelect(event) {
+        const serverId = event.currentTarget.dataset.serverId;
+        const transport = event.currentTarget.dataset.transport;
+        this.mcpSaveMessage = "";
+        this.mcpValidation = null;
+        this.mcpServers = this.mcpServers.map((server) => server.id === serverId
+            ? { ...server, transport }
+            : server);
+    }
+
+    handleAddMcpArgument(event) {
+        const serverId = event.currentTarget.dataset.serverId;
+        this.updateMcpServer(serverId, (server) => ({
+            ...server,
+            arguments: [...server.arguments, keyedValue("")]
+        }));
+    }
+
+    handleMcpArgumentChange(event) {
+        this.updateMcpListValue(event, "arguments", "value");
+    }
+
+    handleRemoveMcpArgument(event) {
+        this.removeMcpListItem(event, "arguments");
+    }
+
+    handleAddMcpEnvironment(event) {
+        const serverId = event.currentTarget.dataset.serverId;
+        this.updateMcpServer(serverId, (server) => ({
+            ...server,
+            environment: [...server.environment, keyedPair("", "")]
+        }));
+    }
+
+    handleMcpEnvironmentChange(event) {
+        this.updateMcpListValue(event, "environment", event.target.dataset.field);
+    }
+
+    handleRemoveMcpEnvironment(event) {
+        this.removeMcpListItem(event, "environment");
+    }
+
+    handleAddMcpPassthrough(event) {
+        const serverId = event.currentTarget.dataset.serverId;
+        this.updateMcpServer(serverId, (server) => ({
+            ...server,
+            environmentPassthrough: [...server.environmentPassthrough, keyedValue("")]
+        }));
+    }
+
+    handleMcpPassthroughChange(event) {
+        this.updateMcpListValue(event, "environmentPassthrough", "value");
+    }
+
+    handleRemoveMcpPassthrough(event) {
+        this.removeMcpListItem(event, "environmentPassthrough");
+    }
+
+    updateMcpListValue(event, listName, fieldName) {
+        const serverId = event.target.dataset.serverId;
+        const itemId = event.target.dataset.itemId;
+        this.updateMcpServer(serverId, (server) => ({
+            ...server,
+            [listName]: server[listName].map((item) => item.id === itemId
+                ? { ...item, [fieldName]: event.target.value }
+                : item)
+        }));
+    }
+
+    removeMcpListItem(event, listName) {
+        const serverId = event.currentTarget.dataset.serverId;
+        const itemId = event.currentTarget.dataset.itemId;
+        this.updateMcpServer(serverId, (server) => ({
+            ...server,
+            [listName]: server[listName].filter((item) => item.id !== itemId)
+        }));
+    }
+
+    updateMcpServer(serverId, updater) {
+        this.mcpSaveMessage = "";
+        this.mcpValidation = null;
+        this.mcpServers = this.mcpServers.map((server) => server.id === serverId ? updater(server) : server);
     }
 
     async handleSaveMcpSettings() {
         this.setBusy("saveMcpSettings", true);
         this.error = null;
+        this.mcpSaveMessage = "";
+        this.mcpValidation = null;
         try {
-            const body = {
-                servers: this.mcpServers.map((server) => ({
-                    id: server.id,
-                    enabled: server.enabled,
-                    command: server.command
-                }))
-            };
-            this.mcpSettings = await request("/api/mcp-settings", { method: "PUT", body });
-            this.mcpServers = this.mcpSettings.servers || [];
+            this.mcpSettings = await request("/api/mcp-settings", { method: "PUT", body: this.mcpSettingsRequestBody() });
+            this.mcpServers = (this.mcpSettings.servers || []).map(prepareMcpServer);
+            this.mcpSaveMessage = "MCP settings saved. Validating launch configuration...";
+            this.mcpValidation = await request("/api/mcp-settings/validate", { method: "POST" });
+            this.mcpSaveMessage = "MCP settings saved.";
         } catch (error) {
             this.error = error.message;
         } finally {
             this.setBusy("saveMcpSettings", false);
         }
+    }
+
+    mcpSettingsRequestBody() {
+        return {
+            servers: this.mcpServers.map((server) => ({
+                id: server.id,
+                name: server.name,
+                enabled: server.enabled,
+                transport: server.transport,
+                command: server.command,
+                endpoint: server.endpoint,
+                arguments: server.arguments.map((item) => item.value).filter(Boolean),
+                environment: server.environment
+                    .filter((item) => item.key?.trim())
+                    .map((item) => ({ key: item.key, value: item.value })),
+                environmentPassthrough: server.environmentPassthrough.map((item) => item.value).filter(Boolean),
+                workingDirectory: server.workingDirectory
+            }))
+        };
     }
 
     async handleCreateOrganization() {
@@ -710,9 +1032,42 @@ export default class Data360Console extends LightningElement {
         }
     }
 
+    handleDismissExportMessage() {
+        this.exportMessage = "";
+    }
+
     setBusy(key, value) {
         this.busy = { ...this.busy, [key]: value };
     }
+}
+
+function shouldDraftPlan(text) {
+    const value = (text || "").toLowerCase();
+    const planSignals = [
+        "planspec",
+        "plan spec",
+        "draft a plan",
+        "make a plan",
+        "set up",
+        "setup",
+        "configure",
+        "create",
+        "build",
+        "deploy",
+        "run",
+        "execute",
+        "activate",
+        "delete",
+        "update",
+        "change",
+        "monitor",
+        "ingest",
+        "unify",
+        "segment customers",
+        "identity resolution",
+        "calculated insight"
+    ];
+    return planSignals.some((signal) => value.includes(signal));
 }
 
 function delay(ms) {
@@ -738,9 +1093,39 @@ function defaultModelForProvider(provider) {
 }
 
 function providerLabel(provider) {
+    if (provider === "mcp") return "Data 360 MCP";
     return provider === "openrouter" ? "OpenRouter" : "Anthropic";
 }
 
 function modelLabel(model) {
     return MODEL_LABELS.get(model) || model || "Model not configured";
+}
+
+let rowId = 0;
+
+function nextRowId() {
+    rowId += 1;
+    return `row-${rowId}`;
+}
+
+function keyedValue(value) {
+    return { id: nextRowId(), value: value || "" };
+}
+
+function keyedPair(key, value) {
+    return { id: nextRowId(), key: key || "", value: value || "" };
+}
+
+function prepareMcpServer(server) {
+    return {
+        ...server,
+        name: server.name || server.label || server.id,
+        transport: server.transport || "stdio",
+        endpoint: server.endpoint || "",
+        command: server.command || "",
+        arguments: (server.arguments || []).map(keyedValue),
+        environment: (server.environment || []).map((item) => keyedPair(item.key, item.value)),
+        environmentPassthrough: (server.environmentPassthrough || []).map(keyedValue),
+        workingDirectory: server.workingDirectory || ""
+    };
 }

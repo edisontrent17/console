@@ -6,5 +6,6 @@ public enum StepStatus {
     WAITING_APPROVAL,
     SUCCEEDED,
     FAILED,
+    CANCELED,
     SKIPPED
 }

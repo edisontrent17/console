@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public enum Data360Action {
@@ -15,20 +16,23 @@ public enum Data360Action {
     CREATE_MAPPING("data360.mapping.create"),
     CREATE_CALCULATED_INSIGHT("data360.calculatedInsight.create"),
     RUN_CALCULATED_INSIGHT("data360.calculatedInsight.run"),
-    CREATE_SEGMENT("data360.createSegment"),
-    UPDATE_SEGMENT("data360.updateSegment"),
-    PUBLISH_SEGMENT("data360.publishSegment"),
-    CREATE_ACTIVATION("data360.createActivation"),
-    RUN_ACTIVATION("data360.runActivation"),
+    CREATE_SEGMENT("data360.createSegment", "data360.segment.create"),
+    UPDATE_SEGMENT("data360.updateSegment", "data360.segment.update"),
+    PUBLISH_SEGMENT("data360.publishSegment", "data360.segment.publish"),
+    CREATE_ACTIVATION("data360.createActivation", "data360.activation.create"),
+    RUN_ACTIVATION("data360.runActivation", "data360.activation.run"),
     GET_IDENTITY_RULESET("data360.identityRuleset.get"),
     CREATE_IDENTITY_RULESET("data360.identityResolution.ruleset.create"),
     RUN_IDENTITY_RESOLUTION("data360.identityResolution.run"),
-    MONITOR_METRIC("data360.monitor.metric");
+    MONITOR_METRIC("data360.monitor.metric"),
+    MCP_EXECUTE("data360.mcp.execute");
 
     private final String value;
+    private final List<String> aliases;
 
-    Data360Action(String value) {
+    Data360Action(String value, String... aliases) {
         this.value = value;
+        this.aliases = List.of(aliases);
     }
 
     @JsonValue
@@ -55,6 +59,7 @@ public enum Data360Action {
             case CREATE_IDENTITY_RULESET -> "urn:salesforce:data360:capability:identityResolution.ruleset.create";
             case RUN_IDENTITY_RESOLUTION -> "urn:salesforce:data360:capability:identityResolution.run";
             case MONITOR_METRIC -> "urn:salesforce:data360:capability:monitor.metric";
+            case MCP_EXECUTE -> "urn:salesforce:data360:capability:mcp.execute";
         };
     }
 
@@ -62,6 +67,7 @@ public enum Data360Action {
         return switch (this) {
             case SEARCH, METADATA_DESCRIBE, QUERY, GET_IDENTITY_RULESET -> PlanPhase.DISCOVER;
             case MONITOR_METRIC -> PlanPhase.MONITOR;
+            case MCP_EXECUTE -> PlanPhase.DISCOVER;
             default -> PlanPhase.SETUP;
         };
     }
@@ -86,8 +92,9 @@ public enum Data360Action {
 
     @JsonCreator
     public static Data360Action from(String value) {
+        var normalized = value == null ? "" : value.trim();
         return Arrays.stream(values())
-                .filter(action -> action.value.equals(value))
+                .filter(action -> action.matches(normalized))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported Data 360 action: " + value));
     }
@@ -101,5 +108,9 @@ public enum Data360Action {
                 .filter(action -> action.resource().equals(normalized))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Unsupported Data 360 capability resource: " + resource.toLowerCase(Locale.ROOT)));
+    }
+
+    private boolean matches(String candidate) {
+        return value.equals(candidate) || aliases.contains(candidate);
     }
 }

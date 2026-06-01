@@ -62,9 +62,13 @@
                         model-label={modelLabel}
                         user-label={userLabel}
                         current-draft={currentDraft}
+                        approved-plan={currentApprovedPlan}
                         current-run={currentRun}
                         busy={busy}
+                        chat-mode={chatMode}
                         onsendmessage={handleChatMessage}
+                        onchatmodechange={handleChatModeChange}
+                        onapproveplan={handleApprovePlan}
                         onstartplan={handleStartPlan}
                         onexportplanspec={handleExportPlanSpec}
                     ></c-chat-workspace>
@@ -92,6 +96,7 @@
                         diagnostics={diagnostics}
                         planner-status={plannerStatus}
                         current-draft={currentDraft}
+                        approved-plan={currentApprovedPlan}
                         current-run={currentRun}
                         approval-history={approvalHistory}
                         approval-history-unavailable={approvalHistoryUnavailable}
@@ -100,7 +105,9 @@
                         onscenariochange={handleScenarioChange}
                         ongoalchange={handleGoalChange}
                         ondraftplan={handleDraftPlan}
+                        onapproveplan={handleApprovePlan}
                         onstartplan={handleStartPlan}
+                        onexportplanspec={handleExportPlanSpec}
                         onsmokedata360={handleSmokeData360}
                         onselectstep={handleSelectStep}
                         onapprovestep={handleApproveStep}
@@ -129,80 +136,186 @@
                 </template>
 
                 <template if:true={isAdmin}>
-                    <header class="workspace-header">
-                        <div>
-                            <h1>Admin</h1>
-                            <p>Configure model access, MCP servers, organizations, and users.</p>
-                        </div>
-                    </header>
-                    <section class="admin-grid">
-                        <article class="admin-panel">
-                            <h2>Model</h2>
-                            <label>Provider
-                                <select class="slds-select" data-field="settingsProvider" onchange={handleFieldChange}>
-                                    <option value="anthropic" selected={settingsProviderIsAnthropic}>Anthropic</option>
-                                    <option value="openrouter" selected={settingsProviderIsOpenRouter}>OpenRouter</option>
-                                </select>
-                            </label>
-                            <label>Model
-                                <select class="slds-select" data-field="settingsModel" onchange={handleFieldChange}>
-                                    <template for:each={settingsModelOptions} for:item="option">
-                                        <option key={option.value} value={option.value} selected={option.selected}>{option.label}</option>
+                    <section class="settings-shell" aria-label="Admin settings">
+                        <aside class="settings-sidebar">
+                            <div class="settings-title">Settings</div>
+                            <template for:each={adminSections} for:item="section">
+                                <button key={section.id} class={section.className} data-section={section.id} onclick={handleAdminSection}>{section.label}</button>
+                            </template>
+                        </aside>
+
+                        <section class="settings-main">
+                            <template if:true={isAdminMcp}>
+                                <header class="settings-header">
+                                    <div>
+                                        <p>MCP servers</p>
+                                        <h1>Connect to custom MCP servers</h1>
+                                    </div>
+                                    <button class="slds-button slds-button_brand" onclick={handleSaveMcpSettings} disabled={busy.saveMcpSettings}>Save and validate</button>
+                                </header>
+
+                                <template if:true={mcpSaveMessage}>
+                                    <div class="settings-feedback passed" role="status">{mcpSaveMessage}</div>
+                                </template>
+
+                                <template if:true={mcpValidation}>
+                                    <section class={mcpValidationClass} aria-label="MCP validation result">
+                                        <strong>{mcpValidation.message}</strong>
+                                        <div class="validation-list">
+                                            <template for:each={mcpValidationRows} for:item="server">
+                                                <div key={server.id} class={server.className}>
+                                                    <span>{server.name}</span>
+                                                    <small>{server.message}</small>
+                                                    <template if:true={server.toolSummary}>
+                                                        <code>{server.toolSummary}</code>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </section>
+                                </template>
+
+                                <div class="mcp-settings-layout">
+                                    <nav class="mcp-server-list" aria-label="MCP server list">
+                                        <template for:each={selectedMcpServerRows} for:item="server">
+                                            <button key={server.id} class={server.className} data-server-id={server.id} onclick={handleSelectMcpServer}>
+                                                <span>{server.name}</span>
+                                                <small>{server.statusLabel}</small>
+                                            </button>
+                                        </template>
+                                    </nav>
+
+                                    <template if:true={selectedMcpServer}>
+                                        <form class="mcp-editor">
+                                            <label>Name
+                                                <input class="slds-input" data-server-id={selectedMcpServer.id} data-field="name" value={selectedMcpServer.name} oninput={handleMcpFieldChange}>
+                                            </label>
+
+                                            <label class="toggle-label">
+                                                <input type="checkbox" checked={selectedMcpServer.enabled} data-server-id={selectedMcpServer.id} onchange={handleMcpEnabledChange}>
+                                                <span>Enabled</span>
+                                            </label>
+
+                                            <div class="field-group">
+                                                <span class="field-label">Transport</span>
+                                                <div class="transport-picker" role="group" aria-label="Transport">
+                                                    <button type="button" class={mcpStdioButtonClass} data-server-id={selectedMcpServer.id} data-transport="stdio" onclick={handleMcpTransportSelect}>STDIO</button>
+                                                    <button type="button" class={mcpHttpButtonClass} data-server-id={selectedMcpServer.id} data-transport="streamable-http" onclick={handleMcpTransportSelect}>Streamable HTTP</button>
+                                                </div>
+                                            </div>
+
+                                            <template if:true={selectedMcpIsStdio}>
+                                                <label>Command to launch
+                                                    <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-field="command" value={selectedMcpServer.command} placeholder="npx -y @salesforce/data360-mcp-server" oninput={handleMcpFieldChange}>
+                                                </label>
+
+                                                <div class="field-group">
+                                                    <span class="field-label">Arguments</span>
+                                                    <template for:each={selectedMcpServer.arguments} for:item="argument">
+                                                        <div key={argument.id} class="repeat-row">
+                                                            <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-item-id={argument.id} value={argument.value} placeholder="--flag=value" oninput={handleMcpArgumentChange}>
+                                                            <button type="button" class="icon-button" title="Remove argument" data-server-id={selectedMcpServer.id} data-item-id={argument.id} onclick={handleRemoveMcpArgument}>×</button>
+                                                        </div>
+                                                    </template>
+                                                    <button type="button" class="text-action" data-server-id={selectedMcpServer.id} onclick={handleAddMcpArgument}>+ Add argument</button>
+                                                </div>
+
+                                                <div class="field-group">
+                                                    <span class="field-label">Environment variables</span>
+                                                    <template for:each={selectedMcpServer.environment} for:item="variable">
+                                                        <div key={variable.id} class="repeat-row two-col">
+                                                            <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-item-id={variable.id} data-field="key" value={variable.key} placeholder="KEY" oninput={handleMcpEnvironmentChange}>
+                                                            <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-item-id={variable.id} data-field="value" value={variable.value} placeholder="value" oninput={handleMcpEnvironmentChange}>
+                                                            <button type="button" class="icon-button" title="Remove environment variable" data-server-id={selectedMcpServer.id} data-item-id={variable.id} onclick={handleRemoveMcpEnvironment}>×</button>
+                                                        </div>
+                                                    </template>
+                                                    <button type="button" class="text-action" data-server-id={selectedMcpServer.id} onclick={handleAddMcpEnvironment}>+ Add environment variable</button>
+                                                </div>
+
+                                                <div class="field-group">
+                                                    <span class="field-label">Environment variable passthrough</span>
+                                                    <template for:each={selectedMcpServer.environmentPassthrough} for:item="variable">
+                                                        <div key={variable.id} class="repeat-row">
+                                                            <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-item-id={variable.id} value={variable.value} placeholder="SALESFORCE_ACCESS_TOKEN" oninput={handleMcpPassthroughChange}>
+                                                            <button type="button" class="icon-button" title="Remove passthrough variable" data-server-id={selectedMcpServer.id} data-item-id={variable.id} onclick={handleRemoveMcpPassthrough}>×</button>
+                                                        </div>
+                                                    </template>
+                                                    <button type="button" class="text-action" data-server-id={selectedMcpServer.id} onclick={handleAddMcpPassthrough}>+ Add variable</button>
+                                                </div>
+
+                                                <label>Working directory
+                                                    <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-field="workingDirectory" value={selectedMcpServer.workingDirectory} placeholder="/Users/me/project" oninput={handleMcpFieldChange}>
+                                                </label>
+                                            </template>
+
+                                            <template if:true={selectedMcpIsHttp}>
+                                                <label>Endpoint
+                                                    <input class="slds-input monospace-input" data-server-id={selectedMcpServer.id} data-field="endpoint" value={selectedMcpServer.endpoint} placeholder="https://example.com/mcp" oninput={handleMcpFieldChange}>
+                                                </label>
+                                            </template>
+                                        </form>
                                     </template>
-                                </select>
-                            </label>
-                            <label>API token<input class="slds-input" type="password" data-field="settingsApiKey" value={settingsApiKey} placeholder={settingsKeyStatus} oninput={handleFieldChange}></label>
-                            <button class="slds-button slds-button_brand" onclick={handleSaveLlmSettings} disabled={busy.saveSettings}>Save model settings</button>
-                        </article>
+                                </div>
+                            </template>
 
-                        <article class="admin-panel mcp-panel">
-                            <h2>MCP Servers</h2>
-                            <template for:each={mcpServers} for:item="server">
-                                <div key={server.id} class="mcp-row">
-                                    <label class="mcp-toggle">
-                                        <input type="checkbox" checked={server.enabled} data-server-id={server.id} onchange={handleMcpEnabledChange}>
-                                        <span>
-                                            <strong>{server.label}</strong>
-                                            <small>{server.description}</small>
-                                        </span>
+                            <template if:true={isAdminModel}>
+                                <section class="settings-card">
+                                    <h1>Model</h1>
+                                    <label>Provider
+                                        <select class="slds-select" data-field="settingsProvider" onchange={handleFieldChange}>
+                                            <option value="anthropic" selected={settingsProviderIsAnthropic}>Anthropic</option>
+                                            <option value="openrouter" selected={settingsProviderIsOpenRouter}>OpenRouter</option>
+                                        </select>
                                     </label>
-                                    <input class="slds-input" data-server-id={server.id} value={server.command} placeholder="stdio command" oninput={handleMcpCommandChange}>
-                                </div>
+                                    <label>Model
+                                        <input class="slds-input" data-field="settingsModelSearch" value={settingsModelSearch} placeholder={modelCatalogCountLabel} oninput={handleFieldChange}>
+                                        <select class="slds-select" data-field="settingsModel" onchange={handleFieldChange}>
+                                            <template for:each={settingsModelOptions} for:item="option">
+                                                <option key={option.value} value={option.value} selected={option.selected}>{option.label}</option>
+                                            </template>
+                                        </select>
+                                    </label>
+                                    <label>API token<input class="slds-input" type="password" data-field="settingsApiKey" value={settingsApiKey} placeholder={settingsKeyStatus} oninput={handleFieldChange}></label>
+                                    <button class="slds-button slds-button_brand" onclick={handleSaveLlmSettings} disabled={busy.saveSettings}>Save model settings</button>
+                                </section>
                             </template>
-                            <button class="slds-button slds-button_brand" onclick={handleSaveMcpSettings} disabled={busy.saveMcpSettings}>Save MCP selection</button>
-                        </article>
 
-                        <article class="admin-panel">
-                            <h2>Organizations</h2>
-                            <div class="inline-form">
-                                <input class="slds-input" data-field="newOrganizationName" value={newOrganizationName} placeholder="Organization name" oninput={handleFieldChange}>
-                                <button class="slds-button slds-button_neutral" onclick={handleCreateOrganization} disabled={busy.createOrganization}>Create</button>
-                            </div>
-                            <template for:each={organizationRows} for:item="org">
-                                <button key={org.id} class={org.className} data-organization-id={org.id} onclick={handleSelectOrganization}>{org.name}</button>
+                            <template if:true={isAdminOrganizations}>
+                                <section class="settings-card">
+                                    <h1>Organizations</h1>
+                                    <div class="inline-form">
+                                        <input class="slds-input" data-field="newOrganizationName" value={newOrganizationName} placeholder="Organization name" oninput={handleFieldChange}>
+                                        <button class="slds-button slds-button_neutral" onclick={handleCreateOrganization} disabled={busy.createOrganization}>Create</button>
+                                    </div>
+                                    <template for:each={organizationRows} for:item="org">
+                                        <button key={org.id} class={org.className} data-organization-id={org.id} onclick={handleSelectOrganization}>{org.name}</button>
+                                    </template>
+                                </section>
                             </template>
-                        </article>
 
-                        <article class="admin-panel">
-                            <h2>Users</h2>
-                            <div class="user-form">
-                                <input class="slds-input" data-field="newUserName" value={newUserName} placeholder="Name" oninput={handleFieldChange}>
-                                <input class="slds-input" type="email" data-field="newUserEmail" value={newUserEmail} placeholder="Email" oninput={handleFieldChange}>
-                                <input class="slds-input" type="password" data-field="newUserPassword" value={newUserPassword} placeholder="Temporary password" oninput={handleFieldChange}>
-                                <select class="slds-select" data-field="newUserRole" onchange={handleFieldChange}>
-                                    <option value="MEMBER" selected={newUserRoleIsMember}>Member</option>
-                                    <option value="ADMIN" selected={newUserRoleIsAdmin}>Admin</option>
-                                    <option value="VIEWER" selected={newUserRoleIsViewer}>Viewer</option>
-                                </select>
-                                <button class="slds-button slds-button_neutral" onclick={handleCreateUser} disabled={busy.createUser}>Create user</button>
-                            </div>
-                            <template for:each={userRows} for:item="item">
-                                <div key={item.id} class="user-row">
-                                    <strong>{item.displayName}</strong>
-                                    <span>{item.email} • {item.role}</span>
-                                </div>
+                            <template if:true={isAdminUsers}>
+                                <section class="settings-card">
+                                    <h1>Users</h1>
+                                    <div class="user-form">
+                                        <input class="slds-input" data-field="newUserName" value={newUserName} placeholder="Name" oninput={handleFieldChange}>
+                                        <input class="slds-input" type="email" data-field="newUserEmail" value={newUserEmail} placeholder="Email" oninput={handleFieldChange}>
+                                        <input class="slds-input" type="password" data-field="newUserPassword" value={newUserPassword} placeholder="Temporary password" oninput={handleFieldChange}>
+                                        <select class="slds-select" data-field="newUserRole" onchange={handleFieldChange}>
+                                            <option value="MEMBER" selected={newUserRoleIsMember}>Member</option>
+                                            <option value="ADMIN" selected={newUserRoleIsAdmin}>Admin</option>
+                                            <option value="VIEWER" selected={newUserRoleIsViewer}>Viewer</option>
+                                        </select>
+                                        <button class="slds-button slds-button_neutral" onclick={handleCreateUser} disabled={busy.createUser}>Create user</button>
+                                    </div>
+                                    <template for:each={userRows} for:item="item">
+                                        <div key={item.id} class="user-row">
+                                            <strong>{item.displayName}</strong>
+                                            <span>{item.email} • {item.role}</span>
+                                        </div>
+                                    </template>
+                                </section>
                             </template>
-                        </article>
+                        </section>
                     </section>
                 </template>
 
@@ -210,7 +323,18 @@
                     <div class="slds-notify slds-notify_alert slds-alert_error floating-alert" role="alert">{error}</div>
                 </template>
                 <template if:true={exportMessage}>
-                    <div class="slds-notify slds-notify_alert export-toast" role="status">{exportMessage}</div>
+                    <div class="slds-notify slds-notify_alert export-toast" role="status">
+                        <span>{exportMessage}</span>
+                        <button
+                            class="toast-dismiss"
+                            type="button"
+                            title="Dismiss export notification"
+                            aria-label="Dismiss export notification"
+                            onclick={handleDismissExportMessage}
+                        >
+                            ×
+                        </button>
+                    </div>
                 </template>
             </main>
         </template>

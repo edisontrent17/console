@@ -2,11 +2,13 @@ package com.acme.data360agent.temporal;
 
 import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.operation.OperationRegistry;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.plan.PlanTopology;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.client.WorkflowStub;
@@ -56,7 +58,7 @@ class Data360PlanWorkflowImplTest {
                 .map(step -> registry.bindingFor(step.action()))
                 .distinct()
                 .toList();
-        WorkflowClient.start(workflow::run, "run_1", plan, operationBindings);
+        WorkflowClient.start(workflow::run, PlanStore.DEFAULT_ORGANIZATION_ID, "run_1", plan, operationBindings, PlanTopology.stepIds(plan));
 
         waitForStatus(workflow, "WAITING_APPROVAL");
         assertThat(workflow.status()).containsEntry("waitingStepId", "create_segment");
@@ -78,6 +80,29 @@ class Data360PlanWorkflowImplTest {
                 "skipped:monitor_goal",
                 "completed:run_1"
         );
+    }
+
+    @Test
+    void cancelSignalWhileWaitingForApprovalCancelsRun() {
+        var workflow = environment.getWorkflowClient().newWorkflowStub(Data360PlanWorkflow.class, WorkflowOptions.newBuilder()
+                .setWorkflowId("test-run-cancel")
+                .setTaskQueue(TASK_QUEUE)
+                .build());
+        var plan = plan();
+        var registry = new OperationRegistry();
+        var operationBindings = plan.steps().stream()
+                .map(step -> registry.bindingFor(step.action()))
+                .distinct()
+                .toList();
+        WorkflowClient.start(workflow::run, PlanStore.DEFAULT_ORGANIZATION_ID, "run_cancel", plan, operationBindings, PlanTopology.stepIds(plan));
+
+        waitForStatus(workflow, "WAITING_APPROVAL");
+        workflow.cancel("No longer needed");
+        var result = WorkflowStub.fromTyped(workflow).getResult(String.class);
+
+        assertThat(result).isEqualTo("run_cancel");
+        assertThat(workflow.status()).containsEntry("status", "CANCELED");
+        assertThat(planRunActivities.events).contains("canceled:run_cancel");
     }
 
     private void waitForStatus(Data360PlanWorkflow workflow, String status) {
@@ -133,6 +158,7 @@ class Data360PlanWorkflowImplTest {
     private static class FakeData360Activities implements Data360Activities {
         @Override
         public ActivityResult executeStep(ActivityCommand command) {
+            assertThat(command.idempotencyKey()).startsWith("exec_");
             assertThat(command.binding().resource()).isEqualTo(command.step().action().resource());
             if (command.step().action() == Data360Action.CREATE_SEGMENT) {
                 assertThat(command.binding().underlyingTool()).isEqualTo("d360_segment_create");
@@ -148,50 +174,60 @@ class Data360PlanWorkflowImplTest {
         private final List<String> events = new ArrayList<>();
 
         @Override
-        public void waitingForApproval(String runId, String planId, String stepId, String action) {
+        public void waitingForApproval(String organizationId, String runId, String planId, String stepId, String action) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("waiting:" + stepId);
         }
 
         @Override
-        public void stepApproved(String runId, String planId, String stepId, String approvedBy) {
+        public void stepApproved(String organizationId, String runId, String planId, String stepId, String approvedBy) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             assertThat(approvedBy).isEqualTo("reviewer@example.com");
             events.add("approved:" + stepId);
         }
 
         @Override
-        public void stepStarted(String runId, String planId, String stepId, String action) {
+        public void stepStarted(String organizationId, String runId, String planId, String stepId, String action) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("started:" + stepId);
         }
 
         @Override
-        public void stepToolCallPrepared(String runId, String planId, String stepId, String action, OperationBindingSnapshot binding, Map<String, Object> resolvedInput) {
+        public void stepToolCallPrepared(String organizationId, String runId, String planId, String stepId, String action, OperationBindingSnapshot binding, Map<String, Object> resolvedInput, String idempotencyKey) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             assertThat(binding.resource()).isNotBlank();
             assertThat(resolvedInput).isNotEmpty();
+            assertThat(idempotencyKey).startsWith("exec_");
             events.add("prepared:" + stepId);
         }
 
         @Override
-        public void stepSucceeded(String runId, String planId, String stepId, String action, Map<String, Object> output, Map<String, Object> raw) {
+        public void stepSucceeded(String organizationId, String runId, String planId, String stepId, String action, Map<String, Object> output, Map<String, Object> raw) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("succeeded:" + stepId);
         }
 
         @Override
-        public void stepFailed(String runId, String planId, String stepId, String error) {
+        public void stepFailed(String organizationId, String runId, String planId, String stepId, String error) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("failed:" + stepId);
         }
 
         @Override
-        public void skipMonitorStep(String runId, String planId, String stepId) {
+        public void skipMonitorStep(String organizationId, String runId, String planId, String stepId) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("skipped:" + stepId);
         }
 
         @Override
-        public void completeRun(String runId, String planId) {
+        public void completeRun(String organizationId, String runId, String planId) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("completed:" + runId);
         }
 
         @Override
-        public void cancelRun(String runId, String planId, String reason) {
+        public void cancelRun(String organizationId, String runId, String planId, String reason) {
+            assertThat(organizationId).isEqualTo(PlanStore.DEFAULT_ORGANIZATION_ID);
             events.add("canceled:" + runId);
         }
 

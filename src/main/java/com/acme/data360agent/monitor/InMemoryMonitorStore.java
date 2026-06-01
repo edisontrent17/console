@@ -28,6 +28,13 @@ public class InMemoryMonitorStore implements MonitorStore {
     }
 
     @Override
+    public Optional<MonitorDefinition> definition(String organizationId, String id) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return Optional.ofNullable(definitions.get(id))
+                .filter(definition -> definition.organizationId().equals(normalized));
+    }
+
+    @Override
     public Optional<MonitorDefinition> definitionFor(String runId, String stepId) {
         return definitions.values().stream()
                 .filter(definition -> definition.runId().equals(runId) && definition.stepId().equals(stepId))
@@ -35,8 +42,25 @@ public class InMemoryMonitorStore implements MonitorStore {
     }
 
     @Override
+    public Optional<MonitorDefinition> definitionFor(String organizationId, String runId, String stepId) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return definitions.values().stream()
+                .filter(definition -> definition.organizationId().equals(normalized))
+                .filter(definition -> definition.runId().equals(runId) && definition.stepId().equals(stepId))
+                .findFirst();
+    }
+
+    @Override
     public Collection<MonitorDefinition> definitions() {
         return definitions.values();
+    }
+
+    @Override
+    public Collection<MonitorDefinition> definitions(String organizationId) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return definitions.values().stream()
+                .filter(definition -> definition.organizationId().equals(normalized))
+                .toList();
     }
 
     @Override
@@ -83,8 +107,27 @@ public class InMemoryMonitorStore implements MonitorStore {
     }
 
     @Override
+    public boolean reviewRecommendation(String organizationId, String recommendationId, MonitorRecommendationStatus status, Instant reviewedAt) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        var reviewed = recommendations.computeIfPresent(recommendationId, (id, current) -> {
+            if (!current.organizationId().equals(normalized) || current.status() != MonitorRecommendationStatus.PENDING_APPROVAL) {
+                return current;
+            }
+            return current.withStatus(status, reviewedAt);
+        });
+        return reviewed != null && reviewed.organizationId().equals(normalized) && reviewed.status() == status;
+    }
+
+    @Override
     public Optional<MonitorRecommendation> recommendation(String id) {
         return Optional.ofNullable(recommendations.get(id));
+    }
+
+    @Override
+    public Optional<MonitorRecommendation> recommendation(String organizationId, String id) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return Optional.ofNullable(recommendations.get(id))
+                .filter(recommendation -> recommendation.organizationId().equals(normalized));
     }
 
     @Override
@@ -96,8 +139,27 @@ public class InMemoryMonitorStore implements MonitorStore {
     }
 
     @Override
+    public Optional<MonitorRecommendation> pendingRecommendationFor(String organizationId, String monitorId) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return recommendations.values().stream()
+                .filter(recommendation -> recommendation.organizationId().equals(normalized))
+                .filter(recommendation -> recommendation.monitorId().equals(monitorId))
+                .filter(recommendation -> recommendation.status() == MonitorRecommendationStatus.PENDING_APPROVAL)
+                .findFirst();
+    }
+
+    @Override
     public List<MonitorRecommendation> recommendations() {
         return recommendations.values().stream()
+                .sorted((left, right) -> right.createdAt().compareTo(left.createdAt()))
+                .toList();
+    }
+
+    @Override
+    public List<MonitorRecommendation> recommendations(String organizationId) {
+        var normalized = MonitorStore.normalizeOrganizationId(organizationId);
+        return recommendations.values().stream()
+                .filter(recommendation -> recommendation.organizationId().equals(normalized))
                 .sorted((left, right) -> right.createdAt().compareTo(left.createdAt()))
                 .toList();
     }

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +51,32 @@ class McpStdioClientTest {
         assertThat(process.writtenText())
                 .contains("\"name\":\"search\"")
                 .contains("\"query\":\"metadata\"");
+    }
+
+    @Test
+    void startsProcessWithOnlyConfiguredEnvironment() {
+        var process = new FakeProcess("""
+                {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2024-11-05"}}
+                {"jsonrpc":"2.0","id":2,"result":{"tools":[]}}
+                """);
+        var environment = new LinkedHashMap<String, String>();
+        environment.put("ALLOWED_TOKEN", "secret");
+        var seenEnvironment = new LinkedHashMap<String, String>();
+        var client = new McpStdioClient(
+                List.of("fake-mcp"),
+                environment,
+                null,
+                Duration.ofSeconds(2),
+                objectMapper,
+                processBuilder -> {
+                    seenEnvironment.putAll(processBuilder.environment());
+                    return process;
+                }
+        );
+
+        client.listTools();
+
+        assertThat(seenEnvironment).containsExactlyEntriesOf(environment);
     }
 
     @Test

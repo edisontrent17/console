@@ -1,6 +1,7 @@
 package com.acme.data360agent.data360;
 
 import com.acme.data360agent.config.AppProperties;
+import com.acme.data360agent.execution.PlanStore;
 import com.acme.data360agent.execution.RunContext;
 import com.acme.data360agent.mcp.McpSettingsService;
 import com.acme.data360agent.operation.OperationRegistry;
@@ -8,6 +9,7 @@ import com.acme.data360agent.plan.Data360Action;
 import com.acme.data360agent.plan.PlanContext;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.support.SensitiveData;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -52,7 +54,8 @@ public class Data360DiagnosticsService {
                     Map.of(),
                     false
             );
-            var result = client.call(operation, step, step.input(), new RunContext("diagnostics", "diagnostics", new PlanContext("diagnostics", "default", "sandbox")));
+            var organizationId = "mcp".equals(mode) ? mcpSettings.current().organizationId() : PlanStore.DEFAULT_ORGANIZATION_ID;
+            var result = client.call(operation, step, step.input(), new RunContext(organizationId, "diagnostics", "diagnostics", new PlanContext("diagnostics", "default", "sandbox")));
             details.put("smoke", "metadata");
             details.put("outputKeys", result.output().keySet().stream().sorted().toList());
             details.put("rawKeys", result.raw().keySet().stream().sorted().toList());
@@ -62,7 +65,7 @@ public class Data360DiagnosticsService {
             details.put("error", "Data 360 Connect API call failed.");
             return new Data360DiagnosticsResult(mode, true, "failed", details, Instant.now());
         } catch (Exception e) {
-            details.put("error", e.getMessage());
+            details.put("error", SensitiveData.redactText(e.getMessage()));
             return new Data360DiagnosticsResult(mode, true, "failed", details, Instant.now());
         }
     }

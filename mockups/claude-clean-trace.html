@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data 360 Agent Console - Clean Trace Mockup</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5f0;
+      --surface: #fffdf8;
+      --surface-2: #f1eee7;
+      --line: #ded8ce;
+      --line-strong: #cfc6b9;
+      --text: #26211b;
+      --muted: #746b61;
+      --soft: #ebe6dd;
+      --accent: #6f4d33;
+      --accent-soft: #efe2d4;
+      --blue: #285f8f;
+      --blue-soft: #edf5fb;
+      --green: #216e4e;
+      --green-soft: #e8f3ee;
+      --red: #9b3535;
+      --shadow: 0 24px 60px rgba(36, 31, 25, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    button, input {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 56px 1fr auto;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 253, 248, .86);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand {
+      font-weight: 650;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mode {
+      display: inline-flex;
+      padding: 3px;
+      gap: 2px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface-2);
+    }
+
+    .mode button {
+      border: 0;
+      background: transparent;
+      border-radius: 8px;
+      color: var(--muted);
+      padding: 7px 11px;
+      min-width: 70px;
+    }
+
+    .mode button.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 2px rgba(36, 31, 25, .09);
+    }
+
+    .top-actions {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ghost {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 11px;
+    }
+
+    .chat {
+      width: min(860px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 34px 0 18px;
+    }
+
+    .message {
+      margin: 0 0 26px;
+      line-height: 1.52;
+    }
+
+    .message.user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 660px;
+      background: var(--soft);
+      border-radius: 18px;
+      padding: 13px 15px;
+    }
+
+    .assistant {
+      max-width: 760px;
+    }
+
+    .assistant p {
+      margin: 0 0 12px;
+    }
+
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .link-button {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      padding: 0;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid #c7d8e4;
+      background: var(--blue-soft);
+      color: var(--blue);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      max-width: 100%;
+    }
+
+    .tool-chip::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex: 0 0 auto;
+    }
+
+    .thinking {
+      display: none;
+      border-left: 2px solid var(--line-strong);
+      padding: 8px 0 8px 14px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .thinking.open {
+      display: block;
+    }
+
+    .plan-card {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 14px;
+    }
+
+    .plan-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plan-title {
+      font-weight: 650;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .plan-rows {
+      display: grid;
+    }
+
+    .plan-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plan-row:last-child {
+      border-bottom: 0;
+    }
+
+    .row-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 3px;
+    }
+
+    .row-actions {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .composer {
+      padding: 14px 16px 24px;
+      background: linear-gradient(to top, var(--bg) 78%, rgba(247, 245, 240, 0));
+      position: sticky;
+      bottom: 0;
+    }
+
+    .composer-inner {
+      width: min(860px, calc(100vw - 32px));
+      margin: 0 auto;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: 0 10px 28px rgba(36, 31, 25, .08);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 11px 11px 11px 15px;
+    }
+
+    .composer input {
+      border: 0;
+      outline: 0;
+      min-width: 0;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .send {
+      border: 0;
+      background: var(--text);
+      color: #fff;
+      border-radius: 12px;
+      padding: 9px 14px;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 50;
+    }
+
+    .drawer.open {
+      display: block;
+    }
+
+    .scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(38, 33, 27, .16);
+    }
+
+    .sheet {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      bottom: 12px;
+      width: min(560px, calc(100vw - 24px));
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      overflow: hidden;
+    }
+
+    .sheet-head {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .sheet-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .sheet-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .close {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 10px;
+      padding: 7px 10px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      border: 0;
+      color: var(--muted);
+      background: transparent;
+      border-radius: 9px;
+      padding: 7px 10px;
+      white-space: nowrap;
+    }
+
+    .tabs button.active {
+      color: var(--text);
+      background: var(--surface-2);
+    }
+
+    .sheet-body {
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 126px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(222, 216, 206, .65);
+      font-size: 13px;
+    }
+
+    .kv span:first-child {
+      color: var(--muted);
+    }
+
+    .section {
+      margin-top: 16px;
+    }
+
+    .section h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    pre {
+      margin: 0;
+      padding: 13px;
+      border-radius: 10px;
+      overflow: auto;
+      background: #171615;
+      color: #f4f0ea;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .server-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .server-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .server-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .server-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .server-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .mini-chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      color: var(--muted);
+      font-size: 12px;
+      background: var(--surface);
+    }
+
+    .dag {
+      display: grid;
+      gap: 8px;
+    }
+
+    .dag-node {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .dag-edge {
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        grid-template-columns: 1fr auto;
+      }
+
+      .mode {
+        display: none;
+      }
+
+      .top-actions {
+        grid-column: 2;
+      }
+
+      .plan-row {
+        grid-template-columns: 1fr;
+      }
+
+      .row-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">Data 360 Agent Console</div>
+      <div class="mode" aria-label="Mode">
+        <button class="active">Explore</button>
+        <button>Plan</button>
+        <button>Execute</button>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" data-drawer-tab="servers">MCP servers</button>
+        <button class="ghost" data-drawer-tab="dag">DAG</button>
+      </div>
+    </header>
+
+    <main class="chat">
+      <article class="message user">
+        <div class="bubble">
+          Bring Snowflake itinerary data and CRM contacts into Data Cloud, unify, calculate LTV, and segment customers with lifetime value over $10,000.
+        </div>
+      </article>
+
+      <article class="message assistant">
+        <p>I can do that. I’ll explore the connected servers first, then draft an approval-ready PlanSpec. Execution will stay deterministic after approval.</p>
+        <div class="inline-actions">
+          <button class="link-button" data-thinking="think-1">Thinking</button>
+          <button class="tool-chip" data-tool="dataspaces">d360_dataspace_list</button>
+          <button class="tool-chip" data-tool="snowflake">snowflake_list_tables</button>
+        </div>
+        <div class="thinking" id="think-1">
+          I need to separate discovery from execution. Snowflake can confirm source shape, CRM can confirm contact fields, and only Data 360 MCP should execute setup mutations.
+        </div>
+      </article>
+
+      <article class="message assistant">
+        <p>I found three dataspaces: <strong>default</strong>, <strong>travel_loyalty</strong>, and <strong>marketing_activation</strong>. For this goal, I’d use <strong>travel_loyalty</strong>.</p>
+        <div class="inline-actions">
+          <button class="link-button" data-thinking="think-2">Thinking</button>
+          <button class="tool-chip" data-tool="dataspaces">view tool call</button>
+        </div>
+        <div class="thinking" id="think-2">
+          The target dataspace should match the business domain. The marketing dataspace may be useful later for activation, but the unified model belongs in travel_loyalty.
+        </div>
+      </article>
+
+      <article class="message assistant">
+        <p>I drafted a PlanSpec with governed MCP calls, approval gates, and output selectors so identity resolution outputs can feed the calculated insight.</p>
+        <section class="plan-card" aria-label="PlanSpec preview">
+          <div class="plan-head">
+            <div>
+              <div class="plan-title">Travel LTV PlanSpec</div>
+              <div class="row-meta">8 states · 6 approval gates · ASL profile valid</div>
+            </div>
+            <span class="badge">Ready for review</span>
+          </div>
+          <div class="plan-rows">
+            <div class="plan-row">
+              <div>
+                <strong>Inspect Snowflake travel tables</strong>
+                <div class="row-meta">read · snowflake-dcbootcamp</div>
+              </div>
+              <div class="row-actions">
+                <button class="tool-chip" data-tool="snowflake">trace</button>
+              </div>
+            </div>
+            <div class="plan-row">
+              <div>
+                <strong>Create Data Cloud streams</strong>
+                <div class="row-meta">write · Data 360 MCP · approval required</div>
+              </div>
+              <div class="row-actions">
+                <button class="tool-chip" data-tool="datastream">trace</button>
+              </div>
+            </div>
+            <div class="plan-row">
+              <div>
+                <strong>Run identity resolution</strong>
+                <div class="row-meta">write · emits unified profile selectors</div>
+              </div>
+              <div class="row-actions">
+                <button class="tool-chip" data-tool="identity">trace</button>
+              </div>
+            </div>
+            <div class="plan-row">
+              <div>
+                <strong>Create lifetime value calculated insight</strong>
+                <div class="row-meta">write · consumes identity resolution output</div>
+              </div>
+              <div class="row-actions">
+                <button class="tool-chip" data-tool="ci">trace</button>
+              </div>
+            </div>
+            <div class="plan-row">
+              <div>
+                <strong>Create high-LTV segment</strong>
+                <div class="row-meta">write · threshold greater than 10000</div>
+              </div>
+              <div class="row-actions">
+                <button class="tool-chip" data-tool="segment">trace</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="composer">
+      <div class="composer-inner">
+        <input value="Show why identity resolution output feeds the calculated insight" />
+        <button class="send">Send</button>
+      </div>
+    </footer>
+  </div>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="scrim" data-close></div>
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <header class="sheet-head">
+        <div>
+          <div class="sheet-title" id="sheetTitle">Trace</div>
+          <div class="sheet-subtitle" id="sheetSubtitle">Select a tool call or artifact</div>
+        </div>
+        <button class="close" data-close>Close</button>
+      </header>
+      <nav class="tabs" aria-label="Trace tabs">
+        <button class="active" data-tab="trace">Trace</button>
+        <button data-tab="servers">MCP servers</button>
+        <button data-tab="plan">PlanSpec</button>
+        <button data-tab="dag">DAG</button>
+      </nav>
+      <div class="sheet-body" id="sheetBody"></div>
+    </section>
+  </aside>
+
+  <script>
+    const tools = {
+      dataspaces: {
+        title: "d360_dataspace_list",
+        subtitle: "Data 360 MCP · read · succeeded",
+        meta: {
+          Server: "data360-prod",
+          Tool: "d360_dataspace_list",
+          Effect: "read",
+          Duration: "812 ms",
+          Status: "succeeded"
+        },
+        request: { toolName: "d360_dataspace_list", params: {} },
+        response: {
+          dataspaces: [
+            { name: "default", status: "active" },
+            { name: "travel_loyalty", status: "active" },
+            { name: "marketing_activation", status: "active" }
+          ]
+        }
+      },
+      snowflake: {
+        title: "snowflake_list_tables",
+        subtitle: "Snowflake MCP · read · succeeded",
+        meta: {
+          Server: "snowflake-dcbootcamp",
+          Tool: "snowflake_list_tables",
+          Database: "dcbootcamp",
+          Warehouse: "dcdemo",
+          Status: "succeeded"
+        },
+        request: { database: "dcbootcamp", schema: "PUBLIC", warehouse: "dcdemo" },
+        response: { tables: ["CUSTOMERS", "ITINERARIES", "TRANSACTIONS", "BOOKINGS"] }
+      },
+      datastream: {
+        title: "d360_data_stream_create",
+        subtitle: "Data 360 MCP · write · waiting for approval",
+        meta: {
+          Server: "data360-prod",
+          Tool: "d360_data_stream_create",
+          Effect: "write",
+          Approval: "required",
+          Idempotency: "exec_4e67f8...",
+          Status: "waiting_approval"
+        },
+        request: {
+          sourceConnection: "snowflake_connected",
+          database: "dcbootcamp",
+          warehouse: "dcdemo",
+          table: "TRANSACTIONS",
+          targetDloName: "Travel_Transaction_DLO"
+        },
+        response: { planned: true, approvalRequired: true }
+      },
+      identity: {
+        title: "d360_identity_resolution_run",
+        subtitle: "Data 360 MCP · write · selected output",
+        meta: {
+          Server: "data360-prod",
+          Tool: "d360_identity_resolution_run",
+          Effect: "write",
+          Approval: "required",
+          Status: "planned"
+        },
+        request: { rulesetApiName: "Travel_Customer_IR" },
+        response: {
+          outputSelectors: {
+            unifiedProfileObjectApiName: "$.output.unifiedProfileObjectApiName",
+            unifiedProfileIdField: "$.output.unifiedProfileIdField"
+          }
+        }
+      },
+      ci: {
+        title: "d360_calculated_insight_create",
+        subtitle: "Data 360 MCP · write · consumes IR output",
+        meta: {
+          Server: "data360-prod",
+          Tool: "d360_calculated_insight_create",
+          Effect: "write",
+          Approval: "required",
+          Status: "planned"
+        },
+        request: {
+          apiName: "Travel_Lifetime_Value__cio",
+          unifiedProfileObjectApiName: "$.run_identity_resolution.selected.unifiedProfileObjectApiName",
+          unifiedProfileIdField: "$.run_identity_resolution.selected.unifiedProfileIdField",
+          measure: "SUM(transaction_amount)"
+        },
+        response: {
+          outputSelectors: {
+            calculatedInsightApiName: "$.output.apiName"
+          }
+        }
+      },
+      segment: {
+        title: "d360_segment_create",
+        subtitle: "Data 360 MCP · write · planned",
+        meta: {
+          Server: "data360-prod",
+          Tool: "d360_segment_create",
+          Effect: "write",
+          Approval: "required",
+          Status: "planned"
+        },
+        request: {
+          name: "High LTV Travelers",
+          segmentOnApiName: "UnifiedIndividual",
+          condition: "Travel_Lifetime_Value__cio.lifetimeValue > 10000"
+        },
+        response: {
+          outputSelectors: {
+            segmentId: "$.output.id",
+            segmentApiName: "$.output.apiName"
+          }
+        }
+      }
+    };
+
+    const planSpec = {
+      Version: "1.0",
+      QueryLanguage: "JSONPath",
+      StartAt: "inspect_snowflake",
+      States: {
+        inspect_snowflake: {
+          Type: "Task",
+          Resource: "urn:salesforce:data360:capability:mcp.execute",
+          Parameters: {
+            serverId: "snowflake-dcbootcamp",
+            toolName: "snowflake_list_tables",
+            effect: "read",
+            params: { database: "dcbootcamp", warehouse: "dcdemo" }
+          },
+          ResultPath: "$.inspect_snowflake",
+          Next: "create_data_streams"
+        },
+        create_data_streams: {
+          Type: "Task",
+          Resource: "urn:salesforce:data360:capability:mcp.execute",
+          Parameters: {
+            serverId: "data360-prod",
+            toolName: "d360_data_stream_create",
+            effect: "write",
+            approvalRequired: true,
+            params: { sourceConnection: "snowflake_connected" },
+            outputSelectors: { dataStreamId: "$.output.id" }
+          },
+          ResultPath: "$.create_data_streams",
+          Next: "run_identity_resolution"
+        },
+        run_identity_resolution: {
+          Type: "Task",
+          Resource: "urn:salesforce:data360:capability:mcp.execute",
+          Parameters: {
+            serverId: "data360-prod",
+            toolName: "d360_identity_resolution_run",
+            effect: "write",
+            approvalRequired: true,
+            params: { rulesetApiName: "Travel_Customer_IR" },
+            outputSelectors: {
+              unifiedProfileObjectApiName: "$.output.unifiedProfileObjectApiName",
+              unifiedProfileIdField: "$.output.unifiedProfileIdField"
+            }
+          },
+          ResultPath: "$.run_identity_resolution",
+          Next: "create_ltv_ci"
+        },
+        create_ltv_ci: {
+          Type: "Task",
+          Resource: "urn:salesforce:data360:capability:mcp.execute",
+          Parameters: {
+            serverId: "data360-prod",
+            toolName: "d360_calculated_insight_create",
+            effect: "write",
+            approvalRequired: true,
+            params: {
+              apiName: "Travel_Lifetime_Value__cio",
+              unifiedProfileObjectApiName: "$.run_identity_resolution.selected.unifiedProfileObjectApiName"
+            }
+          },
+          ResultPath: "$.create_ltv_ci",
+          Next: "create_high_ltv_segment"
+        },
+        create_high_ltv_segment: {
+          Type: "Task",
+          Resource: "urn:salesforce:data360:capability:mcp.execute",
+          Parameters: {
+            serverId: "data360-prod",
+            toolName: "d360_segment_create",
+            effect: "write",
+            approvalRequired: true,
+            params: {
+              name: "High LTV Travelers",
+              threshold: 10000
+            }
+          },
+          ResultPath: "$.create_high_ltv_segment",
+          End: true
+        }
+      }
+    };
+
+    const servers = [
+      {
+        name: "Data 360 MCP",
+        id: "data360-prod",
+        role: "execution server",
+        status: "connected",
+        tools: ["d360_dataspace_list", "d360_data_stream_create", "d360_identity_resolution_run", "d360_calculated_insight_create", "d360_segment_create"]
+      },
+      {
+        name: "Snowflake MCP",
+        id: "snowflake-dcbootcamp",
+        role: "discovery only",
+        status: "connected",
+        tools: ["snowflake_list_tables", "snowflake_describe_table", "snowflake_query"]
+      },
+      {
+        name: "Salesforce CRM MCP",
+        id: "crm-prod",
+        role: "discovery only",
+        status: "connected",
+        tools: ["crm_describe_object", "crm_query_contacts", "crm_list_fields"]
+      }
+    ];
+
+    const drawer = document.getElementById("drawer");
+    const body = document.getElementById("sheetBody");
+    const title = document.getElementById("sheetTitle");
+    const subtitle = document.getElementById("sheetSubtitle");
+
+    document.addEventListener("click", event => {
+      const thinking = event.target.closest("[data-thinking]");
+      if (thinking) {
+        const target = document.getElementById(thinking.dataset.thinking);
+        target.classList.toggle("open");
+        return;
+      }
+
+      const tool = event.target.closest("[data-tool]");
+      if (tool) {
+        openDrawer("trace", tool.dataset.tool);
+        return;
+      }
+
+      const tabLauncher = event.target.closest("[data-drawer-tab]");
+      if (tabLauncher) {
+        openDrawer(tabLauncher.dataset.drawerTab);
+        return;
+      }
+
+      const tab = event.target.closest("[data-tab]");
+      if (tab) {
+        setActiveTab(tab.dataset.tab);
+        renderTab(tab.dataset.tab);
+        return;
+      }
+
+      if (event.target.closest("[data-close]")) {
+        closeDrawer();
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        closeDrawer();
+      }
+    });
+
+    function openDrawer(tab, toolKey) {
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+      setActiveTab(tab);
+      renderTab(tab, toolKey);
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+
+    function setActiveTab(tab) {
+      document.querySelectorAll("[data-tab]").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === tab);
+      });
+    }
+
+    function renderTab(tab, toolKey) {
+      if (tab === "servers") {
+        title.textContent = "MCP servers";
+        subtitle.textContent = "Connected servers and available tool surfaces";
+        body.innerHTML = `
+          <div class="server-list">
+            ${servers.map(server => `
+              <div class="server-card">
+                <div class="server-top">
+                  <strong>${escapeHtml(server.name)}</strong>
+                  <span class="server-status" title="${escapeHtml(server.status)}"></span>
+                </div>
+                <div class="kv"><span>Server ID</span><strong>${escapeHtml(server.id)}</strong></div>
+                <div class="kv"><span>Role</span><strong>${escapeHtml(server.role)}</strong></div>
+                <div class="server-tools">
+                  ${server.tools.map(tool => `<span class="mini-chip">${escapeHtml(tool)}</span>`).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        return;
+      }
+
+      if (tab === "plan") {
+        title.textContent = "PlanSpec";
+        subtitle.textContent = "ASL profile emitted by the planner";
+        body.innerHTML = `<pre>${escapeHtml(JSON.stringify(planSpec, null, 2))}</pre>`;
+        return;
+      }
+
+      if (tab === "dag") {
+        title.textContent = "Plan DAG";
+        subtitle.textContent = "Control and data edges generated from the PlanSpec";
+        body.innerHTML = `
+          <div class="dag">
+            <div class="dag-node"><strong>inspect_snowflake</strong><div class="row-meta">read · snowflake-dcbootcamp</div></div>
+            <div class="dag-edge">control edge</div>
+            <div class="dag-node"><strong>create_data_streams</strong><div class="row-meta">write · data360-prod · approval required</div></div>
+            <div class="dag-edge">control edge</div>
+            <div class="dag-node"><strong>run_identity_resolution</strong><div class="row-meta">write · emits unified profile selectors</div></div>
+            <div class="dag-edge">data edge: unifiedProfileObjectApiName</div>
+            <div class="dag-node"><strong>create_ltv_ci</strong><div class="row-meta">write · consumes identity output</div></div>
+            <div class="dag-edge">control edge</div>
+            <div class="dag-node"><strong>create_high_ltv_segment</strong><div class="row-meta">write · LTV threshold &gt; 10000</div></div>
+          </div>
+        `;
+        return;
+      }
+
+      renderTool(toolKey || "dataspaces");
+    }
+
+    function renderTool(toolKey) {
+      const tool = tools[toolKey] || tools.dataspaces;
+      title.textContent = tool.title;
+      subtitle.textContent = tool.subtitle;
+      body.innerHTML = `
+        ${Object.entries(tool.meta).map(([key, value]) => `
+          <div class="kv"><span>${escapeHtml(key)}</span><strong>${escapeHtml(String(value))}</strong></div>
+        `).join("")}
+        <div class="section">
+          <h3>Request</h3>
+          <pre>${escapeHtml(JSON.stringify(tool.request, null, 2))}</pre>
+        </div>
+        <div class="section">
+          <h3>Response</h3>
+          <pre>${escapeHtml(JSON.stringify(tool.response, null, 2))}</pre>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+  </script>
+</body>
+</html>

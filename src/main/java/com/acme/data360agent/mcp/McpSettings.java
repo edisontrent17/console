@@ -9,4 +9,11 @@ public record McpSettings(
     public McpSettings {
         servers = servers == null ? List.of() : List.copyOf(servers);
     }
+
+    public McpSettings redacted() {
+        return new McpSettings(
+                organizationId,
+                servers.stream().map(McpServerSetting::redacted).toList()
+        );
+    }
 }

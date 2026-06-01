@@ -3,17 +3,17 @@ package com.acme.data360agent.execution;
 import com.acme.data360agent.audit.AuditService;
 import com.acme.data360agent.data360.Data360Client;
 import com.acme.data360agent.monitor.MonitorService;
-import com.acme.data360agent.operation.OperationBindingSnapshot;
 import com.acme.data360agent.operation.OperationRegistry;
 import com.acme.data360agent.plan.PlanPhase;
 import com.acme.data360agent.plan.PlanSpec;
 import com.acme.data360agent.plan.PlanStep;
+import com.acme.data360agent.planner.ApprovedExecutablePlan;
+import com.acme.data360agent.support.SensitiveData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,24 +40,32 @@ public class LocalPlanExecutor implements PlanExecutor {
     }
 
     @Override
-    public PlanRun start(PlanSpec plan) {
-        return start(plan, null);
+    public PlanRun start(ApprovedExecutablePlan approvedPlan) {
+        return start(PlanStore.DEFAULT_ORGANIZATION_ID, approvedPlan);
     }
 
     @Override
-    public PlanRun start(PlanSpec plan, List<OperationBindingSnapshot> operationBindings) {
-        var run = store.createRun(plan, operationBindings);
+    public PlanRun start(String organizationId, ApprovedExecutablePlan approvedPlan) {
+        var run = store.createRun(organizationId, approvedPlan);
         event(run, null, "run_started", Map.of("status", run.getStatus().name()));
-        resumeAsync(run.getId());
+        resumeAsync(run.getOrganizationId(), run.getId());
         return run;
     }
 
     @Override
     public PlanRun approveStep(String runId, String stepId, String approvedBy) {
-        var run = store.withRunLock(runId, lockedRun -> {
+        return approveStep(PlanStore.DEFAULT_ORGANIZATION_ID, runId, stepId, approvedBy);
+    }
+
+    @Override
+    public PlanRun approveStep(String organizationId, String runId, String stepId, String approvedBy) {
+        var run = store.withRunLock(organizationId, runId, lockedRun -> {
             var runRef = lockedRun;
+            if (runRef.getStatus() == RunStatus.CANCELED) {
+                throw new IllegalArgumentException("Run is canceled: " + runId);
+            }
             var planStep = PlanRunSupport.planStep(runRef, stepId);
-            if (!planStep.needsApproval()) {
+            if (!requiresApproval(runRef, planStep)) {
                 throw new IllegalArgumentException("Step does not require approval: " + stepId);
             }
             var current = PlanRunSupport.stepRun(runRef, stepId);
@@ -72,22 +80,48 @@ public class LocalPlanExecutor implements PlanExecutor {
             runRef.setStatus(RunStatus.RUNNING);
             store.saveRun(runRef);
             if (audit != null) {
-                audit.approval(runRef.getId(), stepId, approvedBy, "APPROVED", Map.of("planId", runRef.getPlan().id()));
+                audit.approval(runRef.getOrganizationId(), runRef.getId(), stepId, approvedBy, "APPROVED", Map.of("planId", runRef.getPlan().id()));
             }
             event(runRef, stepId, "step_approved", Map.of("status", current.getStatus().name()));
             return runRef;
         });
-        resumeAsync(runId);
+        resumeAsync(organizationId, runId);
         return run;
     }
 
-    private void resumeAsync(String runId) {
-        executor.submit(() -> resume(runId));
+    @Override
+    public PlanRun cancelRun(String organizationId, String runId, String reason, String canceledBy) {
+        return store.withRunLock(organizationId, runId, run -> {
+            if (PlanRunSupport.terminal(run.getStatus())) {
+                return run;
+            }
+            run.setStatus(RunStatus.CANCELED);
+            var now = Instant.now();
+            for (var step : run.getSteps()) {
+                if (!PlanRunSupport.terminal(step.getStatus())) {
+                    step.setStatus(StepStatus.CANCELED);
+                    step.setFinishedAt(now);
+                }
+            }
+            store.saveRun(run);
+            event(run, null, "run_canceled", Map.of(
+                    "reason", reason == null ? "" : reason,
+                    "canceledBy", canceledBy == null || canceledBy.isBlank() ? "system" : canceledBy
+            ));
+            return run;
+        });
     }
 
-    private void resume(String runId) {
+    private void resumeAsync(String organizationId, String runId) {
+        executor.submit(() -> resume(organizationId, runId));
+    }
+
+    private void resume(String organizationId, String runId) {
         while (true) {
-            var execution = store.withRunLock(runId, run -> {
+            var execution = store.withRunLock(organizationId, runId, run -> {
+                if (run.getStatus() == RunStatus.CANCELED) {
+                    return null;
+                }
                 skipReadyMonitorSteps(run);
                 var next = nextRunnableStep(run);
                 if (next == null) {
@@ -100,7 +134,7 @@ public class LocalPlanExecutor implements PlanExecutor {
                     return null;
                 }
                 var stepRun = PlanRunSupport.stepRun(run, next.id());
-                if (next.needsApproval() && !run.getApprovedSteps().contains(next.id())) {
+                if (requiresApproval(run, next) && !run.getApprovedSteps().contains(next.id())) {
                     stepRun.setStatus(StepStatus.WAITING_APPROVAL);
                     run.setStatus(RunStatus.WAITING_APPROVAL);
                     store.saveRun(run);
@@ -119,11 +153,15 @@ public class LocalPlanExecutor implements PlanExecutor {
             }
 
             try {
-                var runSnapshot = store.run(runId).orElseThrow(() -> new IllegalArgumentException("Run not found: " + runId));
-                var binding = runSnapshot.bindingForResource(execution.step().action().resource());
+                var runSnapshot = store.run(organizationId, runId).orElseThrow(() -> new IllegalArgumentException("Run not found: " + runId));
+                var binding = runSnapshot.bindingForStep(execution.step());
                 var definition = OperationBindingDefinitions.from(binding);
                 var resolved = resolveInput(runSnapshot, execution.step());
-                store.withRunLock(runId, run -> {
+                var idempotencyKey = ExecutionIdempotency.forStep(organizationId, runId, execution.plan().id(), execution.step(), binding, resolved);
+                var preparedRun = store.withRunLock(organizationId, runId, run -> {
+                    if (run.getStatus() == RunStatus.CANCELED) {
+                        return run;
+                    }
                     var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
                     stepRun.setBinding(binding);
                     stepRun.setResolvedInput(resolved);
@@ -131,14 +169,28 @@ public class LocalPlanExecutor implements PlanExecutor {
                     event(run, execution.step().id(), "step_tool_call_prepared", Map.of(
                             "action", execution.step().action().value(),
                             "binding", binding.auditSummary(),
+                            "idempotencyKey", idempotencyKey,
                             "resolvedInputKeys", resolved.keySet().stream().sorted().toList()
                     ));
                     return run;
                 });
-                var result = data360Client.call(definition, binding, execution.step(), resolved, new RunContext(runId, execution.plan().id(), execution.plan().context()));
-                store.withRunLock(runId, run -> {
+                if (preparedRun.getStatus() == RunStatus.CANCELED) {
+                    return;
+                }
+                var result = data360Client.call(definition, binding, execution.step(), resolved, new RunContext(organizationId, runId, execution.plan().id(), execution.plan().context(), idempotencyKey));
+                var output = StepOutputSelector.apply(execution.step(), result.output(), binding);
+                store.withRunLock(organizationId, runId, run -> {
                     var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
-                    stepRun.setOutput(result.output());
+                    if (run.getStatus() == RunStatus.CANCELED) {
+                        if (!PlanRunSupport.terminal(stepRun.getStatus())) {
+                            stepRun.setStatus(StepStatus.CANCELED);
+                            stepRun.setFinishedAt(Instant.now());
+                            store.saveRun(run);
+                            event(run, execution.step().id(), "step_canceled", Map.of("idempotencyKey", idempotencyKey));
+                        }
+                        return run;
+                    }
+                    stepRun.setOutput(output);
                     stepRun.setRaw(result.raw());
                     stepRun.setStatus(StepStatus.SUCCEEDED);
                     stepRun.setFinishedAt(Instant.now());
@@ -147,14 +199,18 @@ public class LocalPlanExecutor implements PlanExecutor {
                     return run;
                 });
             } catch (Exception e) {
-                store.withRunLock(runId, run -> {
+                store.withRunLock(organizationId, runId, run -> {
+                    if (run.getStatus() == RunStatus.CANCELED) {
+                        return run;
+                    }
+                    var error = SensitiveData.redactText(e.getMessage());
                     var stepRun = PlanRunSupport.stepRun(run, execution.step().id());
-                    stepRun.setError(e.getMessage());
+                    stepRun.setError(error);
                     stepRun.setStatus(StepStatus.FAILED);
                     stepRun.setFinishedAt(Instant.now());
                     run.setStatus(RunStatus.FAILED);
                     store.saveRun(run);
-                    event(run, execution.step().id(), "step_failed", Map.of("error", e.getMessage()));
+                    event(run, execution.step().id(), "step_failed", Map.of("error", error == null ? "" : error));
                     return run;
                 });
                 return;
@@ -163,12 +219,12 @@ public class LocalPlanExecutor implements PlanExecutor {
     }
 
     private PlanStep nextRunnableStep(PlanRun run) {
-        for (var step : run.getPlan().steps()) {
+        for (var step : PlanExecutionOrder.steps(run)) {
             if (step.phase() == PlanPhase.MONITOR) {
                 continue;
             }
             var current = PlanRunSupport.stepRun(run, step.id());
-            if (current.getStatus() == StepStatus.SUCCEEDED || current.getStatus() == StepStatus.SKIPPED) {
+            if (PlanRunSupport.terminal(current.getStatus()) || current.getStatus() == StepStatus.RUNNING || current.getStatus() == StepStatus.WAITING_APPROVAL) {
                 continue;
             }
             var depsReady = step.dependsOn().stream().allMatch(dep -> PlanRunSupport.stepRun(run, dep).getStatus() == StepStatus.SUCCEEDED);
@@ -180,7 +236,7 @@ public class LocalPlanExecutor implements PlanExecutor {
     }
 
     private void skipReadyMonitorSteps(PlanRun run) {
-        for (var step : run.getPlan().steps()) {
+        for (var step : PlanExecutionOrder.steps(run)) {
             if (step.phase() != PlanPhase.MONITOR) {
                 continue;
             }
@@ -205,7 +261,7 @@ public class LocalPlanExecutor implements PlanExecutor {
 
     private void event(PlanRun run, String stepId, String type, Map<String, Object> detail) {
         if (audit != null) {
-            audit.event(run.getId(), run.getPlan().id(), stepId, type, detail);
+            audit.event(run.getOrganizationId(), run.getId(), run.getPlan().id(), stepId, type, detail);
         }
     }
 
@@ -215,9 +271,13 @@ public class LocalPlanExecutor implements PlanExecutor {
 
     private Map<String, Object> stepDetail(PlanRun run, PlanStep step) {
         return Map.of(
-                "action", step.action().value(),
-                "binding", run.bindingForResource(step.action().resource()).auditSummary()
+            "action", step.action().value(),
+            "binding", run.bindingForStep(step).auditSummary()
         );
+    }
+
+    private boolean requiresApproval(PlanRun run, PlanStep step) {
+        return step.needsApproval() || run.bindingForStep(step).requiresApproval();
     }
 
     private record ExecutionStep(PlanSpec plan, PlanStep step) {

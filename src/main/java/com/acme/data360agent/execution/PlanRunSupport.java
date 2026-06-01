@@ -25,4 +25,12 @@ public final class PlanRunSupport {
     public static Map<String, Object> outputForStep(PlanRun run, String stepId) {
         return stepRun(run, stepId).getOutput();
     }
+
+    public static boolean terminal(RunStatus status) {
+        return status == RunStatus.SUCCEEDED || status == RunStatus.FAILED || status == RunStatus.CANCELED;
+    }
+
+    public static boolean terminal(StepStatus status) {
+        return status == StepStatus.SUCCEEDED || status == StepStatus.FAILED || status == StepStatus.SKIPPED || status == StepStatus.CANCELED;
+    }
 }
